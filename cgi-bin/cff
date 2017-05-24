@@ -1,0 +1,723 @@
+#!/usr/bin/perl
+#
+##############################################################################
+#
+# File Name:    ress.pl
+# Author:       Ion CIONCA (Ion.Cionca@epfl.ch) - 2005
+#
+#########################################################################
+#####
+#
+#
+
+use lib qw(/opt/dinfo/lib/perl);
+
+use strict;
+use HTML::Template;
+use Net::LDAP;
+use LWP::UserAgent; 
+use JSON; 
+
+use Cadi::CadiDB;
+use Tequila::Client;
+use Cadi::Accreds;
+
+	use vars qw(%args $tequila $gaspar $menupath $authstr $lang $key $sciper $email $nom $prenom
+			$respunits $droitunits $tmpldir $lang $errmsg $dbh $where $header_done $login_as $Rights $db_dinfo
+			$custURL $cffLogon $Accreds $filtreFonds $ref_admin_units $ldap
+			);
+
+	my $me 		= $ENV {SCRIPT_NAME};
+	my $us 		= $ENV {SERVER_NAME};
+	my $qs 		= $ENV {QUERY_STRING};
+	my $pi 		= $ENV {PATH_INFO};
+	my $lang 	= 'fr';
+	my $no_purge= '';
+	my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
+	my $su_list	= '104782,105640';	# - ic, cl
+	$filtreFonds= ',FT03-A,';
+
+#	$login_as 	= '104930';
+	$login_as 	= '125661';
+#	$login_as 	= '248177';
+
+	my $DEBUG 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
+	if ($DEBUG) {
+		$cffLogon   = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
+		$custURL	= 'Customer=epfl_new';	
+	} else {
+		$cffLogon	= 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
+		$custURL	= 'Customer=epfl';
+		$custURL	= 'Customer=epfl_new';
+	}
+	%args		= loadargs ();
+	$lang 		= $args{lang} if $args{lang};
+	$dbh	   	= dbconnect ('cff');
+	$Accreds	= new Cadi::Accreds (caller => '104782', utf8 => 1);
+	$db_dinfo	= new Cadi::CadiDB (
+		  dbname => 'dinfo',
+		   trace => 1,
+			utf8 => 1,
+	  ) unless $db_dinfo;
+	erreur ("FATAL DB ACCESS") unless $db_dinfo;
+
+	$ldap    	= Net::LDAP->new('ldap.epfl.ch')    or erreur ("new LDAP : $!");
+
+	authenticate() if $pi ;
+
+	purge_transactions ('5');
+
+	if      ($pi =~  /^\/go/) {
+		go ();
+	} elsif ($pi =~  /^\/main/) {
+		main ();
+	}
+
+	my $template = initTempl('default.tmpl');
+	$template->param(sErrMsg => $errmsg);
+	print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
+	exit;
+
+#_________________
+sub main {
+
+	my $template = initTempl('main.tmpl');
+
+warn "--> main :: op=$args{op}, person=$args{person}\n";
+
+	my $user;
+	if ( $args{op} eq 'search' ) {
+		my $person = $args{person};
+		   $person =~ s/^\s+//;
+		   $person =~ s/\s+$//;
+		erreur ("Veuillez saisir le nom ou le no sciper de la personne") unless $person;
+
+		#	- find person
+		if ( $person =~ /\d\d\d\d\d\d/ ) {
+			$user 		  = getUserBySciper( $person );
+			$args{op} = 'found' if $user;
+warn "--> main :: op=$args{op}, name=$user->{name}\n";
+		} else {
+			my $users = getUsersByName( $person );
+		#		erreur ( "collaborateur pas trouvé" ) unless $users;
+			if ( scalar keys %$users > 1 ) {
+				my @persons_loop;
+				foreach my $sciper ( sort { $users->{$a}->{name} cmp $users->{$b}->{name} } keys %$users ) {
+					push @persons_loop, {
+						sciper  => $sciper,
+						name	=> $users->{$sciper}->{name},
+						url		=> $me,
+					};
+				}
+		
+				$template->param(sErrMsg 	  => $errmsg);
+				$template->param(sPersonsLoop => \@persons_loop);
+				print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
+				exit;
+			}
+			$user = each %$users;
+			$args{op} eq 'found' if $user;
+		}
+
+	} 
+
+	#	- get CF & fonds
+	my $my_fonds;
+	my $seltxt2;
+	my $fonds   = getFonds ($droitunits);
+	my $layerid = 1;
+	my $seltxt1 = qq{<select name="cf" OnChange="ShowLayer(document.form1.cf.selectedIndex+1)">	};
+	foreach my $cf (sort keys %$fonds) {
+		my $flistref   = $fonds->{$cf};
+		next unless @$flistref;
+
+		$seltxt1 .= qq{<option value="$cf">$cf</option>
+		};
+		my $layerclass = $layerid eq 1 ? 'layer1' : 'layer2';
+		$seltxt2 	  .= qq{
+			<div id="Layer$layerid" class="$layerclass">
+				<select name="fonds_$cf">
+			};
+		foreach my $fond (@$flistref) {
+		  my ($no, $lib) = split(/:/, $fond);
+		  $my_fonds->{$no} = { no => $no, libelle => $lib, };
+
+		  #	- filtre exceptions
+		  $seltxt2 .= qq{<option value="$no">$no : $lib</option>
+		  };
+		}
+		$seltxt2 .= qq{</select>
+				</div>
+				};
+		$layerid++;
+	}
+	$seltxt1 .= qq{</select>};
+	$template->param(sCF			=> $seltxt1 );
+	$template->param(sFonds			=> $seltxt2 );
+
+	if ( $args{op} eq 'found' ) {
+		$user 		  = getUserBySciper( $args{sciper} ) unless $user;
+
+		$template->param(sFound		 => 1 );
+		$template->param(sPersName	 => $user->{name} );
+		$template->param(sPersSciper => $user->{sciper} );
+
+		erreur ("No sciper absent") unless $user->{sciper};
+
+		#	- get dossiers voyages
+		my $dossiers = getDossiers ( $user->{sciper} );
+		if ( $dossiers ) {
+			#	- check fonds
+			my @managed_trips;
+			foreach my $dossier ( @$dossiers ) {
+				foreach my $fonds_item ( split /,/, $dossier->{concatFunds} ) { 
+					next unless $fonds_item;
+					if ( defined $my_fonds->{$fonds_item} ) {
+						push @managed_trips, $dossier;
+						last;
+					}
+				}
+			}
+			
+			if ( scalar @managed_trips ) {
+				@managed_trips = sort { $a->{destination} cmp $b->{destination} } @managed_trips;
+				$template->param( sHasTravelNb => 1 );
+				$template->param( sTravels 	   => \@managed_trips );
+				print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
+				exit;
+			}
+		}
+	}
+	
+	$template->param(sFormaction	=> "$me/go?lang=$lang"		);
+
+
+	$template->param(sErrMsg => $errmsg);
+	print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
+	exit;
+
+}
+#_________________
+sub go {
+
+  my $id   = genkey ();
+  my $loop = 1;
+  while ($loop) {
+    my $sth = dbquery(qq{select id from transactions where id='$id'});
+    if ($sth->fetchrow) {
+       $id = genkey ();
+    } else {
+       $loop = 0;
+    }
+  }
+
+  my ($sNoVoyage, $Fonds) = split /:/, $args{sNoVoyage};
+  $Fonds = $args{"fonds_".$args{cf}} unless ($Fonds);
+  
+  unless ($Fonds) {
+    my $template = initTempl('priv.tmpl');
+    $errmsg = qq{Veuillez saisir le numéro du fonds};
+    $template->param(sErrMsg => $errmsg);
+	print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
+	exit;
+  }
+  
+  my $no    = removeaccents($sNoVoyage);
+  erreur ('Numéro du voyage absent') unless $no;
+
+  my $sth 	 = $db_dinfo->query (qq{select sexe from sciper where sciper='$sciper'});
+  my ($sexe) = $sth->fetchrow ();
+  $sexe 	 = $sexe eq 'F' ? '1' : '2';
+
+  my $phones;
+  my $sql 	 = qq{select distinct dinfo.annu.telephone1,dinfo.annu.telephone2	from dinfo.sciper left outer join dinfo.annu on dinfo.sciper.sciper=dinfo.annu.sciper where dinfo.annu.sciper='$sciper'};
+  $sth 	  	 = $db_dinfo->query ($sql);
+		
+  while (my ($tel1,$tel2) = $sth->fetchrow) {
+    $phones .= ",$tel1" if $tel1;
+    $phones .= ",$tel2" if $tel2;
+  }
+  $phones =~ s/^,//;
+  my $phone;
+  map {
+  	$_ =~ s/^0//;
+  	if ($_ and $phone !~ /$_ /) {
+		if (length($_) == 5) {
+				$phone .= qq{+412169$_ };
+		} else {
+			$phone .= qq{+41$_ };
+		}
+	}  	
+  } split /,/, $phones;
+  $phones = substr($phone, 0, 12);
+  $phones = '+41216931111' unless $phones;
+
+  $nom 	  =~ s/\'/\'\'/g;
+  $prenom =~ s/\'/\'\'/g;
+  $no     =~ s/\'/\'\'/g;
+
+  my $sql = qq{insert into transactions set
+  	id='$id',
+	sciper='$sciper',
+	nom='$nom',
+	pnom='$prenom',
+	email='$email',
+	phone='$phones',
+	no_fond='$Fonds',
+	sexe='$sexe',
+	no='$no',
+	datecrt=now()
+  };
+  dbquery($sql);
+
+warn "$id:$nom:$prenom:$email:$phones:$Fonds:$no\n";
+
+  my $redirect = qq{$cffLogon?$custURL&SAMLart=$id};
+warn "--> CFF go to : $redirect...";
+  print qq{Location: $redirect\n\n};
+
+  write_log ("$id:$nom:$prenom:$email:$phones:$Fonds:$no");
+
+  exit;
+}
+
+#_________________
+sub getFonds {
+  my ($unitlist) = @_;
+  
+  $unitlist    =~ s/,/\',\'/g;
+  my $fondsperCF;
+  my $sql = qq{select cf from dinfo.unites where sigle in (\'$unitlist\')};
+  my $sth = $db_dinfo->query ($sql);
+  while (my ($cf) = $sth->fetchrow_array ()) {
+    my @fonds;
+    # - programmes doctoraux
+    if ($cf =~ /^44/) {
+	    $sql = qq{select no_fond,libelle,clients from dinfo.fonds where (no_fond like '$cf%' or cf = 'F$cf' ) and etat = 'O'};
+	} else {
+    	$sql = qq{select no_fond,libelle,clients from dinfo.fonds where cf = 'F$cf' and etat = 'O'};
+	}
+
+    my $sth = $db_dinfo->query ($sql);
+    while (my ($no_fond,$libelle,$clients) = $sth->fetchrow_array ()) {
+	  next unless $no_fond;
+      next if $filtreFonds =~ /\b$clients\b/;
+      push (@fonds, "$no_fond:$libelle");
+    }
+    $fondsperCF->{$cf} = \@fonds;
+  }
+  
+  # - programmes doctoraux étudiants
+  foreach my $item (split (/,/,$unitlist)) {
+  	$item =~ s/\'//g;
+  	next unless $item =~ /^ED??/;
+    $sql = qq{select * from dinfo.fonds where libelle like '$item%' and etat = 'O'};
+    my $sth = $db_dinfo->query ($sql);
+    while (my $fonds_data = $sth->fetchrow_hashref) {
+	    next if $filtreFonds =~ /\b$fonds_data->{clients}\b/;
+	    my (@fonds, $cf);
+    	$cf = $fonds_data->{cf};
+    	$cf =~ s/^F//;
+    	my $no_fond = $fonds_data->{no_fond};
+    	my $libelle = $fonds_data->{libelle};
+    	my $cf_fonds = $fondsperCF->{$cf};
+		next unless $no_fond;
+		next if grep ("$no_fond:$libelle",@$cf_fonds);
+    	push (@$cf_fonds, "$no_fond:$libelle");
+    	$fondsperCF->{$cf} = $cf_fonds;
+    }
+ 	
+  }
+  
+  return $fondsperCF;
+}
+#_________________
+sub purge_transactions {
+   my ($sesslife) = @_;
+   
+  return if $no_purge; 
+   dbquery(qq{delete from transactions where addtime(datecrt,'0:$sesslife:5') < now() and sciper <> '104782'});
+}
+#_________________
+sub quit {
+  if ($tequila) {
+    $tequila->killsession ();
+    $tequila->{authenticated} = undef;
+  }
+  main ();
+}
+#_________________
+sub write_log {
+  my ($msg) = @_;
+  
+  $msg =~ s/\'/\'\'/g;
+  dbquery(qq{insert into logs set
+  	ts=now(),
+	sciper='$sciper',
+	msg='$msg'
+  });
+}
+#_________________
+sub erreur {
+  my ($err_msg) = @_;
+
+warn " ** ERROR : $err_msg\n";
+  my $template = initTempl('err.tmpl');
+  $template->param(sErrMsg => $err_msg);
+  print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
+  exit;
+}
+#_________________
+sub authenticate {
+
+  unless ($tequila) {
+    $tequila = new Tequila::Client ();
+    $tequila->init ();
+  } 
+
+  my $droit = 'droit-railticket';
+  my $role  = 'role-respadmin';
+  $tequila->setclientsesskey ($key) if $key;
+  $tequila->setservice  ('Billets CFF en ligne');
+  $tequila->setlang  	($lang);
+  $tequila->request     ('name','firstname','uniqueid','email','where',$role);
+  $tequila->require     ($droit);
+
+  $tequila->authenticate ();
+
+  $key 		= $tequila->{key};
+  $sciper 	= $tequila->{attrs}->{uniqueid};
+  $nom 		= $tequila->{attrs}->{name};
+  $prenom 	= $tequila->{attrs}->{firstname};
+  if ($prenom =~ /,/) {
+    my ($p1,$p2) = split(/,/, $prenom);
+    $prenom = $p2;
+  }
+  if ($nom =~ /,/) {
+    my ($p1,$p2) = split(/,/, $nom);
+    $nom = $p2;
+  }
+
+  $email 	= $tequila->{attrs}->{'email'};
+  if ($email =~ /,/) {
+    my ($p1,$p2) = split(/,/, $email);
+    $email = $p1;
+  }
+
+  $where 		= $tequila->{attrs}->{'where'};
+  $droitunits	= $tequila->{attrs}->{$droit};
+  
+  if ($login_as and $sciper eq '104782') {
+  	$sciper 	  	 = $login_as;
+	$ref_admin_units = $Accreds->getAllUnitsWhereHasRight ($sciper, 35);	#	- 'railticket'
+	my $units  	 	 = join "','", keys %$ref_admin_units;
+	$droitunits	  	 = getUnitsSigle($units);
+warn " >> login_as cff $sciper : units=$units, droitunits=$droitunits\n";
+
+  }
+  
+  getPersonData ($sciper);
+
+  erreur ("pas de droit pour ce service, veuillez contacter un de vos accréditeurs") unless $droitunits;
+
+warn "cff $nom $prenom $email, droitunits=$droitunits";
+
+}
+
+#___________________
+sub getUnitsSigle {
+  my ($units) = @_;
+  return unless $units;
+
+  my $droitunits;
+  my $sql = qq{select sigle,hierarchie from dinfo.unites where id_unite in ('$units')};
+  my $sth = $db_dinfo->query ($sql);
+  while (my ($sigle,$hierarchie) = $sth->fetchrow_array ()) {
+  	next unless $sigle;
+  	$droitunits .= "$sigle,";
+  }
+  $droitunits =~ s/,$//;
+  return $droitunits;
+
+}
+#___________________
+sub getPersonsData {
+  my ($scipers) = @_;
+  return unless $scipers;
+  $scipers =~ s/,/','/g;
+
+  my $users_data;
+  my $sql = qq{select sciper.sciper, nom_acc, prenom_acc, nom_usuel, prenom_usuel, addrlog from dinfo.sciper 
+  	left outer join dinfo.emails on sciper.sciper=emails.sciper where sciper.sciper in ('$scipers') };
+  my $sth = $db_dinfo->query ($sql);
+  while (my $data = $sth->fetchrow_hashref) {
+  	next unless $data->{sciper};
+  	$nom 	= $data->{nom_usuel} 	? $data->{nom_usuel} 	: $data->{nom_acc};
+  	$prenom	= $data->{prenom_usuel} ? $data->{prenom_usuel} : $data->{prenom_acc};
+
+  	$users_data->{$data->{sciper}} = {
+  		nom 	=> $nom,
+  		prenom 	=> $prenom,
+  		email 	=> $data->{addrlog},
+  	}; 
+  }
+  
+  $users_data;
+}
+#___________________
+sub getPersonData {
+  my ($sciper) = @_;
+  return unless $sciper;
+
+  my $sql = qq{select nom_acc,prenom_acc,nom_usuel,prenom_usuel,addrlog from dinfo.sciper 
+  	left outer join dinfo.emails on sciper.sciper=emails.sciper where sciper.sciper='$sciper'};
+  my $sth = $db_dinfo->query ($sql);
+  while (my $data = $sth->fetchrow_hashref) {
+  	next unless $data;
+  	$nom 	= $data->{nom_usuel} 	? $data->{nom_usuel} 	: $data->{nom_acc};
+  	$prenom	= $data->{prenom_usuel} ? $data->{prenom_usuel} : $data->{prenom_acc};
+  	$email 	= $data->{addrlog};
+  }
+}
+#_____________
+sub removeaccents {
+  my ($str) = @_;
+  $str =~ tr/\200-\237//d;
+  $str =~ tr/\240-\377/"                               AAAAAA CEEEEIIIIDNOOOOO OUUUUY  aaaaaa ceeeeiiiionooooo ouuuuy y"/;
+#                       "¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏĞÑÒÓÔÕÖ×ØÙÚÛÜİŞßàáâãäåæçèéêëìíîïğñòóôõö÷øùúûüışÿ"
+  return $str;
+}
+#_________________
+sub dbconnect {
+	my ($dbkey) = @_;
+	
+	my $dbconf_file = '/opt/dinfo/etc/dbs.conf';
+	die "dbconnect : ERR OPEN $dbconf_file [$!]" unless (open (DBCONF, "$dbconf_file")) ;
+	my ($dbname, $dbhost, $dbuser, $dbpwd) ;
+	while (<DBCONF>) {
+		chomp;
+		next if $_ =~ /^#/;	# - comments
+		$_ =~ s/\t+/\t/g;
+		next unless $_;
+		my @items = split /\t/, $_;
+
+		next unless $items[0] eq $dbkey;
+		$dbname = $items[1];
+		$dbhost = $items[2];
+		$dbuser = $items[3];
+		$dbpwd = $items[4];
+
+		last;
+	}
+	close DBCONF;
+
+	die "dbconnect : ERR DB CONFIG : $dbname, $dbhost, $dbuser" unless ($dbname and $dbhost and $dbuser and $dbpwd) ;
+	my $dsndb    = qq{dbi:mysql:$dbname:$dbhost:3306}; 
+	my $dbh = DBI->connect ($dsndb, $dbuser, $dbpwd);
+	$dbh->{'mysql_enable_utf8'} = 1;
+
+	die "dbconnect : ERR DBI CONNECT : $dbhost, $dbname, $dbuser" unless $dbh;
+	
+	return $dbh;
+}
+#_________________
+sub dbquery {
+  my ($sql) = @_;
+
+  my $sth = $dbh->prepare( $sql) or die "database fatal erreur prepare\n$DBI::errstr\n$sql\n";
+  $sth->execute ()		 		 or die "database fatal erreur : execute : $DBI::errstr\n$sql\n";
+  return $sth;
+  
+}
+#_________________
+sub loadargs {
+
+  my $query = $ENV{QUERY_STRING};
+  my $postdata;
+  
+  if ($ENV{'REQUEST_METHOD'} && $ENV{'REQUEST_METHOD'} eq 'POST') {
+   read (STDIN, $postdata, $ENV{'CONTENT_LENGTH'});
+  }
+  my $allargs = $query . '&' . $postdata;
+  my @fields  = split (/&/, $allargs);
+  foreach (@fields) {
+    s/\+/ /g;  
+    s/%([0-9a-f]{2,2})/pack ("C", hex ($1))/gie;
+  }
+  my %args;
+  foreach my $field (@fields) {
+    next unless ($field =~ /=/);  
+    my ($name, $value) = split(/=/, $field, 2);  
+    $args {$name} .= ' ' if $args {$name};  
+    $args {$name} .= "$value";
+  }
+  %args
+}
+#_________________
+sub genkey {
+ srand (time ^ ($$ + ($$ << 15)));
+ my $key = "";
+ for (my $i = 0; $i < 32; $i++) {
+   my $car .= int rand (35);
+   $key .= ('a'..'z', '0'..'9')[$car];
+ }
+ return $key;
+}
+#------
+sub initTempl {
+   my ($tmplpath) = @_;
+
+warn "cff initTempl: $tmpldir$tmplpath";
+   my $template = HTML::Template->new(filename => $tmpldir.$tmplpath,
+	   strict => 0,
+	   cache => 1,
+	   die_on_bad_params => 0) or die "err : $!";
+
+   my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+   $year += 1900;
+   $template->param(sCrtYear => $year);
+   $template->param(sPathMe  => $me);
+   $template->param(sID 	 => $sciper);
+   $template->param(sPrenom  => $prenom);
+   $template->param(sNom 	 => $nom);
+   return $template;
+}
+#_________________
+sub getUsersByName {
+	my ($name) = @_;
+	return unless $name;
+	
+
+	$name =~ s/^ //g;
+	$name =~ s/ $//g;
+	$name =~ s/'/''/g;
+	$name = convertaccented($name);
+
+	my $msg  = $ldap->search(
+	  base 	 => 'c=ch',
+	  filter => "(&(sn=$name*)(objectclass=person))"
+	);
+
+	my $users;
+	foreach my $entry ($msg->entries) {
+	  my $sciper = $entry->get_value('uniqueidentifier');
+	  next unless $sciper =~ /\d\d\d\d\d\d/;
+	  my $nom	 = utf8tolatin1($entry->get_value('sn'));
+	  my $prenom = utf8tolatin1($entry->get_value('givenName'));
+	  my $mail	 = $entry->get_value('mail');
+
+	  $users->{$sciper} = {
+		sciper => $sciper,	  	
+		name   => "$nom $prenom",
+		email  => $mail,	  	
+	  };
+	}
+	return $users;
+}
+#_________________
+sub getUserBySciper {
+	my ($sciper) = @_;
+
+	return unless $sciper;
+	erreur ("numéro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
+	
+	my $msg = $ldap->search(
+	  base 	 => 'c=ch',
+	  filter => "(&(uniqueidentifier=$sciper)(objectclass=person))"
+	);
+	my $user;
+	foreach my $entry ($msg->entries) {
+	  my $sciper = $entry->get_value('uniqueidentifier');
+	  next unless $sciper =~ /\d\d\d\d\d\d/;
+	  my $nom	 = utf8tolatin1($entry->get_value('sn'));
+	  my $prenom = utf8tolatin1($entry->get_value('givenName'));
+	  my $mail	 = $entry->get_value('mail');
+
+	  $user = {
+		sciper => $sciper,
+		name   => "$nom $prenom",
+		email  => $mail,	  	
+	  };
+	}
+	return $user;
+}
+#_________________
+sub getDossiers {
+	my ( $sciper ) = @_;
+	return '' unless $sciper;
+
+	my $url  = qq'https://testsapservices.epfl.ch/pid/RESTAdapter/api/fi/travelrequests?sciper=$sciper';
+
+warn " --> getDossiers : $url\n";
+
+	my $lwp  = new LWP::UserAgent;
+	my $req  = new HTTP::Request ('GET', $url);
+	   $req->authorization_basic( 'ticketshop', 'EPFLcff2017' );
+	my $res  = $lwp->request ($req);
+	if ( $res->code == 200 ) {
+warn " --> getDossiers : status 200\n";
+		return '' if $res->content eq '""';
+warn " --> getDossiers : status 200, content OK\n";
+		my $ret  = decode_json( $res->content );
+		return $ret->{travelRequests};
+	} else {
+		warn "getDossiers : ** ERR sciper=$sciper, code=".$res->code;
+		return '';
+	}
+warn " --> getDossiers : $sciper NOT FOUND\n";
+
+	return '';
+
+}
+#_________________
+sub utf8tolatin1 {
+    my $string = shift;
+    $string =~ s/([\xC0-\xDF])([\x80-\xBF])/chr(ord($1)<<6&0xC0|ord($2)&0x3F)/eg;
+    return $string;
+}
+
+
+sub convertaccented {
+ my ($str) = @_;
+
+ my $tmpstr = lc($str);
+#warn "convertaccented :: $tmpstr\n";
+ for ( $tmpstr ) {  # the variable we work on
+   s/\xe0/a/ig;
+   s/\xe1/a/ig;
+   s/\xe2/a/ig;
+   s/\xe3/a/ig;
+   s/\xe5/a/ig;
+   s/\xe4/ae/ig;
+   s/\xe6/ae/ig;
+   s/\xe7/c/ig;
+
+   s/\xe8/e/ig;
+   s/\xe9/e/ig;
+   s/\xea/e/ig;
+   s/\xeb/e/ig;
+
+   s/\xec/i/ig;
+   s/\xed/i/ig;
+   s/\xee/i/ig;
+   s/\xef/i/ig;
+
+   s/\xf1/n/ig;
+   s/\xf2/o/ig;
+   s/\xf3/o/ig;
+   s/\xf4/o/ig;
+   s/\xf5/o/ig;
+
+   s/\xf6/oe/ig;
+   s/\xf9a/u/ig;
+   s/\xf9b/u/ig;
+   s/\xfc/ue/ig;
+   s/\xfd/y/ig;
+   s/\xff/y/ig;
+
+   s/[^\0-\x80]//ig;  ##  clear everything else; optional
+ } 
+ 
+ uc($tmpstr);
+
+}

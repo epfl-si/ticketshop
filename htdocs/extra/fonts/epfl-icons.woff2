@@ -1,0 +1,6257 @@
+<!doctype html>
+<!--[if lt IE 7]><html lang="en" class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html lang="en" class="no-js ie7 lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html lang="en" class="no-js ie8 lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html lang="en" class="no-js ie9 lt-ie10"><![endif]-->
+<!--[if !IE]><!--><html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="no-js"><!--<![endif]-->
+<head>
+  <title>Presentation | EPFL Bootstrap</title>
+  <meta charset="utf-8" />
+  <meta name="description" content="EPFL Bootstrap is a fully responsive, semantic and accessible front-end framework used for web applications on the campus." />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" data-header-version="0.22.15" />
+  <link rel="shortcut icon" type="image/x-icon" href="//static.epfl.ch/v0.22.15/favicon.ico" />
+  <link rel="icon" type="image/png" href="//static.epfl.ch/v0.22.15/favicon.png" />
+  <link rel="stylesheet" href="//static.epfl.ch/v0.22.15/styles/epfl-built.css"/>
+
+  <link rel="stylesheet" href="styles.css"/>
+
+    
+  <!--[if lt IE 9]>
+  <link id="respond-proxy" rel="respond-proxy" href="//static.epfl.ch/v0.22.15/includes/respond-proxy.html" />
+  <script src="//static.epfl.ch/v0.22.15/scripts/ie-built.js"></script>
+  <![endif]-->
+
+  
+
+</head>
+<body>
+  <nav class="a11y" role="navigation" aria-label="Quick navigation links">
+  <a class="visuallyhidden focusable" href="#content" accesskey="c">Skip to content</a>
+  <a class="visuallyhidden focusable" href="#main-navigation" accesskey="n">Skip to navigation</a>
+</nav>
+<div id="page" class="site site-wrapper" itemscope itemtype="http://schema.org/WebPage">
+<header id="epfl-header" class="site-header epfl" role="banner" aria-label="Global EPFL banner" data-ajax-header="//static.epfl.ch/latest/includes/epfl-header.en.html">
+  
+  <div class="logo">
+    <a href="http://www.epfl.ch">
+      <span class="visuallyhidden">EPFL Homepage</span>
+      <object type="image/svg+xml" class="logo-object" data="//static.epfl.ch/latest/images/logo.svg">
+        <img alt="EPFL Logo" width="95" height="46" src="//static.epfl.ch/latest/images/logo.png" />
+      </object>
+    </a>
+  </div>
+  
+  <div class="search search-simple">
+    <a href="#search" class="icon icon-magnifier hidden visible-xxs visible-xs" data-widget="toggle">
+      <span class="visuallyhidden">Search</span>
+    </a>
+    <div id="search" class="visible-s visible-m visible-l visible-xl visible-xxl" role="search">
+      <form id="search-form" class="form form-inline" action="search.html">
+        <div class="form-input-group">
+          <div class="form-input">
+            <label class="visuallyhidden" for="search-query">Search query</label>
+            <input id="search-query" class="search-query" type="text" placeholder="search query" name="q" accesskey="4" />
+          </div>
+          <div class="form-input form-input-mini">
+            <button class="themed search-submit" type="submit">
+              <span class="icon icon-magnifier"></span><span class="visuallyhidden">Search</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</header>
+
+  <header id="header" class="site-header">
+    <h1 class="site-title" itemprop="isPartOf" itemscope itemtype="http://schema.org/CollectionPage">
+      <a href="index.html" itemprop="url" accesskey="1" rel="home"><span itemprop="name"><abbr title="The EPFL front-end framework">EPFL Bootstrap</abbr><span class="visuallyhidden-xs visuallyhidden-xxs"> Style Guide</span></span></a>
+    </h1>
+    <nav class="nav nav-inline bcnav" role="navigation" itemprop="breadcrumb" aria-label="Breadcrumb navigation">
+      <ol class="nav-list">
+        <li class="nav-item" itemprop="sourceOrganization" itemscope itemtype="http://schema.org/CollegeOrUniversity"><a class="nav-link" href="http://www.epfl.ch" itemprop="url"><span itemprop="name">EPFL</span></a></li>
+        <li class="nav-item nav-item-active"><a class="nav-link" href="index.html">Styleguide</a></li>
+      </ol>
+    </nav>
+    <nav class="nav nav-inline lang" role="navigation" aria-label="Language selector">
+      <ul class="nav-list">
+        <li class="nav-item nav-item-active">
+          <a class="nav-link" href="#" lang="en">
+            <span class="visuallyhidden">Current language: </span>
+            <span class="visuallyhidden-xxs visuallyhidden-xs">English</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="mainnav">
+      <a id="main-navigation-label" class="hidden visible-xxs visible-xs" href="#main-navigation" data-widget="collapse">Main navigation</a>
+      
+
+
+
+<nav id="main-navigation" class="nav nav-block nav-horizontal visible-s visible-m visible-l visible-xl visible-xxl" role="navigation" aria-labelledby="main-navigation-label">
+  
+  
+    <ul class="nav-list" data-widget="menubar">
+      
+      <li class="nav-item hidden-xxs hidden-xs">
+        <a class="nav-link" href="index.html">
+          <span class="hidden-xxs hidden-xs icon icon-inline icon-big icon-home" role="presentation" hidden="hidden"></span>
+          <span class="hidden-s hidden-m hidden-l hidden-xl hidden-xxl">Homepage</span>
+        </a>
+      </li>
+      
+      
+        
+          <li class="nav-item">
+            <span class="nav-link" data-widget="collapse">about</span>
+            
+  
+    <ul class="nav-list nav-vertical" data-widget="menu">
+      
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="accessibility.html#accessibility">Accessibility</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="accessibility.html#web-content-accessibility-guidelines-wcag-20">Web Content Accessibility Guidelines (WCAG) 2.0</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="accessibility.html#wai-aria">WAI-ARIA</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="accessibility.html#access-keys">Access keys</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="installation.html#installation">Installation</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="installation.html#optimized-headfoot-files">Optimized head/foot files</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="installation.html#all-in-one-head-files">All-in-one head files</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="installation.html#integration-of-the-epfl-banner-in-a-site">Integration of the EPFL banner in a site</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="installation.html#dynamically-load-the-global-header">Dynamically load the global header</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="installation.html#local-search">Local search</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="installation.html#global-search">Global search</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="custom-scripts.html#custom-scripts">Custom Scripts</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="custom-scripts.html#load-a-custom-jquery-plugin">Load a custom jQuery plugin</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="custom-scripts.html#load-datatables-scripthttpcdndatatablesnet">Load  [datatables script](http://cdn.datatables.net)</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="custom-scripts.html#load-a-jquery-plug-in-different-from-epfl-jquery">Load a jQuery plug-in different from epfl-jquery</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="custom-scripts.html#load-a-custom-script">Load a custom script</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="analytics.html#analytics">Analytics</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="browser-support.html#browser-support">Browser support</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="3rd-party-libraries.html#3rd-party-libraries">3rd-party libraries</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="3rd-party-libraries.html#packaged-libraries">Packaged libraries</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="3rd-party-libraries.html#cdn-libraries">CDN libraries</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="changelog.html#changelog">Changelog</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0229-20161404">v0.22.9 - 2016.14.04</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v02212-20162704">v0.22.12 - 2016.27.04</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0228-20161803">v0.22.8 - 2016.18.03</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0226-20160801">v0.22.6 - 2016.08.01</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0222-20151030">v0.22.2 - 2015.10.30</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0220-20151012">v0.22.0 - 2015.10.12</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0213-20150903">v0.21.3 - 2015.09.03</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0203-20150622">v0.20.3 - 2015.06.22</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0202-20150618">v0.20.2 - 2015.06.18</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0201-20150616">v0.20.1 - 2015.06.16</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0200-20150615">v0.20.0 - 2015.06.15</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0191-20150606">v0.19.1 - 2015.06.06</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0190-20150604">v0.19.0 - 2015.06.04</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0180-20150520">v0.18.0 - 2015.05.20</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0170-20150512">v0.17.0 - 2015.05.12</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0160-20150504">v0.16.0 - 2015.05.04</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0150-20150417">v0.15.0 - 2015.04.17</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0140-20141109">v0.14.0 - 2014.11.09</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0134-20141101">v0.13.4 - 2014.11.01</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0133-20140903">v0.13.3 - 2014.09.03</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0132-20140715">v0.13.2 - 2014.07.15</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0131-20140709">v0.13.1 - 2014.07.09</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0130-20140703">v0.13.0 - 2014.07.03</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0121-20140625">v0.12.1 - 2014.06.25</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0120-20140625">v0.12.0 - 2014.06.25</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0110-20140606">v0.11.0 – 2014.06.06</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0102-20140604">v0.10.2 – 2014.06.04</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0101-20140528">v0.10.1 – 2014.05.28</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v0100-20140527">v0.10.0 – 2014.05.27</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="changelog.html#v090-20140509">v0.9.0 – 2014.05.09</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+    </ul>
+  
+
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <span class="nav-link" data-widget="collapse">base</span>
+            
+  
+    <ul class="nav-list nav-vertical" data-widget="menu">
+      
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="page-structure.html#page-structure">Page Structure</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="grid.html#grid">Grid</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="grid.html#grid-horizontal-classes">Grid horizontal classes</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="grid.html#cell-width">Cell width</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="grid.html#cell-horizontal-offset">Cell horizontal offset</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="grid.html#convenience-classes">Convenience classes</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="grid.html#grid-vertical-classes">Grid vertical classes</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="grid.html#cell-height">Cell height</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="grid.html#cell-vertical-offset">Cell vertical offset</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="grid.html#nested-grids">Nested grids</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="grid.html#overwrite-grid-in-tablet-layout">Overwrite grid in tablet layout</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="grid.html#fixed-vs-fluid-layout">Fixed vs fluid layout</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="grid.html#font-size-adjustments">Font size adjustments</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="visibility.html#visibility">Visibility</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="visibility.html#hiding">Hiding</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="visibility.html#hidden">Hidden</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="visibility.html#visually-hidden">Visually hidden</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="visibility.html#hidden-from-screen-readers">Hidden from screen readers</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="visibility.html#visible">Visible</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="colors.html#colors">Colors</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="colors.html#base">Base</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="colors.html#information">Information</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="colors.html#themes">Themes</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="colors.html#theme-classes">Theme classes</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="typography.html#typography">Typography</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="typography.html#fonts">Fonts</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="typography.html#headings">Headings</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="typography.html#common-content">Common content</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="typography.html#themed-content">Themed content</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="typography.html#code-blocks">Code blocks</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="images.html#images">Images</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="images.html#positioning-images">Positioning images</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="images.html#images-with-a-fixed-proportion">Images with a fixed proportion</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="images.html#images-with-a-forced-size">Images with a forced size</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="images.html#showing-different-images-for-different-screen-sizes">Showing different images for different screen sizes</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="images.html#using-css-classes">Using CSS classes</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="images.html#using-the-html5-picture-element">Using the HTML5 picture element</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="lists.html#lists">Lists</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="lists.html#ordered-lists">Ordered lists</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="lists.html#unordered-lists">Unordered lists</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="lists.html#definition-lists">Definition lists</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="lists.html#unstyled-lists">Unstyled lists</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="tables.html#tables">Tables</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html#styled-table">Styled table</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html#narrow-table">Narrow table</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html#smaller-table">Smaller table</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html#stroked-table">Stroked table</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html#striped-table">Striped table</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html#hoverable-table">Hoverable table</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tables.html#responsive-table">Responsive table</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="quotes.html#quotes">Quotes</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="quotes.html#block-quotes">Block quotes</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="quotes.html#inline-quotes">Inline quotes</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="forms.html#forms">Forms</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="forms.html#styled-form">Styled form</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="forms.html#inline-form">Inline form</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="forms.html#vertical-form">Vertical form</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="forms.html#horizontal-form">Horizontal form</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="forms.html#input-group">Input group</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+    </ul>
+  
+
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <span class="nav-link" data-widget="collapse">modules</span>
+            
+  
+    <ul class="nav-list nav-vertical" data-widget="menu">
+      
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="icons.html#icons">Icons</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="icons.html#default-icons">Default icons</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="icons.html#button-icons">Button icons</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="icons.html#themed-icons">Themed icons</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="icons.html#inline-icons">Inline icons</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="icons.html#bigger-icons">Bigger icons</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="buttons.html#buttons">Buttons</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#default-buttons">Default buttons</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#icon-buttons">Icon buttons</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#operations">Operations</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#data-manipulation">Data manipulation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#information-notification">Information notification</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#long-buttons">Long buttons</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#trigger-button">Trigger button</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="buttons.html#split-button">Split button</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="badges.html#badges">Badges</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="badges.html#default-badge">Default badge</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="badges.html#information-badges">Information badges</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="badges.html#action-badges">Action badges</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="messages.html#messages">Messages</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="messages.html#the-message-module-structure">The message module structure</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="messages.html#various-message-types">Various message types</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="navigation.html#navigation">Navigation</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#the-navigation-module-structure">The navigation module structure</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#inline-navigation">Inline navigation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#horizontal-navigation">Horizontal navigation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#vertical-navigation">Vertical navigation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#pagination-navigation">Pagination navigation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#horizontal-block-navigation">Horizontal block navigation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#vertical-block-navigation">Vertical block navigation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#themed-horizontal-navigation">Themed horizontal navigation</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="navigation.html#themed-vertical-navigation">Themed vertical navigation</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="panels.html#panels">Panels</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="panels.html#the-panel-module-structure">The panel module structure</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="panels.html#default-panels">Default panels</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="panels.html#themed-panels">Themed panels</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="panels.html#cell-panels">Cell panels</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="panels.html#panel-buttons">Panel buttons</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="media.html#media">Media</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="media.html#the-media-module-structure">The media module structure</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="media.html#media-list">Media list</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="media.html#media-list-auto-truncated">Media list (auto-truncated)</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="media.html#minimal-list">Minimal list</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="media.html#media-grid">Media grid</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="media.html#a-media-list-with-the-first-element-emphasized">A media list with the first element emphasized</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="responsive-embeds.html#responsive-embeds">Responsive Embeds</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="responsive-embeds.html#all-supported-aspect-ratios">All supported aspect ratios</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+    </ul>
+  
+
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <span class="nav-link" data-widget="collapse">widgets</span>
+            
+  
+    <ul class="nav-list nav-vertical" data-widget="menu">
+      
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="collapse.html#collapse">Collapse</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="collapse.html#collapse-overview">Collapse overview</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="collapse.html#the-collapse-widget-structure">The collapse widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="collapse.html#options-for-the-collapse-widget">Options for the collapse widget</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="collapse.html#events-for-the-collapse-widget">Events for the collapse widget</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="collapse.html#default-collapse">Default collapse</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="collapse.html#collapse-with-custom-targets">Collapse with custom targets</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="collapse.html#collapse-the-content">Collapse the content</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="collapse.html#collapse-the-link-target">Collapse the link target</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="collapse.html#collapse-targets-specified-in-the-target-option">Collapse targets specified in the target option</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="collapse.html#collapse-targets-specified-in-the-controls-option">Collapse targets specified in the controls option</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="collapse.html#collapse-with-overlay">Collapse with overlay</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="collapse.html#collapse-on-mouseentermouseleave">Collapse on mouseenter/mouseleave</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="tooltip.html#tooltip">Tooltip</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tooltip.html#tooltip-overview">Tooltip overview</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#the-tooltip-widget-structure">The tooltip widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#options-for-the-tooltip-widget">Options for the tooltip widget</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tooltip.html#default-tooltip">Default tooltip</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tooltip.html#tooltip-on-specific-events">Tooltip on specific events</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#click-tooltip">Click tooltip</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#double-click-tooltip">Double-click tooltip</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tooltip.html#tooltip-with-custom-targets">Tooltip with custom targets</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#via-aria-describedby-with-a-list-of-target-ids">Via aria-describedby with a list of target ids</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#via-data-tooltip">Via data-tooltip</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#via-data-target-with-a-css-selector-to-the-targets-relative-to-parent">Via data-target with a css selector to the targets (relative to parent)</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tooltip.html#via-href-with-reference-to-element-id-single-target-only">Via href with reference to element id (single target only)</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tooltip.html#overlay-tooltip">Overlay tooltip</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="menu-menubar-toolbar.html#menu-menubar-toolbar">Menu, Menubar &amp; Toolbar</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="menu-menubar-toolbar.html#menu-widget">Menu widget</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu-menubar-toolbar.html#the-menu-widget-structure">The menu widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu-menubar-toolbar.html#simple-menu">Simple menu</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu-menubar-toolbar.html#multi-level-menu">Multi-level menu</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="menu-menubar-toolbar.html#tool-bar-widget">Tool bar widget</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu-menubar-toolbar.html#the-toolbar-widget-structure">The toolbar widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu-menubar-toolbar.html#simple-toolbar-example">Simple toolbar example</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="menu-menubar-toolbar.html#menu-bar">Menu bar</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu-menubar-toolbar.html#the-menubar-widget-structure">The menubar widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="menu-menubar-toolbar.html#simple-menubar-example">Simple menubar example</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="accordions.html#accordions">Accordions</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="accordions.html#accordions-overview">Accordions overview</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="accordions.html#the-accordion-widget-structure">The accordion widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="accordions.html#options-for-the-accordion-widget">Options for the accordion widget</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="accordions.html#default-accordions-top-positioned">Default accordions (top positioned)</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="accordions.html#bottom-positioned-accordions">Bottom positioned accordions</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="tabs.html#tabs">Tabs</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tabs.html#tabs-overview">Tabs overview</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tabs.html#the-tabs-widget-structure">The tabs widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tabs.html#options-for-the-tabs-widget">Options for the tabs widget</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tabs.html#default-tabs-top">Default tabs (top)</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tabs.html#left-tabs">Left tabs</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tabs.html#right-tabs">Right tabs</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tabs.html#bottom-tabs">Bottom tabs</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tabs.html#nested-tabs-horizontal-vertical">Nested tabs (horizontal-vertical)</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tabs.html#nested-tabs-vertical-horizontal">Nested tabs (vertical-horizontal)</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="tree.html#tree">Tree</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tree.html#tree-overview">Tree overview</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tree.html#the-tree-widget-structure">The tree widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tree.html#options-for-the-tree-widget">Options for the tree widget</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tree.html#in-line-tree">In-line tree</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tree.html#default-in-line-tree">Default in-line tree</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tree.html#in-line-tree-with-auto-collapsing-branches">In-line tree with auto-collapsing branches</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="tree.html#block-tree">Block tree</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tree.html#default-block-tree">Default block tree</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="tree.html#block-tree-with-auto-collapse-of-branches">Block tree with auto-collapse of branches</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="dialog.html#dialog">Dialog</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="dialog.html#dialog-overview">Dialog overview</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="dialog.html#the-dialog-widget-structure">The dialog widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="dialog.html#options-for-the-dialog-widget">Options for the dialog widget</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="dialog.html#simple-dialog">Simple dialog</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="dialog.html#modal-dialog">Modal dialog</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="dialog.html#standard-popup-image">Standard Popup Image</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="dialog.html#popup-image-click-for-downloading">Popup Image click for downloading</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="carousel-slideshow.html#carousel-slideshow">Carousel &amp; Slideshow</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="carousel-slideshow.html#carousel-overview">Carousel overview</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#the-carousel-widget-structure">The carousel widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#options-for-the-carousel-widget">Options for the carousel widget</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#events-for-the-carousel-widget">Events for the carousel widget</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#default-carousel">Default carousel</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#with-inline-preview">With inline preview</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#with-controls">With controls</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#vertical-with-controls">Vertical with controls</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#with-custom-controls">With custom controls</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#with-custom-controls-and-cycleitemstrue">With custom controls and cycleItems=True</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="carousel-slideshow.html#slideshow">Slideshow</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#the-slideshow-widget-structure">The slideshow widget structure</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#options-for-the-slideshow-widget">Options for the slideshow widget</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#events-for-the-slideshow-widget">Events for the slideshow widget</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#default-slideshow">Default slideshow</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#with-controls-no-selectors">With controls (no selectors)</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="carousel-slideshow.html#slideshow-with-custom-controls">Slideshow with custom controls</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="alerts-notifications.html#alerts-notifications">Alerts &amp; Notifications</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="alerts-notifications.html#alert">Alert</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="alerts-notifications.html#notification">Notification</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="filter.html#filter">Filter</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="sort.html#sort">Sort</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="sort.html#list">List</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="sort.html#table">Table</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+    </ul>
+  
+
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <span class="nav-link" data-widget="collapse">plugins</span>
+            
+  
+    <ul class="nav-list nav-vertical" data-widget="menu">
+      
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="markdown.html#markdown">Markdown</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="maths.html#maths">Maths</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="maths.html#tex-example">Tex Example</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="maths.html#mathml">MathML</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="maths.html#asciimath">AsciiMath</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="syntax-highlighting.html#syntax-highlighting">Syntax Highlighting</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="syntax-highlighting.html#java">Java</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="syntax-highlighting.html#python">Python</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="syntax-highlighting.html#javascript">JavaScript</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="syntax-highlighting.html#php">PHP</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="syntax-highlighting.html#perl">Perl</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="syntax-highlighting.html#other">Other</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+    </ul>
+  
+
+          </li>
+        
+      
+        
+          <li class="nav-item">
+            <span class="nav-link" data-widget="collapse">examples</span>
+            
+  
+    <ul class="nav-list nav-vertical" data-widget="menu">
+      
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="page-templates.html#page-templates">Page templates</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#accessibility-links-template">Accessibility links template</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#minimal-global-header">Minimal global header</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#website-name-template">Website name template</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#breadcrumb-navigation-template">Breadcrumb navigation template</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#language-navigation-template">Language navigation template</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#tool-bar-template">Tool bar template</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#main-navigation-template">Main navigation template</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="page-templates.html#secondary-navigation-template">Secondary navigation template</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="article-list.html#article-list">Article list</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="article-list.html#fixed-height-articles-auto-truncate">Fixed height articles (auto-truncate)</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="article-list.html#paginated-news-list">Paginated news list</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="article-list.html#minimal-article-list">Minimal article list</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="article-list.html#news-list-with-emphasized-first-item">News list with emphasized first item</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="course-list.html#course-list">Course list</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="event-list.html#event-list">Event list</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="event-list.html#event-list-auto-truncated">Event-list (auto-truncated)</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="event-list.html#agenda-version">Agenda version</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="people-list.html#people-list">People list</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="people-list.html#condensed-people-grid-layout-2-columns">Condensed people grid layout (2 columns)</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="people-list.html#people-grid-layout">People grid layout</a>
+            
+              <span data-widget="collapse"></span>
+              <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="people-list.html#3-columns">3 columns</a>
+                  </li>
+                
+                  <li class="nav-item">
+                    <a class="nav-link" href="people-list.html#4-columns">4 columns</a>
+                  </li>
+                
+              </ul>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="people-list.html#condensed-people-list">Condensed people list</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="publication-list.html#publication-list">Publication list</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="study-plan.html#study-plan">Study plan</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="organigramme.html#organigramme">Organigramme</a>
+            </li>
+          
+        
+      
+        
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="image.html#image">Responsive Image</a>
+              <span data-widget="collapse"></span>
+              
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+      <ul class="nav-list hidden-xxl hidden-xl hidden-l hidden-m hidden-s" data-widget="menu">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#image-sans-attributs">image sans attributs</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#image-avec-attributs-width-et-height">image avec attributs width et height</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#image-avec-lattribut-style">image avec l'attribut style</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#max-width-100">max-width: 100%</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#width-100">width: 100%</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#image-entierement-visible-sur-lecran">Image entièrement visible sur l'écran</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#image-qui-remplit-tout-lecran">Image qui remplit tout l'écran</a>
+            
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="image.html#differentes-solutions">Différentes solutions</a>
+            
+          </li>
+        
+      </ul>
+    
+  
+
+            </li>
+          
+        
+      
+    </ul>
+  
+
+          </li>
+        
+      
+    </ul>
+  
+
+</nav>
+
+    </div>
+    <div id="tools" class="tools">
+      <div role="toolbar" aria-label="Page tools">
+        <span class="secondary-content" data-role="label">Share:</span>
+      </div>
+    </div>
+  </header>
+  
+<!-- The page content -->
+<main id="content" role="main" class="site-content page home-page page-wrapper" itemprop="mainEntityOfPage">
+
+  <header class="page-header">
+    <h1 class="visuallyhidden">Presentation</h1>
+    <div class="g-span-col8 g-span-s-1_1 g-span-row2 banner">
+      <img src="visual.jpg" alt=" " />
+    </div>
+    <div class="g-span-col4 g-span-s-1_1 g-span-row2">
+      <section class="panel panel-cell local-bg-color1">
+        <h2 class="panel-header">Highlights</h2>
+        <div class="panel-content">
+          <ul>
+            <li>Mobile &amp; high-definition optimized</li>
+            <li>SEO-friendly &amp; semantic</li>
+            <li>Accessible to people with disabilities</li>
+            <li>Easily usable by non-techies</li>
+            <li>Fully modular and extensible</li>
+            <li>Built on latest technologies</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </header>
+  
+  <div class="g-span-2_3 g-span-s-1_1">
+
+    <div class="page-content">
+
+      <p>A front-end framework for easy development and integration of accessible and responsive websites and webapps that follow the EPFL graphics charter.</p>
+      <p>It was designed for all webmasters and webdevelopers at EPFL and does not require any particular knowledge of CSS or JS. The only requirement is a basic knowledge of HTML.</p>
+
+      <h2>Concepts</h2>
+
+      <div class="g-row">
+        <div class="g-span-1_2">
+          <div class="media panel">
+            <h3 class="media-header panel-header">Semantic HTML markup</h3>
+            <div class="media-content panel-content">
+              <p>The framework makes full usage of <a href="http://html5doctor.com/lets-talk-about-semantics/">HTML5 semantic tags</a>, and is meant to rely heavily on <a href="http://en.wikipedia.org/wiki/Microdata_(HTML)">Microdata</a> for structuring semantic information.</p>
+            </div>
+          </div>
+        </div>
+        <div class="g-span-1_2">
+          <div class="media panel">
+            <h3 class="media-header panel-header">Decoupling data and presentation</h3>
+            <div class="media-content panel-content">
+              <p>Presentation is done via CSS classes only to stay independant from the HTML markup.</p>
+              <p>This allows a better separation between the content semantics and its styling.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="g-row">
+        <div class="g-span-1_2">
+          <div class="media panel">
+            <h3 class="media-header panel-header">Decoupling presentation and widgets</h3>
+            <div class="media-content panel-content">
+              <p>Widgets are activated through HTML5 <code>data-*</code> attributes, and are independant from the CSS styling.</p>
+              <p>All their logic and states are reflected in attributes, not CSS classes.</p>
+            </div>
+          </div>
+        </div>
+        <div class="g-span-1_2">
+          <div class="media panel">
+            <h3 class="media-header panel-header">Pure CSS transitions</h3>
+            <div class="media-content panel-content">
+              <p>Since CSS3 transitions are usually faster than JavaScript animations (using jQuery), animations in the framework are only using CSS3 transitions.</p>
+              <p>They also offer a grafeul fallback to older browsers, since they will simply be ignored.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="g-row">
+        <div class="g-span-1_2">
+          <div class="media panel">
+            <h3 class="media-header panel-header">Vector images</h3>
+            <div class="media-content panel-content">
+              <p>To better accomodate to various screen sizes and resolutions, the framework only uses vector images and icon fonts for its illustrations.</p>
+            </div>
+          </div>
+        </div>
+        <div class="g-span-1_2">
+          <div class="media panel">
+            <h3 class="media-header panel-header">Accessibility at every step</h3>
+            <div class="media-content panel-content">
+              <p>The library is built keeping accessibility in mind. The markup and the widgets are annotated to be fully WAI-ARIA compatible to guarantee easy access to the information to all users.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+
+  <aside id="sidebar" class="g-span-1_3 g-span-s-1_1 sidebar" role="complementary">
+
+  
+    <section class="panel">
+      <h2 class="panel-header">Related links</h2>
+      <nav id="links" class="panel-content nav nav-vertical" role="navigation">
+        <ul class="nav-list">
+          
+            <li class="nav-item">
+              <a class="nav-link" href="http://blogs.epfl.ch/bootstrap">Bootstrap Blog</a>
+            </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://git.epfl.ch/polyrepo/private/repository/manage.go?id=6563">Bootstrap Git Repository</a>
+            </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../scripts/index.html">JavaScript Documentation</a>
+            </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="http://atelierweb.epfl.ch">Atelier Web</a>
+            </li>
+          
+        </ul>
+      </nav>
+    </section>
+  
+
+  </aside>
+
+  <footer class="g-span-1_1 page-footer">
+    
+  </footer>
+
+</main>
+
+  <footer id="footer" class="site-footer" role="contentinfo">
+    <div class="g-span-1_1">
+      <nav class="nav nav-inline" role="navigation" aria-label="Footer links">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a class="nav-link" href="#header" accesskey="t">Back to top</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="sitemap.html" accesskey="3">Sitemap</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="mailto:webmaster@epfl.ch" accesskey="9">Webmaster</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="all.html">Everything on a single page</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="accessibility.html" accesskey="0"><meta itemprop="accessibilityAPI" content="ARIA"/>Accessibility</a>
+          </li>
+          <li class="nav-item secondary-content"><meta itemprop="lastReviewed" content="2016-08-25T07:13:01.778Z"/>Updated 25 Aug 2016</li>
+          <li class="nav-item secondary-content"> &copy; <span itemprop="copyrightHolder">EPFL</span> <span itemprop="copyrightYear">2016</span></li>
+          <!--li class="nav-item login">
+            <a class="nav-link" href="?logout"><span class="icon icon-lock-locked"></span>Login</a>
+          </li-->
+        </ul>
+      </nav>
+    </div>
+  </footer>
+</div>
+
+  <script src="//static.epfl.ch/v0.22.15/scripts/epfl-jquery-built.js"></script>
+<script>var jslib="epfl-jquery";</script><script>
+  // Create code examples
+  require([jslib], function($){
+    $('.example').each(function(){
+      var html = this.innerHTML.replace(/</g, '&lt;').replace(/:/g, '&#58;');
+      var $code = $('<div class="code"><pre><code class="language-html"></code></pre></div>');
+      $(this).after($code);
+      $code.find('code').html(html);
+    });
+  });
+  require([jslib, 'lazyload'], function($, lazyload){
+    'use strict';
+    // Open print dialog when printing
+    if (window.location.search.indexOf('print') != -1) { window.print(); }
+    $(function() {
+      // Highlight current item in nav
+      function updateNav() {
+        var slug = window.location.pathname.match(/([^\/]*)\.html$/);
+        $('.localnav .nav-item[data-category]')
+          .attr('aria-hidden', 'true')
+          .css({'display': 'none', 'visibility': 'hidden'});
+        var hash = window.location.hash
+        $('.nav-item-active', '.mainnav, .localnav').removeClass('nav-item-active');
+        if (slug) {
+          var link = $('.localnav .nav-link[href="'+slug[1]+'.html'+hash+'"]');
+          if (link.length) {
+            var item = link.closest('.nav-item').addClass('nav-item-active');
+            $('.localnav .nav-item[data-category="'+item.attr('data-category')+'"]')
+              .attr('aria-hidden', 'false')
+              .css({'display': 'inherit', 'visibility': 'visible'});
+          }
+          link = $('.mainnav .nav-link[href="'+slug[1]+'.html'+hash+'"]');
+          if (link.length) {
+            var $item = link.closest('.nav-item:not(.hidden-xs)').addClass('nav-item-active');
+            link.parents('.nav-item').last().addClass('nav-item-parent');
+            if (!$item.attr('id')) {
+              $item.attr('id', _.getGUID('nav-item-'));
+            }
+            $('.mainnav [role="menubar"]').attr('aria-activedescendant', $item.attr('id'));
+          }
+        }
+        $('[role="tree"]').epfl_tree('selectItem', $('[role="tree"] .nav-item-active'));
+      };
+      updateNav();
+      $(window).on('hashchange', function() { updateNav(); });
+      
+      window.setTimeout(function() {
+        _.LazyLoad.load();
+      })
+      // Toggle code examples on click
+      $(document).on('click', '.code, .template', function(e){ $(this).toggleClass('expanded').children().toggle(); })
+      $(document).on('click', '.code pre, .template pre', function(e) { e.stopPropagation(); });
+      // Show background color in table cells
+      $('.table.bgColor').find('td span, td code').each(function(){
+        var $this = $(this);
+        var bgColor = $this.css('background-color');
+        var hexColor = bgColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/).slice(1,4).map(function(x){
+          return ('0' + parseInt(x).toString(16)).slice(-2);
+        }).join('');
+        $this.html('&nbsp;#' + hexColor + '&nbsp;');
+      });
+    });
+    // Overwrite local site search
+    require(['search'], function(s){
+      $('#epfl-header').epfl_search('update', {engines:{site:{url: 'search.html',ac: false}}});
+    });
+  });
+  
+</script>
+
+</body>
+</html>
