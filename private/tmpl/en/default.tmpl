@@ -1,0 +1,39 @@
+<TMPL_INCLUDE NAME="head.tmpl">
+
+<TMPL_IF NAME=sMsg>
+	<p><TMPL_VAR NAME=sMsg></p>
+	<hr>
+</TMPL_IF>
+
+<h3>On line CFF tickets</h3>
+<!--
+<div class="redborder">
+<p>
+<center><b>Ticketshop CFF is unavailable.</b></center>
+<p></p>
+For urgent orders, please call <b>0848 111 456</b>.
+</p>
+</div>
+-->
+You can use this application to order CFF tickets on line for people belonging to one of 
+your units.
+<p>You need to have the right <b>bilets CFF</b> or the administrative manager role
+(<b>respadmin</b>) to access the application.
+<br>
+Please contact your accreditor for details.</p>
+<p><a href="<TMPL_VAR NAME="spathMe">/priv?lang=en"><img src="http://ditdevsrv4.epfl.ch/cff/images/leftarrow.gif" border="0" align="middle"> <b>Login</b></a> to enter the application</p>
+
+<!--
+<hr>
+<div style="border:solid 1px; padding:2px;">
+<b>Problems with the Ticketshop</b><br>
+The Ticketshop is currently experiencing some dysfunctions. We are working to improve this situation. If you are unable to make an urgent booking, you may temporarily call the EPFL (CWT) Travel Agency.
+</div>
+-->
+
+<!-- start menu column -->
+<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<!-- end menu column -->
+
+
+<TMPL_INCLUDE NAME="footer.tmpl">

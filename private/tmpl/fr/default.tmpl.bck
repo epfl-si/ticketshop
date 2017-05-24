@@ -1,0 +1,49 @@
+<TMPL_INCLUDE NAME="head.tmpl">
+
+<TMPL_IF NAME=sMsg>
+	<p><TMPL_VAR NAME=sMsg></p>
+	<hr>
+</TMPL_IF>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr valign="top">
+  
+<!-- start menu column -->
+<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<!-- end menu column -->
+
+<td>
+<h3>Commande de billets CFF en ligne</h3>
+
+<p>
+A travers cette interface vous pouvez effectuer les commandes de billets CFF pour le personnel des unités
+sous votre contrôle d'accréditation.
+<p>Il faut disposer du droit <b>billets CFF</b> ou du rôle de responsable administratif (<b>respadmin</b>) pour l'accès.
+<br>
+Veuillez contacter votre responsable accréditation pour plus de détails.</p>
+<p>Effectuer le <a href="<TMPL_VAR NAME="spathMe">/priv?lang=fr"><img src="http://ditdevsrv4.epfl.ch/cff/images/leftarrow.gif" border="0" align="middle"> login</b></a> pour l'accès à l'application</p>
+
+<h3>FAQs</h3>
+<li><b>Mon compte CFF est bloqué? Que faire?</b></li>
+<ul>L'accès à l'application de commande de billets CFF en ligne peut être vérouillé après plusieurs échecs
+successifs. <b>Ce problème n'est pas lié à l'identification Gaspar/Tequila, donc il n'y a pas besoin de changer
+votre mot de passe GASPAR.</b> En attendant que la procédure officielle de déblocage nous soit communiquée par
+les CFF, veuillez nous <a href=mailto:webmaster@epfl.ch>contacter</a> pour nous informer de votre problème.
+</ul>
+<li><b>Je suis accréditeur pour l'unité XYZ, mais je ne peux pas donner le droit <i>billets CFF</i> </b></li>
+<ul>
+Le droit <b>billets CFF</b> peut être donné seulement par les personnes qui ont le rôle <b>responsable
+administratif</b>
+</ul>
+<li><b>J'ai le rôle responsable accréditation mais je ne peux pas donner le droit <i>billets
+CFF</i></b></li>
+<ul>Un responsable accréditation peut donner le rôle <b>responsable administratif</b> qui permet la
+gestion du droit <b>billets CFF</b>
+</ul>
+
+</td>
+
+ </tr>	
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

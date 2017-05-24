@@ -1,0 +1,38 @@
+<TMPL_INCLUDE NAME="head.tmpl">
+
+<TMPL_IF NAME=sErrMsg>
+  <p class=redborder align=center>  <TMPL_VAR NAME="sErrMsg"></p>
+</TMPL_IF>
+
+<p>Veuillez sélectionner un <b>Centre Financier</b> et un <b>fonds</b>:</p>
+<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sFormaction>" target="bottom">
+  <table width="100%" border="0">
+    <tr height="40" valign="bottom">
+      <td><div align="right">No. Voyage</div></td>
+      <td><input name="sNoVoyage"></td>
+    </tr>
+    
+    <tr>
+      <td width="14%"><div align="right">Centre Financier</div></td>
+      <td width="86%"><TMPL_VAR NAME=sCF></td>
+    </tr>
+    <tr height="30" valign="top">
+      <td><div align="right">Fonds</div></td>
+      <td><TMPL_VAR NAME=sFonds></td>
+    </tr>
+
+  </table>
+<TMPL_IF NAME="sErrMsg">
+<TMPL_ELSE>
+   <p>
+	 <input type="submit" name="mod" value="continuer"> vers la commande de billets CFF en ligne
+   </p>
+</TMPL_IF>
+</form>
+
+  
+<!-- start menu column -->
+<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<!-- end menu column -->
+
+<TMPL_INCLUDE NAME="footer.tmpl">

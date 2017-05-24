@@ -1,0 +1,39 @@
+<TMPL_INCLUDE NAME="head.tmpl">
+
+<TMPL_IF NAME=sMsg>
+	<p><TMPL_VAR NAME=sMsg></p>
+	<hr>
+</TMPL_IF>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr valign="top">
+  
+<!-- start menu column -->
+<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<!-- end menu column -->
+
+<td>
+<h3>CFF on line tickets</h3>
+Please choose a <b>Financial Center</b> and a <b>fond</b>:
+<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sFormaction>">
+  <table width="100%" border="0">
+    <tr>
+      <td width="14%"><div align="right">Financial Center</div></td>
+      <td width="86%"><TMPL_VAR NAME=sCF></td>
+    </tr>
+    <tr height="30" valign="top">
+      <td><div align="right">Fond</div></td>
+      <td><TMPL_VAR NAME=sFonds></td>
+    </tr>
+  </table>
+<p>
+  <input type="submit" name="mod" value="continue"> to CFF on line tickets
+</p>
+</form>
+
+</td>
+
+ </tr>	
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

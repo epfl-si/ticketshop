@@ -1,0 +1,61 @@
+<TMPL_INCLUDE NAME="head.tmpl">
+
+<TMPL_IF NAME=sMsg>
+	<p><TMPL_VAR NAME=sMsg></p>
+	<hr>
+</TMPL_IF>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr valign="top">
+  
+<!-- start menu column -->
+<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<!-- end menu column -->
+
+<td>
+<h3>Paiement en ligne</h3>
+<b>Instance <TMPL_VAR NAME=sIdInstance></b>
+<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sFormaction>">
+  <table width="100%" border="0">
+    <tr>
+      <td width="14%"><div align="right">CF</div></td>
+      <td width="86%"><TMPL_VAR NAME=sCF></td>
+    </tr>
+    <tr height="30" valign="top">
+      <td><div align="right">Fonds</div></td>
+      <td><TMPL_VAR NAME=sFonds></td>
+    </tr>
+    <tr>
+      <td><div align="right">Description</div></td>
+      <td><textarea name="descr" cols="48" rows="3" id="descr"><TMPL_VAR NAME=sdescr></textarea></td>
+    </tr>
+    <tr>
+      <td><div align="right">Date d&eacute;but</div></td>
+      <td><input name="datedeb" type="text" id="datedeb" value="<TMPL_VAR NAME=sdatedeb>" /></td>
+    </tr>
+    <tr>
+      <td><div align="right">Date fin </div></td>
+      <td><input name="datefin" type="text" id="datefin" value="<TMPL_VAR NAME=sdatefin>" /></td>
+    </tr>
+    <tr>
+      <td><div align="right">URL Retour </div></td>
+      <td><input name="url" type="text" id="url" size="48"  value="<TMPL_VAR NAME=sURL>"/></td>
+    </tr>
+    <tr>
+      <td><div align="right">Etat</div></td>
+      <td><TMPL_VAR NAME=sEtat>
+      </td>
+    </tr>
+  </table>
+<p>
+	<input type="submit" name="mod" value="enregistrer">
+	<input type="submit" name="del" value="effacer">
+</p>
+</form>
+
+</td>
+
+ </tr>	
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,0 +1,27 @@
+<td width="155">
+   <table width="100%" cellpadding="3" cellspacing="0" border="0">
+   <tr valign="top" align="left">
+   <td>
+
+   <!-- start links menu -->
+   <table width="155" border="0" cellspacing="2" cellpadding="0">
+   <tr>
+   <td bgcolor="FF0000">
+   <img src="http://www.epfl.ch/tools/label.php?s=14&label=LIENS+UTILES&BG=FF0000">
+   </td>
+   </tr>
+   <tr>
+    <td>
+     <a href="http://www.epfl.ch/administration/sf/voyages.htm#cff"
+     target="_blank">aide</a><br>      
+     <TMPL_IF NAME=sAuthstr>
+     <hr>user: <TMPL_VAR NAME=sPrenom>&nbsp;<TMPL_VAR NAME=sNom>
+     </TMPL_IF>
+    </td>
+   </tr>
+   </table>
+   <!-- end links menu -->
+
+   </tr>
+   </table>
+</td>

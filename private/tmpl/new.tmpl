@@ -1,0 +1,38 @@
+<TMPL_INCLUDE NAME="head.tmpl">
+
+<TMPL_IF NAME=sMsg>
+	<p><TMPL_VAR NAME=sMsg></p>
+	<hr>
+</TMPL_IF>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr valign="top">
+  
+<!-- start menu column -->
+<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<!-- end menu column -->
+
+<td>
+<h3>Billets CFF en ligne</h3>
+<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sFormaction>">
+  <table width="100%" border="0">
+    <tr>
+      <td width="14%"><div align="right">CF</div></td>
+      <td width="86%"><TMPL_VAR NAME=sCF></td>
+    </tr>
+    <tr height="30" valign="top">
+      <td><div align="right">Fonds</div></td>
+      <td><TMPL_VAR NAME=sFonds></td>
+    </tr>
+  </table>
+<p>
+  <input type="submit" name="mod" value="continuer"> vers la commande de billets CFF en ligne
+</p>
+</form>
+
+</td>
+
+ </tr>	
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">

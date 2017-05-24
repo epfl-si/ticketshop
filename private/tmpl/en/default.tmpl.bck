@@ -1,0 +1,46 @@
+<TMPL_INCLUDE NAME="head.tmpl">
+
+<TMPL_IF NAME=sMsg>
+	<p><TMPL_VAR NAME=sMsg></p>
+	<hr>
+</TMPL_IF>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
+  <tr valign="top">
+  
+<!-- start menu column -->
+<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<!-- end menu column -->
+
+<td>
+<h3>On line CFF tickets</h3>
+You can use this application to order CFF tickets on line for people belonging to one of 
+your units.
+<p>You need to have the right <b>bilets CFF</b> or the administrative manager role
+(<b>respadmin</b>) to access the application.
+<br>
+Please contact your accreditor for details.</p>
+<p><a href="<TMPL_VAR NAME="spathMe">/priv?lang=en"><img src="http://ditdevsrv4.epfl.ch/cff/images/leftarrow.gif" border="0" align="middle"> <b>Login</b></a> to enter the application</p>
+
+<h3>FAQs</h3>
+<li><b>My TicketShop account is locked? What can I do?</b></li>
+<ul>Your TicketShop account is locked after several login failures. <b>This problem is not related to
+your Gaspar/Tequila identification. No need to change your Gaspar password.</b> Until the
+offcial procedure to unlock the account is be available, please <a href=mailto:webmaster@epfl.ch>contact us</a>.
+</ul>
+<li><b>I am accreditor in my unit but I can't control the right <i>billets CFF</i> </b></li>
+<ul>
+The right <b>billets CFF</b> is managed only by people having the <b>administrative manager</b> role
+</ul>
+<li><b>I have the accreditation manager role but I can't control the right <i>billets
+CFF</i></b></li>
+<ul>People with accreditation manager role can give the <b>administrative manager</b> role which 
+controls the <b>billets CFF</b> right
+</ul>
+
+</td>
+
+ </tr>	
+</table>
+
+<TMPL_INCLUDE NAME="footer.tmpl">
