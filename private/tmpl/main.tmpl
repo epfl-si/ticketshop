@@ -5,6 +5,7 @@
 <TMPL_ELSE>
 
 		<div class="col-md-12" >
+			<h3>Déplacement avec dossier de voyage dans SESAME</h3>
 			<form name="form" method="post" action="<TMPL_VAR NAME=sPathMe>/main" style="margin-top: 20px;">
 			<h4>Bénéficiaire du voyage</h4>
 			Recherche par nom ou sciper : <input name="person" >
@@ -83,7 +84,7 @@
 		<TMPL_ELSE>
 			<div class="col-md-12" id="choix_cf" style="margin-top: 20px; display: block;">
 				ou
-				<h4>Voyage sans dossier actif</h4>
+				<h4>Autres cas (Notes de frais dans I-monitor ou hors voyage)</h4>
 
 				<div class="row" style="margin-bottom: 10px;">
 					<div class="col-md-5" >
@@ -103,6 +104,7 @@
 					</div>
 				</div>
 
+<!--
 				<div class="row" style="margin-bottom: 10px;">
 					<div class="col-md-5" >
 						Numéro du voyage
@@ -111,7 +113,7 @@
 						<input name="sNoVoyage">
 					</div>
 				</div>
-		 
+-->	 
 			</div>
 		</TMPL_IF>		
 

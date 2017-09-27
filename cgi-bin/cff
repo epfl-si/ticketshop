@@ -2,7 +2,7 @@
 #
 ##############################################################################
 #
-# File Name:    ress.pl
+# File Name:    cff
 # Author:       Ion CIONCA (Ion.Cionca@epfl.ch) - 2005
 #
 #########################################################################
@@ -96,10 +96,8 @@ warn "--> main :: op=$args{op}, person=$args{person}\n";
 		if ( $person =~ /\d\d\d\d\d\d/ ) {
 			$user 		  = getUserBySciper( $person );
 			$args{op} = 'found' if $user;
-warn "--> main :: op=$args{op}, name=$user->{name}\n";
 		} else {
 			my $users = getUsersByName( $person );
-		#		erreur ( "collaborateur pas trouvé" ) unless $users;
 			if ( scalar keys %$users > 1 ) {
 				my @persons_loop;
 				foreach my $sciper ( sort { $users->{$a}->{name} cmp $users->{$b}->{name} } keys %$users ) {
@@ -370,17 +368,21 @@ warn " ** ERROR : $err_msg\n";
 #_________________
 sub authenticate {
 
+  my $droit = 'droit-railticket';
+  my $role  = 'role-respadmin';
+
   unless ($tequila) {
-    $tequila = new Tequila::Client ();
+    $tequila = new Tequila::Client (
+	  service    => 'Commande de billets CFF en ligne',
+	  request    => [ 'name','firstname','uniqueid','email','where',$role ],
+	  identities => 'any',
+	  urlaccess  => "https://$ENV{SERVER_NAME}/cgi-bin/cff/priv?$ENV{QUERY_STRING}",
+    );
     $tequila->init ();
   } 
 
-  my $droit = 'droit-railticket';
-  my $role  = 'role-respadmin';
   $tequila->setclientsesskey ($key) if $key;
-  $tequila->setservice  ('Billets CFF en ligne');
   $tequila->setlang  	($lang);
-  $tequila->request     ('name','firstname','uniqueid','email','where',$role);
   $tequila->require     ($droit);
 
   $tequila->authenticate ();
