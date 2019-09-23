@@ -1,0 +1,285 @@
+
+#header2013 {
+    width: 1100px; 
+  padding: 0 8px;
+}
+
+#nav-search {
+  width: 444px; 
+}
+
+#header2013 input.search {
+   width: 299px;
+  height:  25px;
+}
+
+#header2013 .navigation-panel {
+   width: 1100px;
+}
+
+#header2013 #nav-logo a {
+   height: 46px;
+}
+
+#main-content {
+        width: 1100;
+//  padding-top: 10px;
+}
+
+#result-content {
+  list-style-type: none;
+  padding-left: 160;
+}
+
+#result-content ul {
+  list-style-type: none;
+  padding-left: 25px;
+}
+
+#result-content table {
+  border: solid 1px #000;
+  background-color: linen;
+            border: solid 1px #000;
+            margin: 20px;
+   border-collapse:  collapse;
+}
+
+#result-content table thead th {
+  background-color: #DCDDDE;
+  font-weight: bold;
+  text-align: left;
+}
+
+#result-content table td {
+  border: solid 1px #000;
+  margin: 5px;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+#result-content table th {
+  font-weight: bold;
+  text-align: right;
+  border: solid 1px #000;
+  margin: 5px;
+  padding: 5px;
+}
+
+#result-content h3 {
+  background-color: #F0E0E0;
+  font-weight: bold;
+  padding-left: 5px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 2px ridge linen;
+  border-bottom: 2px ridge linen;
+  margin-bottom: 20px;  font-weight: bold;
+}
+
+#popup table {
+  border: solid 1px #000;
+  background-color: linen;
+            border: solid 1px #000;
+            margin: 20px;
+   border-collapse:  collapse;
+            margin: auto;
+}
+
+#popup table thead th {
+  background-color: #DCDDDE;
+  font-weight: bold;
+  text-align: left;
+}
+
+#popup table td {
+  border: solid 1px #000;
+  margin: 5px;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+#popup table th {
+  font-weight: bold;
+  text-align: right;
+  border: solid 1px #000;
+  margin: 5px;
+  padding: 5px;
+}
+
+#subtable {
+  margin: 0px;
+}
+
+#subtable table {
+  margin: 0px;
+   width: 100%;
+  border: 2px;
+  border-color: #AAAAAA;
+  border-collapse: collapse;
+}
+
+#subtable table th {
+    width: 120px;
+   margin: 0px;
+  padding: 5px;
+  border-color: #AAAAAA;
+}
+
+#subtable table td {
+   margin: 0px;
+  padding: 5px;
+  border-color: #AAAAAA;
+}
+
+#modiftable {
+  margin: 0px;
+}
+
+#modiftable table {
+  margin: 0px;
+  border: 2px;
+  border-collapse: collapse;
+}
+
+#modiftable table th {
+   margin: 0px;
+  padding: 5px;
+  text-align: center;
+}
+
+#modiftable table td {
+   margin: 0px;
+  padding: 2px;
+  text-align: center;
+}
+
+a {
+       font-weight: bolder;
+   text-decoration: none;	
+  background-image: none;	
+}
+
+a:hover {
+       color: #9EC068;
+  background: inherit;
+}
+	
+#sidebar {
+       float: left;
+     padding: 0;
+ padding-top: 10;
+      margin: 0;	
+       width: 160px;
+}
+	
+#sidebar .left-title {
+   text-align: center;
+      padding: 5px 5px 5px 10px; 
+  font-weight: bolder;
+        color: #555;
+       border: 1px solid #959595;
+  font-size: smaller;
+}
+
+#sidebar .left-box {
+  border: 1px solid #CECECE;
+  padding: 0px;
+  margin: 0 0 5px 0;	
+  font-size: smaller;
+}
+
+#sidebar ul.sidemenu {
+  list-style: none;
+  text-align: left;
+  margin: 3px 0 8px 0; padding: 0;
+  text-decoration: none;		
+}
+
+#sidebar ul.sidemenu li {
+  border-bottom: 1px solid #EFF0F1;
+  background: url('/images/go.gif') no-repeat 5px 5px;	
+  padding: 2px 0 2px 25px;
+  margin: 0 2px;	
+}
+
+#sidebar ul.sidemenu a {
+  font-weight: bolder;
+  text-decoration: none;	
+  background-image: none;	
+}
+
+#sidebar ul.sidemenu b {
+  font-weight: bolder;
+}
+
+//
+// Table
+//
+
+.bluetable {
+  background-color: linen;
+            border: solid 1px #000;
+        margin-top: 20px;
+}
+
+.bluetable .bluelabel {
+            margin: 5px;
+        margin-top: 20px;
+  background-color: linen;
+        text-align: right;
+       font-weight: bold;
+}
+
+.bluetable td {
+  background-color: linen;
+  border: solid 1px #000;
+  margin: 5px;
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.bluetable th {
+  text-align: right;
+  background-color: linen;
+  border: solid 1px #000;
+  margin: 5px;
+  padding: 5px;
+}
+
+.bluetable thead {
+  background-color: #DCDDDE;
+  font-weight: bold;
+  text-align: left;
+}
+
+.bluetable a {
+       font-weight: bolder;
+   text-decoration: none;	
+  background-image: none;	
+}
+
+.label {
+   text-align: right;
+  font-weight: bold;
+}
+
+.grouplabel {
+  text-align: right;
+  font-weight: bold;
+}
+
+.bluetitle {
+   text-align: left;
+  font-weight: bold;
+
+}
+
+
+
+
+
+
+
+
+
+

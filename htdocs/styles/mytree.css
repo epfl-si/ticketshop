@@ -1,0 +1,50 @@
+
+.tree {
+  font: 10pt Verdana,sans-serif;
+  color: navy;
+}
+
+.branch {
+  display: none;
+  margin-left: 16px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background-image: url("/images/bar.gif");
+  background-repeat: repeat-y;
+  background-position: left;
+}
+
+.treeitem {
+  font: bold 11px verdana, arial, sans-serif;
+  margin: 0px;
+}
+
+.trigger {
+  cursor: pointer;
+  margin: 0px;
+  white-space: nowrap;
+}
+
+.trigger a {
+  font-size: 8pt;
+}
+
+.triggerimage {
+  margin: 0px;
+  border: 0px;
+  vertical-align: middle;
+}
+
+a:active, a:link {
+  color: #003366;
+  font-weight: bold;
+  font-family: Verdana, Helvetica,  Arial, Geneva, Swiss, SunSans-Regular, sans-serif;
+  text-decoration: none
+}
+
+a:visited, a:hover {
+  color: #336699;
+  font-weight: bold;
+  font-family: Verdana, Helvetica, Arial, Geneva, Swiss, SunSans-Regular, sans-serif;
+  text-decoration: none
+}

@@ -41,7 +41,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 	$RIGHT_NAME		= 'railticket';
 	$USE_DOSSIERS = 1;
 
-#	$tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/preprod/';
+	$tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/preprod/';
 	
 	my $help	= {
 		help_epfl => {
@@ -432,7 +432,7 @@ sub authenticate {
   }
 
 	my $rights = $Accreds->getAllUnitsWhereHasRight ($sciper, $RIGHT_NAME);	#	- 'railticket'
-warn " >> cff $sciper , $RIGHT_NAME: rights\n".Dumper($rights);
+#warn " >> cff $sciper , $RIGHT_NAME: rights\n".Dumper($rights);
 	$fonds		  = getFonds ($rights);
   
   $login_person = getPersonData ($sciper);
@@ -617,7 +617,7 @@ sub genkey {
 sub initTempl {
    my ($tmplpath) = @_;
 
-warn "cff initTempl: $tmpldir$tmplpath";
+#warn "cff initTempl: $tmpldir$tmplpath";
    my $template = HTML::Template->new(filename => $tmpldir.$tmplpath,
 	   strict => 0,
 	   cache => 1,

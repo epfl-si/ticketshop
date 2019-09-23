@@ -1,0 +1,33 @@
+body	{ 
+	color: #000000; 
+	font-size: 10px; 
+	font-family: Verdana, Helvetica, Arial, Geneva, Swiss, SunSans-Regular, sans-serif 
+}
+.redborder {
+	border: 1px solid #FF0000;
+	padding:4px
+}
+.editbox {
+	border: 1px solid #2e8b57;
+	background-color : #E2F5EC;
+	padding:4px
+}
+.litegray {
+	border: 1px solid #666666;
+	background-color : #EEEEEE;
+}
+.greyborder {
+	border: 1px solid #999999;
+	padding:4px
+}
+.layer1 {
+	position:absolute;
+	width:400px;
+	height:50px;
+}
+.layer2 {
+	position:absolute;
+	width:400px;
+	height:50px;
+	visibility: hidden;
+}
