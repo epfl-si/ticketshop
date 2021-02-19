@@ -1,0 +1,400 @@
+#!/usr/bin/perl
+#
+
+use lib qw(/opt/dinfo/lib/perl);
+
+use strict;
+use utf8;
+use Net::LDAPS;
+use Data::Dumper;
+use XML::LibXML;
+use Net::CIDR;
+use Net::CIDR ':all';
+
+use Cadi::WSUtils;
+use Cadi::CadiDB;
+use Cadi::Accreds;
+
+#	- params
+my $rechnungsstelle = 'EPFL'; # - facture
+my $firmaID 				= 'epfl.ch';
+my $password 				= 'epfl05';
+my $vertragsnummer 	= 'EPFL776';
+my @YP_IP_range			= ('128.178.1.146', '194.150.244.64/27', '195.65.152.0/24', '195.65.154.0/24');
+my $firmaBez				= 'EPFL';
+
+my $REGEX_EMAIL			= '^[a-z0-9._\-+]+@[a-z0-9.-]+\.[a-z]{2,}$';
+my $REGEX_ID				= '^[1-9]\d{5}$';
+
+my $RIGHT_NAME			= 'railticket';
+
+my $CHECK_IPRANGE		= 1;
+my $DEBUG 			 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
+my $PURGEDATA				= 0;
+
+#	 $rechnungsstelle = 'RST_EPFL_1' if $DEBUG;
+	 $CHECK_IPRANGE 	= 0 if $DEBUG;
+
+warn ">> artifactServer : IP=$ENV{REMOTE_ADDR}\n";
+	checkIPRange();
+
+	my $ldap = Net::LDAPS->new('ldap.epfl.ch') or die "new LDAP : $!";
+
+	my	$req = Cadi::WSUtils::loadreq ();
+
+	my @param_keys = keys %{$req->{args}}	;
+	my $param = $param_keys[0].'='.$req->{args}->{$param_keys[0]};
+
+	my $action = getParams ($param);
+
+	my $dbh = new Cadi::CadiDB (
+		dbname => 'cff',
+	);
+	my $dbh_dinfo = new Cadi::CadiDB (
+		dbname => 'dinfo',
+	);
+	my $Accreds	= new Cadi::Accreds (caller => '104782', utf8 => 1);
+	
+	getArtifactID ($action->{email}) 			if $action->{op} eq 'getArtifactID';
+	getArtifact	  ($action->{artifactID}) if $action->{op} eq 'getArtifact';
+ 	error ('22', 'Unsupported operation');
+
+	exit;
+
+sub getParams {
+	my $msg = shift;
+warn ">> getParams : msg\n".Dumper($msg);	
+	error ('21', 'Missing parameters') unless $msg;
+
+	my $dom = XML::LibXML->load_xml(string => $msg);
+	my $xpc = XML::LibXML::XPathContext->new($dom);
+	$xpc->registerNs('ns3', 'http://xmlns.sbb.ch/zvs/splp/artifact');
+	
+ 	my $email = $xpc->findvalue('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifactID/email');
+warn ">> email=$email\n";
+ 	if ($email) {
+		error ('21', 'Illegal parameter') unless $email =~ m/$REGEX_EMAIL/i;
+		return { 
+			op 		=> 'getArtifactID',
+			email => $email,
+		};
+ 	}
+	
+	my $artifactID = $xpc->findvalue('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifact/artifactID/id');
+	error ('21', 'Unknown parameter') unless $artifactID;
+warn ">> id=$artifactID\n";
+	error ('21', 'Illegal parameter') unless $artifactID =~ m/$REGEX_ID/i;
+ 	
+	return { 
+		op 				 => 'getArtifact',
+		artifactID => $artifactID,
+	} ;
+	
+ 	error ('21', 'Missing parameter');
+
+}
+
+sub getArtifactID {
+	my $email = shift;
+warn ">> getArtifactID : $email\n";
+	error ('21', 'Missing Email parameter') unless $email;
+
+	my $user = getUserByEmail($email);
+	error ( '2', 'User not found') unless $user;
+
+#	- search for artifact
+# 	my $sql = qq{select id, sciper, email from transactions where email=? order by datecrt desc};
+# 	my $sth = $dbh->prepare( $sql ) or die "** ERR people prepare :$sql: $DBI::errstr\n";
+# 	$sth->execute ($email) 					or die "** ERR execute : $DBI::errstr\n";
+# 	my $data = $sth->fetchrow_hashref;
+# 	error ( '2', 'artifactID not found') unless $data->{id} && $data->{sciper} && $data->{email} eq $email;
+#warn ">> getArtifactID : user\n".Dumper($user);
+	
+	SOAPreturn (qq{<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:getArtifactIDResponse xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
+         <return>
+            <id>$user->{sciper}</id>
+         </return>
+      </ns2:getArtifactIDResponse>
+   </soap:Body>
+</soap:Envelope>
+});
+
+}
+
+sub getArtifact {
+	my $sciper = shift;
+warn ">> getArtifact : $sciper\n";
+	error ('21', 'Missing artifactID') unless $sciper;
+ 	my $user = getUser($sciper);
+ 	error ('2', 'User not found') unless $user;
+
+	my $output = qq{<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:getArtifactResponse xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
+         <return>
+            <artifactID>
+               <id>$sciper</id>
+            </artifactID>
+            <email>$user->{email}</email>
+            <vertragsnummer>$vertragsnummer</vertragsnummer>
+            <rechnungsstellen>
+               <bezeichnung>$rechnungsstelle</bezeichnung>
+  };
+
+# - get traveller
+	my $sql = qq{select 
+		no as no_dossier, no_fond, benef_sciper 
+		from transactions 
+		where sciper=?
+		order by datecrt desc};
+	my $sth = $dbh->prepare( $sql ) or die "** ERR prepare :$sql: $DBI::errstr\n";
+	$sth->execute ($sciper) 				or die "** ERR execute : $DBI::errstr\n";
+	my ($traveller_data);
+	my $data = $sth->fetchrow_hashref;
+	my $no_dossier = $data->{no_dossier};
+	my $no_fond 	 = $data->{no_fond};
+
+warn ">> getArtifact : data\n".Dumper($data);
+	if ($data->{benef_sciper}) {
+		my $benef = getUserBySciper($data->{benef_sciper});
+# 		utf8::encode($benef->{name});
+# 		utf8::encode($benef->{firstname});
+warn ">> getArtifact : benef\n".Dumper($benef);
+		next unless $benef;
+		my $anrede 	= $benef->{sexe} eq 'F' ? 'FRAU' : 'HERR';
+		$traveller_data .= qq{
+           <mitreisende>
+            <anrede>$anrede</anrede>
+            <name>$benef->{name}</name>
+            <vorname>$benef->{firstname}</vorname>
+            <geburtsdatum>$benef->{birthdate}</geburtsdatum>
+            <email>$benef->{email}</email>
+           </mitreisende>
+    };
+	}
+	
+	if ($no_fond) {
+			$output .= qq{
+                  <kostenzuordnungen>
+                    <bezeichnung>$no_fond</bezeichnung>
+                  </kostenzuordnungen>               
+                  <referenz>$no_fond</referenz>
+			};
+	} else {
+		my $rights = $Accreds->getAllUnitsWhereHasRight ($sciper, $RIGHT_NAME);	#	- 'railticket'
+		my $fonds	 = getFonds ($rights);
+		foreach my $fond (sort keys %$fonds) {
+			$output .= qq{
+                  <kostenzuordnungen>
+                    <bezeichnung>$fond</bezeichnung>
+                  </kostenzuordnungen>               
+       };
+		}
+	}
+	$output .= qq{
+                  <referenz2>$no_dossier</referenz2>
+  } if $no_dossier;
+	 	
+ 	$output .= qq{
+            </rechnungsstellen>
+            <sprache>fr</sprache>
+            <telefonnummer>$user->{phone}</telefonnummer>
+            <personalnummer>$sciper</personalnummer>
+            <geschaeftsadresse>
+               <firmaBez>EPFL</firmaBez>
+               <strasse>av Piccard</strasse>
+               <plz>1015</plz>
+               <ort>Lausanne</ort>
+               <land>CH</land>
+            </geschaeftsadresse>
+  };
+
+
+  $output .= qq{
+          $traveller_data
+  } if $traveller_data;
+ 
+	$output .= qq{
+        </return>
+      </ns2:getArtifactResponse>
+   </soap:Body>
+</soap:Envelope>
+  };
+
+	#	- remove travel data for user
+	if ($PURGEDATA) {
+		my $sql = qq{delete from transactions where sciper=?};
+		my $sth = $dbh->prepare( $sql ) or die "** ERR prepare :$sql: $DBI::errstr\n";
+		$sth->execute ($sciper) 		or die "** ERR execute : $DBI::errstr\n";
+		warn ">> getArtifact : purge transactions for sciper : $sciper\n";
+	}
+	
+	SOAPreturn ($output);
+
+}
+
+
+sub error {
+	my $status = shift;
+	my $msg		 = shift;
+	
+warn ">> error : $status, $msg\n";
+	SOAPreturn (qq{<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+<soap:Body>
+ <soap:Fault>
+   <faultcode>soap:Server</faultcode>
+   <faultstring>Fault occurred while processing.</faultstring>
+   <detail>
+    <ns2:faultMessage xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
+      <errors>
+       <errorCode>$status</errorCode>
+       <errorMessage>$msg</errorMessage>
+      </errors>
+    </ns2:faultMessage>
+   </detail>
+ </soap:Fault>
+</soap:Body>
+</soap:Envelope>
+});
+
+}
+
+sub SOAPreturn {
+	my $msg = shift;
+warn ">> SOAPreturn : $msg\n";
+	return unless $msg;
+	my $msglen = length ($msg);
+	print qq{Content-Type: text/xml; charset=utf-8
+Content-Length: $msglen
+
+$msg
+};
+	exit;
+}
+
+sub ip2dec ($) {
+    unpack N => pack CCCC => split /\./ => shift;
+}
+
+sub checkIPRange {
+	return 1 unless $CHECK_IPRANGE;
+	my $addr = $ENV{REMOTE_ADDR};
+	error ('21', 'IP address not found')  unless $addr;
+	my $dec_addr = ip2dec($addr);
+	foreach my $ip (@YP_IP_range) {
+		my ($start_range, $end_range) = split /-/, join '', Net::CIDR::cidr2range($ip);
+		my $start_addr = ip2dec($start_range);
+		my $end_addr   = ip2dec($end_range);
+warn ">> checkIPRange $dec_addr : $start_addr, $end_addr\n";
+		if ($end_addr) {
+			return 1 if ($dec_addr ge $start_addr) && ($dec_addr le $end_addr);
+		} else {
+			return 1 if $dec_addr eq $start_addr;
+		}
+	}
+	error ('21', 'IP access not allowed');
+}
+
+sub getUser {
+	my $sciper = shift;
+	return unless $sciper;
+
+	my $msg  = $ldap->search(
+	  base 	 => 'c=ch',
+	  filter => "(&(uniqueidentifier=$sciper)(objectclass=person))"
+	);
+
+	foreach my $entry ($msg->entries) {
+		my $phone = $entry->get_value('telephoneNumber');
+			 $phone = '+41216931111' unless $phone;
+	  return (
+	  	{
+				sciper   	=> $entry->get_value('uniqueidentifier'),
+				name   		=> $entry->get_value('sn'),
+				firstname => $entry->get_value('givenName'),
+				email  		=> $entry->get_value('mail'),	  	
+				phone  		=> $phone,	  	
+	  	}
+	  );
+	}
+	return 0;
+
+}
+
+sub getUserByEmail {
+	my ($email) = @_;
+	return unless $email;
+
+	my $msg  = $ldap->search(
+	  base 	 => 'c=ch',
+	  filter => "(&(mail=$email)(objectclass=person))"
+	);
+
+	foreach my $entry ($msg->entries) {
+		my $phone = $entry->get_value('telephoneNumber');
+			 $phone = '+41216931111' unless $phone;
+	  return (
+	  	{
+				sciper   	=> $entry->get_value('uniqueidentifier'),
+				name   		=> $entry->get_value('sn'),
+				firstname => $entry->get_value('givenName'),
+				email  		=> $entry->get_value('mail'),	  	
+				phone  		=> $phone,	  	
+	  	}
+	  );
+	}
+	return 0;
+}
+
+sub getUserBySciper {
+	my ($sciper) = @_;
+	return unless $sciper;
+	return unless $sciper =~ /\d\d\d\d\d\d/;
+	
+	my $user;
+	my $sql = qq{select 
+			nom_acc,
+			prenom_acc,
+			nom_usuel,
+			prenom_usuel,
+			addrlog as email,
+			sexe,
+			date_naiss
+		from dinfo.sciper 
+		left join dinfo.emails on sciper.sciper=emails.sciper
+		where sciper.sciper=?};
+	my $sth = $dbh_dinfo->query ($sql, $sciper);
+	if (my $data = $sth->fetchrow_hashref) {
+		$user->{sciper}	= $sciper;
+		my $nom			= $data->{nom_usuel} 		? $data->{nom_usuel} 		: $data->{nom_acc};
+		my $prenom	= $data->{prenom_usuel} ? $data->{prenom_usuel} : $data->{prenom_acc};
+		$user->{name}	 		 =  "$nom";
+		$user->{firstname} =  "$prenom";
+		$user->{email} 	= $data->{email};
+		my ($day, $mon, $yr) = split /\./, $data->{date_naiss};
+		$user->{birthdate} = qq{$yr-$mon-$day};
+	}
+
+	return $user;
+}
+
+#_________________
+sub getFonds {
+	my ($items)	= @_;
+
+	my $fonds;
+	map { 
+		if ( $items->{$_} =~ /^y/ ) {
+			if ( $_ =~ /^FF(.*)$/ ) {
+				my $fond = $1;
+				$fond =~ s/FF//;
+				$fonds->{$fond} = 1;
+			}
+		}
+	} keys %$items;
+  
+  return $fonds;
+
+}
