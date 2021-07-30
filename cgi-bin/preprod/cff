@@ -105,8 +105,8 @@ my $messages = {
 		en	=> qq{select},
 	},
 	tripnb_label	=> {
-		fr	=> qq{R�f�rence du voyage (optionnel)} ,
-		en	=> qq{Trip reference (optional)},
+		fr	=> qq{Si applicable pr�ciser le num�ro de DF} ,
+		en	=> qq{If applicable indicate DF reference},
 	},
 	cff_label	=> {
 		fr	=> qq{vers la commande de billets CFF en ligne} ,
