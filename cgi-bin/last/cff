@@ -36,7 +36,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 	my $pi 		= $ENV {PATH_INFO};
 	my $no_purge= '';
 	my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
-	my $su_list	= '104782,105640';	# - ic, cl
+	my $su_list	= '169419,243371';	# - nborboen, quatrava
 
 	$RIGHT_NAME		= 'railticket';
 	$USE_DOSSIERS = 0;
@@ -64,7 +64,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 
 my $messages = {
 	benef_label	=> {
-		fr	=> qq{Bénéficiaire du voyage},
+		fr	=> qq{Bï¿½nï¿½ficiaire du voyage},
 		en	=> qq{Person to travel},
 	},
 	search_label	=> {
@@ -72,7 +72,7 @@ my $messages = {
 		en	=> qq{Search by sciper or by name},
 	},
 	results_label	=> {
-		fr	=> qq{Résultats de la recherche},
+		fr	=> qq{Rï¿½sultats de la recherche},
 		en	=> qq{Search results},
 	},
 	travelfor_label	=> {
@@ -80,11 +80,11 @@ my $messages = {
 		en	=> qq{Search results},
 	},
 	selecttravel_label	=> {
-		fr	=> qq{Sélectionner un voyage planifié},
+		fr	=> qq{Sï¿½lectionner un voyage planifiï¿½},
 		en	=> qq{Select a planned travel},
 	},
 	notravel_label1	=> {
-		fr	=> qq{Sans numéro de dossier de voyage},
+		fr	=> qq{Sans numï¿½ro de dossier de voyage},
 		en	=> qq{No planned travel already defined},
 	},
 	nodossier_label	=> {
@@ -92,7 +92,7 @@ my $messages = {
 		en	=> qq{Travel without an trip number},
 	},
 	fundsel_label	=> {
-		fr	=> qq{Sélectionner un fond} ,
+		fr	=> qq{Sï¿½lectionner un fond} ,
 		en	=> qq{Select a fund},
 	},
 	choose_label	=> {
@@ -100,7 +100,7 @@ my $messages = {
 		en	=> qq{select},
 	},
 	tripnb_label	=> {
-		fr	=> qq{Référence du voyage (optionnel)} ,
+		fr	=> qq{Rï¿½fï¿½rence du voyage (optionnel)} ,
 		en	=> qq{Trip reference (optional)},
 	},
 	cff_label	=> {
@@ -112,7 +112,7 @@ my $messages = {
 		en	=> qq{Continue},
 	},
 	cancel_label	=> {
-		fr	=> qq{Annuler cette requête} ,
+		fr	=> qq{Annuler cette requï¿½te} ,
 		en	=> qq{Cancel this operation},
 	},
 };
@@ -275,11 +275,11 @@ sub go {
 		$Fonds = $args{fond};
 		$no = $args{sNoVoyage};
 	}
-#  erreur ('Numéro du voyage absent') unless $no;
+#  erreur ('Numï¿½ro du voyage absent') unless $no;
 	
 	unless ($Fonds) {
 		my $template = initTempl('priv.tmpl');
-		$errmsg = qq{Veuillez saisir le numéro du fonds};
+		$errmsg = qq{Veuillez saisir le numï¿½ro du fonds};
 		$template->param(sErrMsg => $errmsg);
 		print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
 		exit;
@@ -429,8 +429,8 @@ sub authenticate {
   
   $login_person = getPersonData ($sciper);
 
-#  erreur ("pas de droit pour ce service, veuillez contacter un de vos accréditeurs") unless scalar (keys %$fondsByCF) > 0;
-  erreur ("pas de droit pour ce service, veuillez contacter un de vos accréditeurs") unless scalar (keys %$fonds)  > 0;
+#  erreur ("pas de droit pour ce service, veuillez contacter un de vos accrï¿½diteurs") unless scalar (keys %$fondsByCF) > 0;
+  erreur ("pas de droit pour ce service, veuillez contacter un de vos accrï¿½diteurs") unless scalar (keys %$fonds)  > 0;
 
 warn "cff $login_person->{nom} $login_person->{prenom}";
 
@@ -518,7 +518,7 @@ sub removeaccents {
   my ($str) = @_;
   $str =~ tr/\200-\237//d;
   $str =~ tr/\240-\377/"                               AAAAAA CEEEEIIIIDNOOOOO OUUUUY  aaaaaa ceeeeiiiionooooo ouuuuy y"/;
-#                       "¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"
+#                       "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
   return $str;
 }
 #_________________
@@ -676,7 +676,7 @@ sub getUserBySciper {
 	my ($sciper) = @_;
 
 	return unless $sciper;
-	erreur ("numéro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
+	erreur ("numï¿½ro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
 	
 	my $msg = $ldap->search(
 	  base 	 => 'c=ch',

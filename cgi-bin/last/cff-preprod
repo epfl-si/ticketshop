@@ -36,7 +36,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 	my $pi 		= $ENV {PATH_INFO};
 	my $no_purge= '';
 	my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
-	my $su_list	= '104782,105640';	# - ic, cl
+	my $su_list	= '169419,243371';	# - nborboen, quatrava
 	$filtreFonds= ',FT03-A,';
 
 	my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl-preprod/';
@@ -238,14 +238,14 @@ sub go {
   
   unless ($Fonds) {
     my $template = initTempl('priv.tmpl');
-    $errmsg = qq{Veuillez saisir le numéro du fonds};
+    $errmsg = qq{Veuillez saisir le numï¿½ro du fonds};
     $template->param(sErrMsg => $errmsg);
 	print "Content-Type: text/html; charset=iso-8859-1\n\n", $template->output;
 	exit;
   }
   
   my $no    = removeaccents($sNoVoyage);
-  erreur ('Numéro du voyage absent') unless $no;
+  erreur ('Numï¿½ro du voyage absent') unless $no;
 
   my $sth 	 = $db_dinfo->query (qq{select sexe from sciper where sciper='$sciper'});
   my ($sexe) = $sth->fetchrow ();
@@ -329,7 +329,7 @@ sub getFonds {
     $fondsperCF->{$cf} = \@fonds;
   }
   
-  # - programmes doctoraux étudiants
+  # - programmes doctoraux ï¿½tudiants
   foreach my $item (split (/,/,$unitlist)) {
   	$item =~ s/\'//g;
   	next unless $item =~ /^ED??/;
@@ -447,7 +447,7 @@ warn " >> login_as cff $sciper : units=$units, droitunits=$droitunits\n";
   
   getPersonData ($sciper);
 
-  erreur ("pas de droit pour ce service, veuillez contacter un de vos accréditeurs") unless $droitunits;
+  erreur ("pas de droit pour ce service, veuillez contacter un de vos accrï¿½diteurs") unless $droitunits;
 
 warn "cff $nom $prenom $email, droitunits=$droitunits";
 
@@ -513,7 +513,7 @@ sub removeaccents {
   my ($str) = @_;
   $str =~ tr/\200-\237//d;
   $str =~ tr/\240-\377/"                               AAAAAA CEEEEIIIIDNOOOOO OUUUUY  aaaaaa ceeeeiiiionooooo ouuuuy y"/;
-#                       "¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"
+#                       "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
   return $str;
 }
 #_________________
@@ -666,7 +666,7 @@ sub getUserBySciper {
 	my ($sciper) = @_;
 
 	return unless $sciper;
-	erreur ("numéro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
+	erreur ("numï¿½ro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
 	
 	my $msg = $ldap->search(
 	  base 	 => 'c=ch',
