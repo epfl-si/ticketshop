@@ -63,10 +63,6 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 	};
 
 my $messages = {
-	title1_label	=> {
-		fr	=> qq{D�placement avec dossier de voyage dans SESAME (Notes de frais)},
-		en	=> qq{Travel with SESAME reference (Travel & Expenses)},
-	},
 	title2_label	=> {
 		fr	=> qq{Autres cas (Notes de frais dans I-monitor ou hors voyage)},
 		en	=> qq{Other (Expenses in I-monitor or not related to travel)},
