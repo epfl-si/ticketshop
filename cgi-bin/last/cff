@@ -63,7 +63,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 
 my $messages = {
 	title1_label	=> {
-		fr	=> qq{D�placement avec dossier de voyage dans SESAME (Notes de frais)},
+		fr	=> qq{Déplacement avec dossier de voyage dans SESAME (Notes de frais)},
 		en	=> qq{Travel with SESAME reference (Travel & Expenses)},
 	},
 	title2_label	=> {
@@ -71,7 +71,7 @@ my $messages = {
 		en	=> qq{Other},
 	},
 	benef_label	=> {
-		fr	=> qq{B�n�ficiaire du voyage},
+		fr	=> qq{Bï¿½nï¿½ficiaire du voyage},
 		en	=> qq{Person to travel},
 	},
 	search_label	=> {
@@ -79,7 +79,7 @@ my $messages = {
 		en	=> qq{Search by sciper or by name},
 	},
 	results_label	=> {
-		fr	=> qq{R�sultats de la recherche},
+		fr	=> qq{Rï¿½sultats de la recherche},
 		en	=> qq{Search results},
 	},
 	travelfor_label	=> {
@@ -87,11 +87,11 @@ my $messages = {
 		en	=> qq{Search results},
 	},
 	selecttravel_label	=> {
-		fr	=> qq{S�lectionner un voyage planifi�},
+		fr	=> qq{Sï¿½lectionner un voyage planifiï¿½},
 		en	=> qq{Select a planned travel},
 	},
 	notravel_label1	=> {
-		fr	=> qq{Sans num�ro de dossier de voyage},
+		fr	=> qq{Sans numï¿½ro de dossier de voyage},
 		en	=> qq{No planned travel already defined},
 	},
 	nodossier_label	=> {
@@ -99,7 +99,7 @@ my $messages = {
 		en	=> qq{Travel without an trip number},
 	},
 	fundsel_label	=> {
-		fr	=> qq{S�lectionner un fonds} ,
+		fr	=> qq{Sï¿½lectionner un fonds} ,
 		en	=> qq{Select a fund},
 	},
 	choose_label	=> {
@@ -107,7 +107,7 @@ my $messages = {
 		en	=> qq{select},
 	},
 	tripnb_label	=> {
-		fr	=> qq{Si applicable pr�ciser le num�ro de DF} ,
+		fr	=> qq{Si applicable prï¿½ciser le numï¿½ro de DF} ,
 		en	=> qq{If applicable indicate DF reference},
 	},
 	cff_label	=> {
@@ -119,7 +119,7 @@ my $messages = {
 		en	=> qq{Continue},
 	},
 	cancel_label	=> {
-		fr	=> qq{Annuler cette requ�te} ,
+		fr	=> qq{Annuler cette requï¿½te} ,
 		en	=> qq{Cancel this operation},
 	},
 	ticketshop_label	=> {
@@ -135,7 +135,7 @@ my $messages = {
 		en	=> qq{Travel for},
 	},
 	note_label	=> {
-		fr	=> qq{Les achats d'abonnements CFF et abonnements r�gionaux doivent obligatoirement �tre effectu�s via les Ressources Humaines de l'EPFL.<br>Les achats priv�s sont interdits.<br> <a href="https://www.epfl.ch/campus/services/wp-content/uploads/2019/06/CFF_2019AvantageMobiliteFRAANG.pdf" target="_blank">Pour plus d'informations...</a> } ,
+		fr	=> qq{Les achats d'abonnements CFF et abonnements régionaux doivent obligatoirement être effectués via les Ressources Humaines de l'EPFL.<br>Les achats privés sont interdits.<br> <a href="https://www.epfl.ch/campus/services/wp-content/uploads/2019/06/CFF_2019AvantageMobiliteFRAANG.pdf" target="_blank">Pour plus d'informations...</a> } ,
 		en	=> qq{Purchase of SBB subscriptions and regional subscriptions must be made via EPFL Human Resources Service.<br>
 		Private purchases are prohibited.<br>
 		<a href="https://www.epfl.ch/campus/services/wp-content/uploads/2019/06/CFF_2019AvantageMobiliteFRAANG.pdf" target="_blank">More details...</a> },
@@ -312,11 +312,11 @@ sub go {
 		$Fonds = $args{fond};
 		$no = $args{sNoVoyage};
 	}
-#  erreur ('Num�ro du voyage absent') unless $no;
+#  erreur ('Numï¿½ro du voyage absent') unless $no;
 	
 	unless ($Fonds) {
 		my $template = initTempl('priv.tmpl');
-		$errmsg = qq{Veuillez saisir le num�ro du fonds};
+		$errmsg = qq{Veuillez saisir le numï¿½ro du fonds};
 		$template->param(sErrMsg => $errmsg);
 		print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 		exit;
@@ -459,7 +459,7 @@ sub authenticate {
   
   $login_person = getPersonData ($sciper);
 
-  erreur ("pas de droit pour ce service, veuillez contacter un de vos accr�diteurs") unless scalar (keys %$fonds)  > 0;
+  erreur ("pas de droit pour ce service, veuillez contacter un de vos accrï¿½diteurs") unless scalar (keys %$fonds)  > 0;
 
 warn "cff $login_person->{nom} $login_person->{prenom}";
 
@@ -548,7 +548,7 @@ sub removeaccents {
   my ($str) = @_;
   $str =~ tr/\200-\237//d;
   $str =~ tr/\240-\377/"                               AAAAAA CEEEEIIIIDNOOOOO OUUUUY  aaaaaa ceeeeiiiionooooo ouuuuy y"/;
-#                       "�����������������������������������������������������������������������������������������������"
+#                       "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
   return $str;
 }
 #_________________
@@ -705,7 +705,7 @@ sub getUserBySciper {
 	my ($sciper) = @_;
 
 	return unless $sciper;
-	erreur ("num�ro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
+	erreur ("numï¿½ro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
 	my $user;
 	#	- search sciper
 	my $sql = qq{select nom_acc,prenom_acc,nom_usuel,prenom_usuel,addrlog, date_naiss

@@ -174,7 +174,7 @@ sub loadargs {
     $args{$name} .= ' ' if $args{$name};  
     $args{$name} .= "$value";
 warn "--> loadargs :: $name=$value";
-  # - test validité paramètres
+  # - test validitÃ© paramÃ¨tres
 	if ( $name eq 'artifact' ) {
 		 error('illegal param value : '.$name) unless $value =~ /^\w+$/i;
 	} else {
