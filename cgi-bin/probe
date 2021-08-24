@@ -64,13 +64,13 @@ if ( $pi =~ /usage/ ) {
 			) ;
 		
 			if ( $dbh ) {
-				my $sql = qq{SELECT sciper FROM cff.transactions LIMIT 0, 1};
+				my $sql = qq{SELECT * FROM cff.logs LIMIT 0, 1};
 				my $sth = $dbh->prepare( $sql) ;
 
 				if ($sth) {
 					$sth->execute () ;
-					my $sciper = $sth->fetchrow;
-					if ( $sciper ne '' ) {
+					my ($data) = $sth->fetchrow;
+					if ( $data) {
 						$probe->{items}->{$key}->{status} = 'ok';
 					} else {
 						$probe->{items}->{$key}->{status} = 'ko';

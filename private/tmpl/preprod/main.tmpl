@@ -26,98 +26,36 @@
 					</table>
 				</div>
 			<TMPL_ELSE>
+				<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sPathMe>/go" style="margin-top: 20px;" >
+				<input name="goto" id="goto" type="hidden" >
+
 				<TMPL_IF NAME=sPersSciper>
+						<input name="scipertodo" type="hidden" value="<TMPL_VAR NAME=sPersSciper>">
 
-						<div class="col-md-12"  style="border: 1px solid #aaaaaa;">
-							<h3><TMPL_VAR NAME=travelfor_label> <TMPL_VAR NAME=sPersName></h3>
+						<div class="col-md-12"  >
+							<h3><TMPL_VAR NAME=travel_for_label> <TMPL_VAR NAME=sPersName></h3>
+
 							<TMPL_IF NAME="sHasTravelNb">
-								<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sPathMe>/go" style="margin-top: 20px;">
-								<input name="scipertodo" type="hidden" value="<TMPL_VAR NAME=sPersSciper>">
-
 								<div class="col-md-12" style="margin-bottom: 10px;">
 									<h4><TMPL_VAR NAME=selecttravel_label></h4>
 									<div class="col-md-12" >
-										<select name="sNoVoyage">
+										<select name="sNoVoyage" id="sNoVoyage">
 											<option value="" selected><TMPL_VAR NAME=choose_label></option>
 										<TMPL_LOOP NAME=sTravels>
-											<option value="<TMPL_VAR NAME=requestID>:<TMPL_VAR NAME=concatFunds>">Destination: <TMPL_VAR NAME="destination">, Dates : <TMPL_VAR NAME="dates">, Funds: <TMPL_VAR NAME="concatFunds"></option>
+											<option value="<TMPL_VAR NAME=requestID>:<TMPL_VAR NAME=concatFunds>"><TMPL_VAR NAME="destination">, Dates : <TMPL_VAR NAME="dates">, Funds: <TMPL_VAR NAME="concatFunds"></option>
 										</TMPL_LOOP>
 										</select>
 									</div>
 								</div>
 
-								<div class="row" style="margin-bottom: 10px;">
-									<div class="col-md-12" style="margin-top: 20px; ">
-										<div class="col-md-8">
-											<p>
-											<input type="submit" name="mod" value="<TMPL_VAR NAME=continue_label>"> <TMPL_VAR NAME=cff_label>
-											</p>
-										</div>
-										<div class="col-md-4">
-											<p>
-											<a href="#" class="icon icon-before-link icon-arrow-head-right" onclick="location.href='<TMPL_VAR NAME=sPathMe>/main?lang=<TMPL_VAR NAME=sLang>';" ><TMPL_VAR NAME=cancel_label></a>
-											</p>
-										</div>
-									</div>
-								</div>
-						
-								</form>
 								<hr>
-								ou
+							
+							<TMPL_ELSE>
+								No travel dossier found
+								<TMPL_INCLUDE NAME=no_dossier.tmpl>
 							</TMPL_IF>
-
-							<h4><TMPL_VAR NAME=nodossier_label></h4>
-
-							<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sPathMe>/go" style="margin-top: 20px;">
-							<input name="scipertodo" type="hidden" value="<TMPL_VAR NAME=sPersSciper>">
-
-							<div class="row" style="margin-bottom: 10px; margin-left: 10px;">
-								<div class="row" style="margin-bottom: 10px;">
-									<div class="col-md-5" >
-										<TMPL_VAR NAME=fundsel_label>
-									</div>
-									<div class="col-md-7" >
-										<select name=fond>
-										<option value="">-- <TMPL_VAR NAME=choose_label> --</option>
-										<TMPL_LOOP NAME=sFondsLoop>
-											<option value="<TMPL_VAR NAME=fond>"><TMPL_VAR NAME=fond></option>
-										</TMPL_LOOP>
-										</select>
-									</div>
-								</div>
-
-								<div class="row" style="margin-bottom: 10px;">
-									<div class="col-md-5" >
-										<TMPL_VAR NAME=tripnb_label>
-									</div>
-									<div class="col-md-7" >
-										<input name="sNoVoyage">
-									</div>
-								</div>
-							</div>
-
-							<div class="row" style="margin-bottom: 10px;">
-								<div class="col-md-12" style="margin-top: 20px; ">
-									<div class="col-md-8">
-										<p>
-										<input type="submit" name="mod" value="<TMPL_VAR NAME=continue_label>"> <TMPL_VAR NAME=cff_label>
-										</p>
-									</div>
-									<div class="col-md-4">
-										<p>
-										<a href="#" class="icon icon-before-link icon-arrow-head-right" onclick="location.href='<TMPL_VAR NAME=sPathMe>/main?lang=<TMPL_VAR NAME=sLang>';" ><TMPL_VAR NAME=cancel_label></a>
-										</p>
-									</div>
-								</div>
-							</div>
-					
-							</form>
-
-					
 						</div>
 
-					</form>
-			
 				</TMPL_IF>
 
 			</TMPL_IF>
@@ -125,58 +63,22 @@
 <!--	 -->	
 
 			<TMPL_UNLESS NAME="sPersonsLoop">
-				<TMPL_UNLESS NAME="sFound">
-						<div class="col-md-12" >
-						ou<br>
-						<h3><TMPL_VAR NAME=title2_label></h3>
-
-							<form id="form1" name="form1" method="post" action="<TMPL_VAR NAME=sPathMe>/go" style="margin-top: 20px;">
-							<input name="scipertodo" type="hidden" value="<TMPL_VAR NAME=sPersSciper>">
-
-							<div class="row" style="margin-bottom: 10px; margin-left: 10px;">
-								<div class="row" style="margin-bottom: 10px;">
-									<div class="col-md-5" >
-										<TMPL_VAR NAME=fundsel_label>
-									</div>
-									<div class="col-md-7" >
-										<select name=fond>
-										<option value="">-- <TMPL_VAR NAME=choose_label> --</option>
-										<TMPL_LOOP NAME=sFondsLoop>
-											<option value="<TMPL_VAR NAME=fond>"><TMPL_VAR NAME=fond></option>
-										</TMPL_LOOP>
-										</select>
-									</div>
-								</div>
-
-								<div class="row" style="margin-bottom: 10px;">
-									<div class="col-md-5" >
-										<TMPL_VAR NAME=tripnb_label>
-									</div>
-									<div class="col-md-7" >
-										<input name="sNoVoyage">
-									</div>
-								</div>
-							</div>
-
-							<div class="row" style="margin-bottom: 10px;">
-								<div class="col-md-12" style="margin-top: 20px; ">
-									<div class="col-md-8">
-										<p>
-										<input type="submit" name="mod" value="<TMPL_VAR NAME=continue_label>"> <TMPL_VAR NAME=cff_label>
-										</p>
-									</div>
-
-								</div>
-							</div>
-					
-							</form>
-
-					
-						</div>
-
-					</form>
+				<TMPL_UNLESS NAME="sPersSciper">
+					<TMPL_INCLUDE NAME=no_dossier.tmpl>
+				</TMPL_UNLESS>
 			</TMPL_UNLESS>
-		</TMPL_UNLESS>
+
+			<TMPL_UNLESS NAME="sPersonsLoop">
+				<TMPL_INCLUDE NAME=buttons.tmpl>
+			</TMPL_UNLESS>
+
+		</form>
+
+		<p>
+		<a href="#" class="icon icon-before-link icon-arrow-head-right" onclick="
+			location.href='<TMPL_VAR NAME=sPathMe>/main?lang=<TMPL_VAR NAME=sLang>';
+		" ><TMPL_VAR NAME=cancel_label></a>
+		</p>
 
 
 </TMPL_IF>

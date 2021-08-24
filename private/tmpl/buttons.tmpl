@@ -1,0 +1,32 @@
+		<div class="col-md-12">
+			<div style="width:auto; padding: 10px; border: 1px solid #aaaaaa; text-align: center; font-size: large;"">
+				<TMPL_VAR NAME=note_label>
+			</div>
+		</div>
+		
+			<div class="row" style="margin-bottom: 10px;">
+				<div class="col-md-12" style="margin-top: 20px; display: flex;">
+					<div class="col-md-6" style="border: 1px solid #aaaaaa; margin: 10px; padding: 20px; ">
+						<a href="#" onclick="
+							document.getElementById('goto').value = 'sso';
+							if (chkSelFond('sNoVoyage') || chkSelFond('fond')) {
+									form1.submit();
+							} else {
+								return false;
+							}
+						"><TMPL_VAR NAME=ticketshop_label></a>
+					</div>
+
+					<div class="col-md-6" style="border: 1px solid #aaaaaa; margin: 10px; padding: 20px; ">
+						<a href="#"onclick="
+							document.getElementById('goto').value = 'swisspass';
+							if (chkSelFond('sNoVoyage') || chkSelFond('fond')) {
+									form1.submit();
+							} else {
+								return false;
+							}
+						"><TMPL_VAR NAME=swisspass_label></a>
+					</div>
+
+				</div>
+			</div>

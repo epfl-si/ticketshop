@@ -28,7 +28,7 @@ my $REGEX_ID				= '^[1-9]\d{5}$';
 
 my $RIGHT_NAME			= 'railticket';
 
-my $CHECK_IPRANGE		= 1;
+my $CHECK_IPRANGE		= 0;
 my $DEBUG 			 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
 my $PURGEDATA				= 0;
 
@@ -140,7 +140,8 @@ warn "getArtifact user\n".Dumper($user);
             <email>$user->{email}</email>
             <vertragsnummer>$vertragsnummer</vertragsnummer>
             <rechnungsstellen>
-               <bezeichnung>$rechnungsstelle</bezeichnung>};
+               <bezeichnung>$rechnungsstelle</bezeichnung>
+  };
 
 # - get traveller
 	my $sql = qq{select 
@@ -170,32 +171,26 @@ warn ">> getArtifact : benef\n".Dumper($benef);
             <vorname>$benef->{firstname}</vorname>
             <geburtsdatum>$benef->{birthdate}</geburtsdatum>
             <email>$benef->{email}</email>
-           </mitreisende>};
+           </mitreisende>
+    };
 	}
 	
 	if ($no_fond) {
-warn ">> A getArtifact no_fond=$no_fond";
 			$output .= qq{
-              <kostenzuordnungen>
-                <bezeichnung>$no_fond</bezeichnung>
-              </kostenzuordnungen>
-              <referenz>$no_fond</referenz>
-              };
+                  <kostenzuordnungen>
+                    <bezeichnung>$no_fond</bezeichnung>
+                  </kostenzuordnungen>               
+                  <referenz>$no_fond</referenz>
+			};
 	} else {
 		my $rights = $Accreds->getAllUnitsWhereHasRight ($sciper, $RIGHT_NAME);	#	- 'railticket'
-		if ($rights) {
-			my $fonds	 = getFonds ($rights);
-warn ">> B0 getArtifact rights\n".Dumper($rights);
-warn ">> B1 getArtifact fonds=".Dumper($fonds);
-			foreach my $fond (sort keys %$fonds) {
-				$output .= qq{
-               <kostenzuordnungen>
-                 <bezeichnung>$fond</bezeichnung>
-               </kostenzuordnungen>};
-			}
-		} else {
-			#	- error 
-			error ('21', 'No rights');
+		my $fonds	 = getFonds ($rights);
+		foreach my $fond (sort keys %$fonds) {
+			$output .= qq{
+                  <kostenzuordnungen>
+                    <bezeichnung>$fond</bezeichnung>
+                  </kostenzuordnungen>               
+       };
 		}
 	}
 	$output .= qq{
@@ -405,6 +400,7 @@ sub getFonds {
 			}
 		}
 	} keys %$items;
+  
   return $fonds;
 
 }

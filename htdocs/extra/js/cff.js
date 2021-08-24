@@ -48,3 +48,19 @@ function loadHTML (div_id, url) {
 		document.getElementById(div_id).style.display = 'block'; 
 	}
 }
+
+//
+function chkSelFond (id) {
+	var sel = document.getElementById(id);
+console.log('>> chkSelFond: '+id+'='+sel)
+	if (sel === null) {
+		return false;
+	}
+console.log('>> chkSelFond: '+id+'='+sel.options[sel.selectedIndex].value)
+	if (sel.options[sel.selectedIndex].value == '') {
+		alert('Please select a value');
+		return false;
+	}
+	alert ('This will redirect you to the SBB/CFF web shop to continue tickets purchase');
+	return true;
+}

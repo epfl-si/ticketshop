@@ -78,6 +78,10 @@ if (my $rec = $sth->fetchrow_hashref ()) {
 	</soapenv:Body>
 	</soapenv:Envelope>};
 	my $msglen = length($msg);	
+
+	#	- PURGE TRANSACTION
+	my $sql = qq{delete from transactions where sciper=$rec->{sciper}};
+	my $sth = dbquery ( $sql );
 	
 	my $logTXT = $msg;
 	$logTXT =~ s/\t//g;
