@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ticketshop_web:
+    build: .
+    hostname: ticketshop-web
+    ports:
+      - "8080:8080"
+    links:
+      - ticketshop_db
+    environment:
+      - TEQUILA_HOST=test-tequila.epfl.ch
+      - MOCK_ORACLE=1
+      - FAKE_TEQUILA=169419
+      - SITE_URL=localhost:8080
+      - TS_TEST=ticketshop-test
+    volumes:
+      - ./cgi-bin:/usr/local/apache2/cgi-bin
+      - ./htdocs:/usr/local/apache2/htdocs
+      - ./private:/var/www/vhosts/ticketshop.epfl.ch/private
+      # Mount the corresponding DB secret file
+      - ./dbs.local.conf:/opt/dinfo/etc/dbs.conf
+      - ./TequilaFakeClient.pm:/opt/dinfo/lib/perl/Tequila/Client.pm
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ticketshop_db:
+    image: mysql:5.5
+    hostname: ticketshop-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=cff
+      - MYSQL_USER=cff
+      - MYSQL_PASSWORD=cff
+    volumes:
+      - ./conf/docker/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - "23306:3306"
