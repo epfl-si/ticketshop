@@ -10,6 +10,11 @@
 #
 #
 
+die "/cgi-bin/last directory not used anymore";
+
+
+
+
 use lib '/opt/dinfo/lib/perl';
 
 use strict;

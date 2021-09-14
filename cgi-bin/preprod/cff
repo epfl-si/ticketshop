@@ -10,6 +10,9 @@
 #
 #
 
+die "/cgi-bin/preprod directory not used anymore";
+
+
 use lib qw(/opt/dinfo/lib/perl);
 
 use strict;
