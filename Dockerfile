@@ -12,6 +12,9 @@ RUN sed -i \
     /usr/local/apache2/conf/httpd.conf
 
 RUN echo "PassEnv FAKE_TEQUILA" >> /usr/local/apache2/conf/httpd.conf
+RUN echo "PassEnv TEQUILA_HOST" >> /usr/local/apache2/conf/httpd.conf
+RUN echo "PassEnv SITE_URL" >> /usr/local/apache2/conf/httpd.conf
+
 # RUN echo "Include /var/www/vhosts/ticketshop.epfl.ch/conf/*.conf" >> /usr/local/apache2/conf/httpd.conf
 
 RUN mkdir -p /var/www/Tequila/Sessions
