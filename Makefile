@@ -12,7 +12,7 @@ run:
 	docker run -it epflsi/ticketshop bash
 
 exec:
-	docker exec -it $$(docker ps -a --filter "name=ticketshopdev_web" --format "{{.Names}}") bash
+	docker exec -it $$(docker ps -a --filter "name=ticketshop_web" --format "{{.Names}}") bash
 
 up:
 	docker-compose up --build --force-recreate --remove-orphans
