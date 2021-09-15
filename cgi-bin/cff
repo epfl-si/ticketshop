@@ -40,7 +40,7 @@ my $pi 		= $ENV {PATH_INFO};
 my $environment = getEnv();
 my $NO_PURGE= '';
 my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
-my $su_list	= '169419,243371';	# - nborboen, quatrava
+my @superusers	= qw(169419 243371);	# - nborboen, quatrava
 my $SWISSPASS = 1;
 
 $RIGHT_NAME		= 'railticket';
@@ -464,8 +464,9 @@ sub authenticate {
   $key 			 = $tequila->{key};
   my $sciper = $tequila->{attrs}->{uniqueid};
 
-  if ($login_as and $sciper eq '104782') {
+  if ($login_as and grep { /$sciper/ } @superusers) {
   	$sciper = $login_as;
+		warn "$sciper logged as $login_as"
   }
 
 	my $rights = $Accreds->getAllUnitsWhereHasRight ($sciper, $RIGHT_NAME);	#	- 'railticket'
