@@ -1,4 +1,4 @@
-.PHONY: build tag push run up stop rm rmi 
+.PHONY: build tag push run up stop rm rmi
 build:
 	docker build . -t epflsi/ticketshop
 
@@ -28,3 +28,16 @@ rmi:
 
 tun:
 	ssh -T -N -L 0.0.0.0:3306:test-cadidb.epfl.ch:3306 dinfo@test-dinfo1.epfl.ch
+
+# OpenShift
+oc-build:
+	set -e -x; \
+	./../ops/cffsible -vvv -t ticketshop.build; \
+	BUILDCMD=$$(oc start-build ticketshop-idevfsd); \
+	BUILDID=$$(echo "$$BUILDCMD" | grep -Eo '([0-9]*)'); \
+	oc logs -f bc/ticketshop-idevfsd --version=$$BUILDID
+
+oc-deploy:
+	set -e -x; \
+	oc delete dc ticketshop; \
+	./../ops/cffsible  -vvv -t ticketshop.dc
