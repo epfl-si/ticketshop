@@ -39,18 +39,26 @@ XML
          https://"$TARGET"/cgi-bin/artifactServer
 }
 
+run_test () {
+    (set -e; set -o pipefail; $2)
+    local teststatus=$?
+    if [ $teststatus = 0 ]; then
+        echo "ok $1 # $2"
+    else
+        echo "not ok $1 # $2"
+    fi
+}
+
 test_200_response_on_existing_user () {
-    soap_getArtifactID "dominique.quatravaux@epfl.ch"  2>&1 | grep -q "HTTP/1.1 200"
+    soap_getArtifactID "dominique.quatravaux@epfl.ch"  2>&1 | (set -x; grep -q "HTTP/1.1 200")
 }
 
 test_500_response_on_bogus_user () {
+    # Weird - It sounds like being in an “if” (from the caller) disables set -e altogether?
     soap_getArtifactID "dominiq.quatravaux@epfl.ch"  2>&1 | (set -x; grep -q "User not found")
     soap_getArtifactID "dominiq.quatravaux@epfl.ch"  2>&1 | (set -x; grep -q "HTTP/1.1 500")
 }
 
-
-set -e
-if test_200_response_on_existing_user ; then echo "ok 1"; else echo "not ok 1"; fi
-if test_500_response_on_bogus_user ; then echo "ok 2"; else echo "not ok 2"; fi
+run_test 1 test_200_response_on_existing_user
+run_test 2 test_500_response_on_bogus_user
 echo "1..2"
-
