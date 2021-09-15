@@ -1,17 +1,19 @@
 <!-- private/tmpl/footer.tmpl -->
 </div> <!-- main-content -->
 
-<div class="col-md-12" id="footer"> 
-
-<hr>
-<TMPL_IF NAME="sID">
-	<TMPL_IF NAME=sLangFR>utilisateur : <TMPL_ELSE>user: </TMPL_IF><TMPL_VAR NAME="sLoginPrenom"> <TMPL_VAR NAME="sLoginNom">, 
-</TMPL_IF>
-	<span class="copyright">&copy; 2010 EPFL <TMPL_IF NAME=sLangFR>tous droits réservés<TMPL_ELSE>all right reserved</TMPL_IF> </span>
-	<a  class="icon icon-before-link icon-arrow-head-right" href="mailto:1234@epfl.ch">Contact</a> 
-	<a  class="icon icon-before-link icon-arrow-head-right" href="http://www.epfl.ch/accessibility.<TMPL_VAR NAME="sLang">.shtml">Accessibilité</a> 
-
-</div> 
+		<div class="col-md-12" id="footer">
+			<hr>
+			<TMPL_IF NAME="sID">
+				<TMPL_IF NAME=sLangFR>utilisateur : <TMPL_ELSE>user: </TMPL_IF>
+				<TMPL_VAR NAME="sLoginPrenom"> <TMPL_VAR NAME="sLoginNom"> &mdash; 
+			</TMPL_IF>
+			<span class="copyright">
+				&copy; 2010 EPFL <TMPL_IF NAME=sLangFR>tous droits réservés<TMPL_ELSE>all right reserved</TMPL_IF>
+			</span>
+			<TMPL_IF NAME=sENVProd><TMPL_ELSE> &mdash; <code><TMPL_VAR NAME=sENV></code> </TMPL_IF>
+			<a class="icon icon-before-link icon-arrow-head-right" href="mailto:1234@epfl.ch">Contact</a>
+			<a class="icon icon-before-link icon-arrow-head-right" href="http://www.epfl.ch/accessibility.<TMPL_VAR NAME=sLang>.shtml"><TMPL_IF NAME=sLangFR>Accessibilité<TMPL_ELSE>Accessibility</TMPL_IF></a>
+		</div>
 
 </div>
 </div>

@@ -35,6 +35,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 	my $me 		= $ENV {SCRIPT_NAME};
 	my $us 		= $ENV {SERVER_NAME};
 	my $pi 		= $ENV {PATH_INFO};
+	my $environment = getEnv();
 	my $NO_PURGE= '';
 	my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
 	my $su_list	= '169419,243371';	# - nborboen, quatrava
@@ -186,6 +187,19 @@ my $messages = {
 	$template->param(sErrMsg => $errmsg);
 	print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 	exit;
+
+
+	
+#_________________
+sub getEnv {
+	if ($ENV{SERVER_NAME} == 'localhost' || $ENV{SERVER_NAME} == '127.0.0.1') {
+		return "dev"
+	} elsif ($ENV{SERVER_NAME} == 'ticketshop-preprod.epfl.ch') {
+		return "preprod"
+	} else {
+		return "prod"
+	}
+}
 
 #_________________
 sub main {
@@ -650,6 +664,8 @@ warn "cff initTempl: $tmpldir$tmplpath";
    $template->param(sCrtYear 			=> $year);
    $template->param(sPathMe  			=> $me);
    $template->param(sPathInfo			=> $pi);
+   $template->param(sENV					=> $environment);
+   $template->param(sENVProd			=> $environment eq 'prod');
    $template->param(sID 	 	 			=> $login_person->{sciper});
    $template->param(sLoginPrenom  => $login_person->{prenom});
    $template->param(sLoginNom 	 	=> $login_person->{nom});
