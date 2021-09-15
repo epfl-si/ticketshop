@@ -5,7 +5,7 @@
 
 <hr>
 <TMPL_IF NAME="sID">
-	user : <TMPL_VAR NAME="sLoginPrenom"> <TMPL_VAR NAME="sLoginNom">, 
+	<TMPL_IF NAME=sLangFR>utilisateur : <TMPL_ELSE>user: </TMPL_IF><TMPL_VAR NAME="sLoginPrenom"> <TMPL_VAR NAME="sLoginNom">, 
 </TMPL_IF>
 	<span class="copyright">&copy; 2010 EPFL <TMPL_IF NAME=sLangFR>tous droits réservés<TMPL_ELSE>all right reserved</TMPL_IF> </span>
 	<a  class="icon icon-before-link icon-arrow-head-right" href="mailto:1234@epfl.ch">Contact</a> 
