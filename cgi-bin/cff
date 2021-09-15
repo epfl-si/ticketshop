@@ -32,13 +32,10 @@ use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person
 require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';	
 
 warn Dumper(\%ENV); # To be removed
-# TODO nbo: It feel weird to redefine web server variables :( plus $us don't seems to be used anywhere...
-$ENV {SERVER_NAME} = $ENV {SITE_URL} if ($ENV {SERVER_NAME} eq '127.0.0.1' && $ENV {SITE_URL});
 my $me 		= $ENV {SCRIPT_NAME};
-my $us 		= $ENV {SERVER_NAME};
 my $pi 		= $ENV {PATH_INFO};
-my $environment = getEnv();
-my $version = 'v1.2.3';
+sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
+my $version = 'v1.2.5';
 my $NO_PURGE= '';
 my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
 my @superusers	= qw(169419 243371);	# - nborboen, quatrava
@@ -143,9 +140,9 @@ my $messages = {
 	},
 };
 
-if ($environment eq 'prod') {
+# TODO: refactor every variable from the OPS code
+if (environment() eq 'prod') {
 	$cffLogon	= 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
-	$custURL	= 'Customer=epfl';
 	$custURL	= 'Customer=epfl_new';
 	$CFFwebShop		= 'https://www.sbb.ch/';
 	$urlDossiers = qq'https://sapservices.epfl.ch/pop/RESTAdapter/api/fi/travelrequests';
@@ -192,19 +189,6 @@ my $template = initTempl('default.tmpl');
 $template->param(sErrMsg => $errmsg);
 print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 exit;
-
-
-	
-#_________________
-sub getEnv {
-	if ($ENV{HTTP_HOST} =~ /^localhost.*/ || $ENV{HTTP_HOST} == '127.0.0.1') {
-		return "dev"
-	} elsif ($ENV{HTTP_HOST} == 'ticketshop-preprod.epfl.ch') {
-		return "preprod"
-	} else {
-		return "prod"
-	}
-}
 
 #_________________
 sub main {
@@ -670,8 +654,8 @@ warn "cff initTempl: $tmpldir$tmplpath";
    $template->param(sCrtYear 			=> $year);
    $template->param(sPathMe  			=> $me);
    $template->param(sPathInfo			=> $pi);
-   $template->param(sENV					=> $environment);
-   $template->param(sENVProd			=> $environment eq 'prod');
+   $template->param(sENV					=> environment);
+   $template->param(sENVProd			=> environment eq 'prod');
 	 $template->param(sVER					=> $version);
    $template->param(sID 	 	 			=> $login_person->{sciper});
    $template->param(sLoginPrenom  => $login_person->{prenom});
