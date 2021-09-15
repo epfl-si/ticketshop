@@ -1,4 +1,4 @@
-<TMPL_INCLUDE NAME="head.tmpl">
+<TMPL_INCLUDE NAME=head.tmpl>
 <!-- private/tmpl/default.tmpl -->
 
 <TMPL_IF NAME=sLangFR>
@@ -13,9 +13,9 @@
 	</p>
 	<p>
 		Effectuer le 
-		<a href="<TMPL_VAR NAME="spathMe">/main?lang=fr">
+		<a href="<TMPL_VAR NAME=spathMe>/main?lang=fr">
 			<img src="/images/leftarrow.gif" border="0" align="middle"> <b>login</b>
-		</a> pour l'accès à l'application
+		</a> pour l'accès à l'application.
 	</p>
 
 <TMPL_ELSE>
@@ -29,15 +29,15 @@
 		Please contact your accreditor for details.
 	</p>
 	<p>
-		<a href="<TMPL_VAR NAME="spathMe">/main?lang=en">
+		<a href="<TMPL_VAR NAME=spathMe>/main?lang=en">
 			<img src="/images/leftarrow.gif" border="0" align="middle">
-			 <b>Login</b>
-		 </a> to enter the application.
-	 </p>
+				<b>Login</b>
+		</a> to enter the application.
+	</p>
 
 </TMPL_IF>
 
-<TMPL_INCLUDE NAME="leftmenu.tmpl">
+<TMPL_INCLUDE NAME=leftmenu.tmpl>
 <!-- end menu column -->
 
-<TMPL_INCLUDE NAME="footer.tmpl">
+<TMPL_INCLUDE NAME=footer.tmpl>
