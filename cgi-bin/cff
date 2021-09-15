@@ -31,37 +31,39 @@ use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person
 #	- get access params
 require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';	
 
-	$ENV {SERVER_NAME} = $ENV {SITE_URL} if ($ENV {SERVER_NAME} eq '127.0.0.1' && $ENV {SITE_URL});
-	my $me 		= $ENV {SCRIPT_NAME};
-	my $us 		= $ENV {SERVER_NAME};
-	my $pi 		= $ENV {PATH_INFO};
-	my $environment = getEnv();
-	my $NO_PURGE= '';
-	my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
-	my $su_list	= '169419,243371';	# - nborboen, quatrava
-	my $SWISSPASS = 1;
+warn Dumper(\%ENV); # To be removed
+# TODO nbo: It feel weird to redefine web server variables :( plus $us don't seems to be used anywhere...
+$ENV {SERVER_NAME} = $ENV {SITE_URL} if ($ENV {SERVER_NAME} eq '127.0.0.1' && $ENV {SITE_URL});
+my $me 		= $ENV {SCRIPT_NAME};
+my $us 		= $ENV {SERVER_NAME};
+my $pi 		= $ENV {PATH_INFO};
+my $environment = getEnv();
+my $NO_PURGE= '';
+my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
+my $su_list	= '169419,243371';	# - nborboen, quatrava
+my $SWISSPASS = 1;
 
-	$RIGHT_NAME		= 'railticket';
-	$USE_DOSSIERS = 1;
+$RIGHT_NAME		= 'railticket';
+$USE_DOSSIERS = 1;
 
-	my $help	= {
-		help_epfl => {
-			fr	=> qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
-			en	=> qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
-		},
-		help_cff_ch => {
-			fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/businesstravel/questions/remboursement/remboursement-online-ticket.html},
-			en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-swiss-online-tickets.html},
-		},
-		help_cff_mobile => {
-			fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remboursement-mobile-ticket.html},
-			en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-mobile-tickets.html},
-		},
-		help_cff_int => {
-			fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remoboursement-internationaux.html},
-			en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-international-tickets.html},
-		},
-	};
+my $help	= {
+	help_epfl => {
+		fr	=> qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
+		en	=> qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
+	},
+	help_cff_ch => {
+		fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/businesstravel/questions/remboursement/remboursement-online-ticket.html},
+		en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-swiss-online-tickets.html},
+	},
+	help_cff_mobile => {
+		fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remboursement-mobile-ticket.html},
+		en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-mobile-tickets.html},
+	},
+	help_cff_int => {
+		fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remoboursement-internationaux.html},
+		en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-international-tickets.html},
+	},
+};
 
 my $messages = {
 	title2_label	=> {
@@ -141,52 +143,52 @@ my $messages = {
 };
 
 # 	$login_as 	= '190274';
- 	$login_as 	= '340657';
+$login_as 	= '340657';
 
-	my $DEBUG 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
-	if ($DEBUG) {
-		$cffLogon = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
-		$custURL	= 'Customer=epfl_new';	
-		$CFFwebShop		= 'https://int-www.sbb.ch/';
-		$urlDossiers  = qq'https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests';
-	} else {
-		$cffLogon	= 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
-		$custURL	= 'Customer=epfl';
-		$custURL	= 'Customer=epfl_new';
-		$CFFwebShop		= 'https://www.sbb.ch/';
-		$urlDossiers = qq'https://sapservices.epfl.ch/pop/RESTAdapter/api/fi/travelrequests';
-	}
+my $DEBUG 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
+if ($DEBUG) {
+	$cffLogon = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
+	$custURL	= 'Customer=epfl_new';	
+	$CFFwebShop		= 'https://int-www.sbb.ch/';
+	$urlDossiers  = qq'https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests';
+} else {
+	$cffLogon	= 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
+	$custURL	= 'Customer=epfl';
+	$custURL	= 'Customer=epfl_new';
+	$CFFwebShop		= 'https://www.sbb.ch/';
+	$urlDossiers = qq'https://sapservices.epfl.ch/pop/RESTAdapter/api/fi/travelrequests';
+}
 
-	%args	= loadargs ();
-	$lang = $args{lang} ? $args{lang} : 'en';
-	$dbh	= new Cadi::CadiDB (
-		  dbname => 'cff'
-	);
-	erreur ("FATAL DB ACCESS") unless $dbh;
-	$Accreds	= new Cadi::Accreds (caller => '104782', utf8 => 1);
-	$db_dinfo	= new Cadi::CadiDB (
-		  dbname => 'dinfo',
-		   trace => 1,
-				utf8 => 1,
-	  ) unless $db_dinfo;
-	erreur ("FATAL DB ACCESS") unless $db_dinfo;
+%args	= loadargs ();
+$lang = $args{lang} ? $args{lang} : 'en';
+$dbh	= new Cadi::CadiDB (
+	  dbname => 'cff'
+);
+erreur ("FATAL DB ACCESS") unless $dbh;
+$Accreds	= new Cadi::Accreds (caller => '104782', utf8 => 1);
+$db_dinfo	= new Cadi::CadiDB (
+	  dbname => 'dinfo',
+	   trace => 1,
+			utf8 => 1,
+  ) unless $db_dinfo;
+erreur ("FATAL DB ACCESS") unless $db_dinfo;
 
-	$ldap    	= Net::LDAP->new('ldap.epfl.ch')    or erreur ("new LDAP : $!");
+$ldap    	= Net::LDAP->new('ldap.epfl.ch')    or erreur ("new LDAP : $!");
 
-	authenticate() if $pi ;
+authenticate() if $pi ;
 
-	purge_transactions ('5');
+purge_transactions ('5');
 
-	if      ($pi =~  /^\/go/) {
-		go ();
-	} elsif ($pi =~  /^\/main/) {
-		main ();
-	}
+if      ($pi =~  /^\/go/) {
+	go ();
+} elsif ($pi =~  /^\/main/) {
+	main ();
+}
 
-	my $template = initTempl('default.tmpl');
-	$template->param(sErrMsg => $errmsg);
-	print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
-	exit;
+my $template = initTempl('default.tmpl');
+$template->param(sErrMsg => $errmsg);
+print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
+exit;
 
 
 	
