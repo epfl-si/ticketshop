@@ -246,6 +246,7 @@ sub error {
 	my $msg		 = shift;
 	
 warn ">> error : $status, $msg\n";
+        print "Status: 500 Internal server error\n";  # https://go.epfl.ch/INC0423845
 	SOAPreturn (qq{<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
 <soap:Body>
  <soap:Fault>
