@@ -143,9 +143,6 @@ my $messages = {
 	},
 };
 
-# 	$login_as 	= '190274';
-$login_as 	= '340657';
-
 if ($environment eq 'prod') {
 	$cffLogon	= 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
 	$custURL	= 'Customer=epfl';
@@ -161,6 +158,7 @@ if ($environment eq 'prod') {
 
 %args	= loadargs ();
 $lang = $args{lang} ? $args{lang} : 'en';
+my $bypass = $args{bypass} ? $args{bypass} : '';
 $dbh	= new Cadi::CadiDB (
 	  dbname => 'cff'
 );
@@ -172,6 +170,11 @@ $db_dinfo	= new Cadi::CadiDB (
 			utf8 => 1,
   ) unless $db_dinfo;
 erreur ("FATAL DB ACCESS") unless $db_dinfo;
+
+
+# 	$login_as 	= '190274';
+# $login_as 	= '340657';
+$login_as = $bypass;
 
 $ldap    	= Net::LDAP->new('ldap.epfl.ch')    or erreur ("new LDAP : $!");
 
