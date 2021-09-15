@@ -145,18 +145,17 @@ my $messages = {
 # 	$login_as 	= '190274';
 $login_as 	= '340657';
 
-my $DEBUG 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
-if ($DEBUG) {
-	$cffLogon = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
-	$custURL	= 'Customer=epfl_new';	
-	$CFFwebShop		= 'https://int-www.sbb.ch/';
-	$urlDossiers  = qq'https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests';
-} else {
+if ($environment eq 'prod') {
 	$cffLogon	= 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
 	$custURL	= 'Customer=epfl';
 	$custURL	= 'Customer=epfl_new';
 	$CFFwebShop		= 'https://www.sbb.ch/';
 	$urlDossiers = qq'https://sapservices.epfl.ch/pop/RESTAdapter/api/fi/travelrequests';
+} else {
+	$cffLogon = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
+	$custURL	= 'Customer=epfl_new';	
+	$CFFwebShop		= 'https://int-www.sbb.ch/';
+	$urlDossiers  = qq'https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests';
 }
 
 %args	= loadargs ();
