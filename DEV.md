@@ -89,6 +89,15 @@ services:
 RUN echo "PassEnv FAKE_TEQUILA" >> /usr/local/apache2/conf/httpd.conf
 ```
 
+### Tests
+
+In order to test the [artifactServer](./cgi-bin/artifactServer), one can use
+```
+TARGET=ticketshop-preprod.epfl.ch ./tests/artifact-server-tests.sh
+```
+It sends some SOAP requests and checks the HTTP responses.
+
+
 ### Sessions
 
 Tequila will look up for certains directories to store the sessions files. Be 
