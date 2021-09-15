@@ -67,7 +67,7 @@ my $messages = {
 		en	=> qq{Other},
 	},
 	benef_label	=> {
-		fr	=> qq{Bï¿½nï¿½ficiaire du voyage},
+		fr	=> qq{Bénéficiaire du voyage},
 		en	=> qq{Person to travel},
 	},
 	search_label	=> {
@@ -75,7 +75,7 @@ my $messages = {
 		en	=> qq{Search by sciper or by name},
 	},
 	results_label	=> {
-		fr	=> qq{Rï¿½sultats de la recherche},
+		fr	=> qq{Résultats de la recherche},
 		en	=> qq{Search results},
 	},
 	travelfor_label	=> {
@@ -83,11 +83,11 @@ my $messages = {
 		en	=> qq{Search results},
 	},
 	selecttravel_label	=> {
-		fr	=> qq{Sï¿½lectionner un voyage planifiï¿½},
+		fr	=> qq{Sélectionner un voyage planifié},
 		en	=> qq{Select a planned travel},
 	},
 	notravel_label1	=> {
-		fr	=> qq{Sans numï¿½ro de dossier de voyage},
+		fr	=> qq{Sans numéro de dossier de voyage},
 		en	=> qq{No planned travel already defined},
 	},
 	nodossier_label	=> {
@@ -95,7 +95,7 @@ my $messages = {
 		en	=> qq{Travel without an trip number},
 	},
 	fundsel_label	=> {
-		fr	=> qq{Sï¿½lectionner un fonds} ,
+		fr	=> qq{Sélectionner un fonds} ,
 		en	=> qq{Select a fund},
 	},
 	choose_label	=> {
@@ -103,7 +103,7 @@ my $messages = {
 		en	=> qq{select},
 	},
 	tripnb_label	=> {
-		fr	=> qq{Si applicable prï¿½ciser le numï¿½ro de DF} ,
+		fr	=> qq{Si applicable préciser le numéro de DF} ,
 		en	=> qq{If applicable indicate DF reference},
 	},
 	cff_label	=> {
@@ -115,7 +115,7 @@ my $messages = {
 		en	=> qq{Continue},
 	},
 	cancel_label	=> {
-		fr	=> qq{Annuler cette requï¿½te} ,
+		fr	=> qq{Annuler cette requête} ,
 		en	=> qq{Cancel this operation},
 	},
 	ticketshop_label	=> {
@@ -309,11 +309,11 @@ sub go {
 		$Fonds = $args{fond};
 		$no = $args{sNoVoyage};
 	}
-#  erreur ('Numï¿½ro du voyage absent') unless $no;
+#  erreur ('Numéro du voyage absent') unless $no;
 	
 	unless ($Fonds) {
 		my $template = initTempl('priv.tmpl');
-		$errmsg = qq{Veuillez saisir le numï¿½ro du fonds};
+		$errmsg = qq{Veuillez saisir le numéro du fonds};
 		$template->param(sErrMsg => $errmsg);
 		print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 		exit;
@@ -456,7 +456,7 @@ sub authenticate {
   
   $login_person = getPersonData ($sciper);
 
-  erreur ("pas de droit pour ce service, veuillez contacter un de vos accrï¿½diteurs") unless scalar (keys %$fonds)  > 0;
+  erreur ("pas de droit pour ce service, veuillez contacter un de vos accréditeurs") unless scalar (keys %$fonds)  > 0;
 
 warn "cff $login_person->{nom} $login_person->{prenom}";
 
@@ -702,7 +702,7 @@ sub getUserBySciper {
 	my ($sciper) = @_;
 
 	return unless $sciper;
-	erreur ("numï¿½ro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
+	erreur ("numéro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
 	
 	my $user;
 	#	- search sciper
