@@ -13,6 +13,7 @@
 use lib '/opt/dinfo/lib/perl';
 
 use strict;
+use utf8;
 use HTML::Template;
 use Net::LDAP;
 use LWP::UserAgent; 
