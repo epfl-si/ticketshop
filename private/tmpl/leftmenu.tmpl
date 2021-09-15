@@ -1,81 +1,97 @@
 <!-- private/tmpl/leftmenu.tmpl -->
 </div>
 
-<div  class="col-md-4">
-<TMPL_IF NAME=sLangFR>
+<div class="col-md-4">
+	<TMPL_IF NAME=sLangFR>
 
-	<table width="100%" cellpadding="3" cellspacing="0" border="0">
-	<tr valign="top" align="left">
-	<td>
+		<table width="100%" cellpadding="3" cellspacing="0" border="0">
+			<tr valign="top" align="left">
+				<td>
 
-	<!-- start links menu -->
-	<table width="100%" border="0" cellspacing="2" cellpadding="0">
-	<tr>
-	<td style="background-color: #FF0000; color: #ffffff; font-weight: bold; padding-left: 30px;">LIENS UTILES</td>
-	</tr>
-	<tr>
-	<td>
-	 <br> 
-		<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFmobile>">Remboursement de Tickets suisses</a><br>
-		<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFint>">Remboursement d'OnlineTickets internationaux</b>
-	</td>
-	</tr>
-	</table>
-	<!-- end links menu -->
+					<!-- start links menu -->
+					<table width="100%" border="0" cellspacing="2" cellpadding="0">
+						<tr>
+							<td style="background-color: #FF0000; color: #ffffff; font-weight: bold; padding-left: 30px;">LIENS UTILES</td>
+						</tr>
+						<tr>
+							<td>
+								<br>
+								<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFmobile>">Remboursement de Tickets suisses</a><br>
+								<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFint>">Remboursement d'OnlineTickets internationaux</b>
+							</td>
+						</tr>
+					</table>
+					<!-- end links menu -->
 
-	</tr>
-	</table>
+			</tr>
+		</table>
 
-	<hr>
+		<hr>
 
-	<h4>FAQs</h4>
-	<li>Mon compte CFF est bloqué ? Que faire ? <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq2');"></a></li><br>
-	<ul id="faq2" style="display: none; ">L'accès à l'application de commande de railticket en ligne peut être vérouillé après plusieurs échecs
-	successifs. Ce problème n'est pas lié à l'identification Gaspar/Tequila, donc il n'y a pas besoin de changer
-	votre mot de passe Gaspar.<br>
-	Veuillez contacter <a class="icon icon-before-link icon-arrow-head-right" href=mailto:1234@epfl.ch>le Service Desk</a>.
-	</ul>
-	<li>Je suis accréditeur pour l'unité XYZ, mais je ne peux pas donner le droit <i>railticket</i>  <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq3');"></a></li><br>
-	<ul id="faq3" style="display: none; ">
-	Le droit railticket peut être donné seulement par les personnes qui ont le rôle gestionnaire d'unité
-	</ul>
+		<h4>FAQs</h4>
+		<div>
+			&bull; Mon compte CFF est bloqué ? Que faire ? <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq2');"></a>
+			<div id="faq2" style="display: none; padding-left: 1em;">
+				L'accès à l'application de commande de railticket en ligne peut être vérouillé après plusieurs échecs
+				successifs. Ce problème n'est pas lié à l'identification Gaspar/Tequila, donc il n'y a pas besoin de changer
+				votre mot de passe Gaspar.<br>
+				Veuillez contacter <a class="icon icon-before-link icon-arrow-head-right" href=mailto:1234@epfl.ch>le Service Desk</a>.
+				<br>
+				<br>
+			</div>
+		</div>
 
-<TMPL_ELSE>
+		<div>
+			&bull; Je suis accréditeur pour l'unité XYZ, mais je ne peux pas donner le droit <i>railticket</i> ? <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq3');"></a>
+			<div id="faq2" style="display: none; padding-left: 1em;">
+				Le droit railticket peut être donné seulement par les personnes qui ont le rôle gestionnaire d'unité.
+			</div>
+		</div>
 
-	<table width="100%" cellpadding="3" cellspacing="0" border="0">
-	<tr valign="top" align="left">
-	<td>
 
-	<!-- start links menu -->
-	<table width="100%" border="0" cellspacing="2" cellpadding="0">
-	<tr>
-	<td style="background-color: #FF0000; color: #ffffff; font-weight: bold; padding-left: 30px;">USEFUL LINKS</td>
-	</tr>
-	<tr>
-	<td>
-		<br> 
-		<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFmobile>">Refund for unused Swiss Tickets</a><br>
-		<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFint>">Refund for unused International OnlineTickets</b>
-	</td>
-	</tr>
-	</table>
-	<!-- end links menu -->
+		<TMPL_ELSE>
 
-	</tr>
-	</table>
+			<table width="100%" cellpadding="3" cellspacing="0" border="0">
+				<tr valign="top" align="left">
+					<td>
 
-	<hr>
+						<!-- start links menu -->
+						<table width="100%" border="0" cellspacing="2" cellpadding="0">
+							<tr>
+								<td style="background-color: #FF0000; color: #ffffff; font-weight: bold; padding-left: 30px;">USEFUL LINKS</td>
+							</tr>
+							<tr>
+								<td>
+									<br>
+									<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFmobile>">Refund for unused Swiss Tickets</a><br>
+									<a class="icon icon-before-link icon-arrow-head-right" href="<TMPL_VAR NAME=sHelpCFFint>">Refund for unused International OnlineTickets</b>
+								</td>
+							</tr>
+						</table>
+						<!-- end links menu -->
 
-	<h4>FAQs</h4>
-	<li>My CFF account is locked? What can I do? <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq2');"></a></li><br>
-	<ul id="faq2" style="display: none; ">Your CFF account will be locked after several failed logins. This is not a Tequila/Gaspar problem, no need to change this password. <br>
-	Please contact <a class="icon icon-before-link icon-arrow-head-right" href=mailto:1234@epfl.ch>the Service Desk</a>.
-	</ul>
-	<li>I am accreditor for unit XYZ but I cannot give the right <i>railticket</i>  <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq3');"></a></li><br>
-	<ul id="faq3" style="display: none; ">
-	The right railticket is managed only by people with the respadmin role
-	</ul>
+				</tr>
+			</table>
 
-</TMPL_IF>
+			<hr>
+
+			<h4>FAQs</h4>
+			<div>
+				&bull; My CFF account is locked? What can I do? <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq2');"></a>
+				<div id="faq2" style="display: none; padding-left: 1em;">
+					Your CFF account will be locked after several failed logins. This is not a Tequila/Gaspar problem, no need to change this password. <br>
+					Please contact <a class="icon icon-before-link icon-arrow-head-right" href=mailto:1234@epfl.ch>the Service Desk</a>.
+					<br>
+					<br>
+				</div>
+			</div>
+			<div>
+				&bull; I am accreditor for unit XYZ but I cannot give the right <i>railticket</i>? <a href="#" class="icon icon-arrow-right" onclick="toggleDiv('faq3');"></a>
+				<div id="faq3" style="display: none; padding-left: 1em;">
+					The right railticket is managed only by people with the respadmin role.
+				</div>
+			</div>
+
+	</TMPL_IF>
 
 </div>
