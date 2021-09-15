@@ -194,9 +194,9 @@ exit;
 	
 #_________________
 sub getEnv {
-	if ($ENV{SERVER_NAME} == 'localhost' || $ENV{SERVER_NAME} == '127.0.0.1') {
+	if ($ENV{HTTP_HOST} =~ /^localhost.*/ || $ENV{HTTP_HOST} == '127.0.0.1') {
 		return "dev"
-	} elsif ($ENV{SERVER_NAME} == 'ticketshop-preprod.epfl.ch') {
+	} elsif ($ENV{HTTP_HOST} == 'ticketshop-preprod.epfl.ch') {
 		return "preprod"
 	} else {
 		return "prod"
