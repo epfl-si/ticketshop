@@ -31,7 +31,7 @@ use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person
 #	- get access params
 require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';	
 
-warn Dumper(\%ENV); # To be removed
+# warn Dumper(\%ENV);
 my $me 		= $ENV {SCRIPT_NAME};
 my $pi 		= $ENV {PATH_INFO};
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
