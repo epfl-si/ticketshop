@@ -428,8 +428,15 @@ warn " ** ERROR : $err_msg\n";
 #_________________
 sub authenticate {
 
-	#my  $tequilaurl =  'https://test-tequila.epfl.ch/tequila';
-	my  $tequilaurl =  'https://tequila.epfl.ch/tequila';
+	# Define the Tequila URL, see INC0424061
+	sub tequilaurl { 
+		if (environment eq 'prod') {
+			return 'https://tequila.epfl.ch/tequila';
+		}
+		return 'https://test-tequila.epfl.ch/tequila';
+	}
+
+	my  $tequilaurl =  tequilaurl;
 
   unless ($tequila) {
     $tequila = new Tequila::Client (
