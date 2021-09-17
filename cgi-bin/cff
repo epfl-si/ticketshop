@@ -35,7 +35,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 my $me 		= $ENV {SCRIPT_NAME};
 my $pi 		= $ENV {PATH_INFO};
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
-my $version = 'v1.2.5';
+my $version = 'v1.2.6';
 my $NO_PURGE= '';
 my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
 my @superusers	= qw(169419 243371);	# - nborboen, quatrava
@@ -370,6 +370,7 @@ warn "--> go to Swisspass : $id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no";
 warn "--> go to SSO : $id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no";
 		$redirect = qq{$cffLogon?$custURL&SAMLart=$id};
 	}
+	warn "cff redirecting to $redirect -- transaction_id=$id / email=$email";
 	print qq{Location: $redirect\n\n};
 	exit;
 }
