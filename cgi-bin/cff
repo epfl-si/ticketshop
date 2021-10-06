@@ -34,7 +34,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 my $me         = $ENV {SCRIPT_NAME};
 my $pi         = $ENV {PATH_INFO};
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
-my $version    = 'v1.2.7';
+my $version    = 'v1.2.9';
 my $NO_PURGE   = '';
 my $tmpldir    = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
 my @superusers = qw(169419 243371); # - nborboen, quatrava
@@ -139,27 +139,34 @@ my $messages = {
 	},
 };
 
+%args	= loadargs ();
+
+# ensure lang is either 'en' or 'fr', 'en' is the default
+our %LANGS = map { $_ => $_ } qw(fr en);
+$lang = $LANGS{$args{lang}} || 'en';
+
+my $bypass = $args{bypass} ? $args{bypass} : '';
+
 # TODO: refactor every variable from the OPS code
 if (environment() eq 'prod') {
 	$cffLogon    = 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
 	$custURL     = 'Customer=epfl_new';
-	$CFFwebShop  = 'https://www.sbb.ch/';
+	$CFFwebShop  = "https://www.sbb.ch/$lang/";
 	$urlDossiers = qq'https://sapservices.epfl.ch/pop/RESTAdapter/api/fi/travelrequests';
 } else {
 	$cffLogon    = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
 	$custURL     = 'Customer=epfl_new';
-	$CFFwebShop  = 'https://int-www.sbb.ch/';
+	$CFFwebShop  = "https://int-www.sbb.ch/$lang/";
 	$urlDossiers = qq'https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests';
 }
 
-%args	= loadargs ();
-$lang = $args{lang} ? $args{lang} : 'en';
-my $bypass = $args{bypass} ? $args{bypass} : '';
 $dbh	= new Cadi::CadiDB (
 	  dbname => 'cff'
 );
 erreur ("FATAL DB ACCESS") unless $dbh;
+
 $Accreds	= new Cadi::Accreds (caller => '104782', utf8 => 1);
+
 $db_dinfo	= new Cadi::CadiDB (
 	  dbname => 'dinfo',
 	   trace => 1,
@@ -366,10 +373,10 @@ sub go {
 warn "--> go to Swisspass : $id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no";
 		$redirect = $CFFwebShop;
 	} else {
-warn "--> go to SSO : $id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no";
+warn "--> go to (old)SSO : $id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no";
 		$redirect = qq{$cffLogon?$custURL&SAMLart=$id};
 	}
-	warn "cff redirecting to $redirect -- transaction_id=$id / email=$email";
+	warn "cff redirecting to $redirect\n  -- transaction_id=$id / email=$email";
 	print qq{Location: $redirect\n\n};
 	exit;
 }
