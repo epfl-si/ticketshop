@@ -1,6 +1,7 @@
 #!/bin/bash
 
 : ${TARGET:=test-ticketshop.epfl.ch}
+: ${USER_EMAIL:=dominique.quatravaux@epfl.ch}
 
 tmpdir () {
     local tmpdir
@@ -50,15 +51,16 @@ run_test () {
 }
 
 test_200_response_on_existing_user () {
-    soap_getArtifactID "dominique.quatravaux@epfl.ch"  2>&1 | (set -x; grep -q "HTTP/1.1 200")
+    soap_getArtifactID "$USER_EMAIL"  2>&1 | (set -x; grep -q "HTTP/1.1 200")
 }
 
 test_500_response_on_bogus_user () {
     # Weird - It sounds like being in an “if” (from the caller) disables set -e altogether?
-    soap_getArtifactID "dominiq.quatravaux@epfl.ch"  2>&1 | (set -x; grep -q "User not found")
-    soap_getArtifactID "dominiq.quatravaux@epfl.ch"  2>&1 | (set -x; grep -q "HTTP/1.1 500")
+    soap_getArtifactID "fake.email@epfl.ch"  2>&1 | (set -x; grep -q "User not found")
+    soap_getArtifactID "fake.email@epfl.ch"  2>&1 | (set -x; grep -q "HTTP/1.1 500")
 }
 
+echo Testing on $TARGET with $USER_EMAIL
 run_test 1 test_200_response_on_existing_user
 run_test 2 test_500_response_on_bogus_user
 echo "1..2"
