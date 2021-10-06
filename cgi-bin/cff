@@ -5,8 +5,7 @@
 # File Name:    cff
 # Author:       Ion CIONCA (Ion.Cionca@epfl.ch) - 2005
 #
-#########################################################################
-#####
+##############################################################################
 #
 #
 
@@ -16,8 +15,8 @@ use strict;
 use utf8::all;
 use HTML::Template;
 use Net::LDAP;
-use LWP::UserAgent; 
-use JSON; 
+use LWP::UserAgent;
+use JSON;
 use Data::Dumper;
 
 use Cadi::CadiDB;
@@ -29,112 +28,112 @@ use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person
 			$RIGHT_NAME $USE_DOSSIERS $fonds $CFFwebShop);
 
 #	- get access params
-require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';	
+require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 
 # warn Dumper(\%ENV);
-my $me 		= $ENV {SCRIPT_NAME};
-my $pi 		= $ENV {PATH_INFO};
+my $me         = $ENV {SCRIPT_NAME};
+my $pi         = $ENV {PATH_INFO};
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
-my $version = 'v1.2.7';
-my $NO_PURGE= '';
-my $tmpldir = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
-my @superusers	= qw(169419 243371);	# - nborboen, quatrava
-my $SWISSPASS = 1;
+my $version    = 'v1.2.7';
+my $NO_PURGE   = '';
+my $tmpldir    = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
+my @superusers = qw(169419 243371); # - nborboen, quatrava
+my $SWISSPASS  = 1;
 
-$RIGHT_NAME		= 'railticket';
-$USE_DOSSIERS = 1;
+$RIGHT_NAME    = 'railticket';
+$USE_DOSSIERS  = 1;
 
-my $help	= {
+my $help = {
 	help_epfl => {
-		fr	=> qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
-		en	=> qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
+		fr => qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
+		en => qq{http://jahia-prod.epfl.ch/files/content/sites/travel/files/Documents/TicketshopAideEPFL.pdf},
 	},
 	help_cff_ch => {
-		fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/businesstravel/questions/remboursement/remboursement-online-ticket.html},
-		en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-swiss-online-tickets.html},
+		fr => qq{https://www.sbb.ch/fr/clientele-commerciale/businesstravel/questions/remboursement/remboursement-online-ticket.html},
+		en => qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-swiss-online-tickets.html},
 	},
 	help_cff_mobile => {
-		fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remboursement-mobile-ticket.html},
-		en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-mobile-tickets.html},
+		fr => qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remboursement-mobile-ticket.html},
+		en => qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-mobile-tickets.html},
 	},
 	help_cff_int => {
-		fr	=> qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remoboursement-internationaux.html},
-		en	=> qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-international-tickets.html},
+		fr => qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remoboursement-internationaux.html},
+		en => qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-international-tickets.html},
 	},
 };
 
 my $messages = {
 	title2_label	=> {
-		fr	=> qq{Autres cas},
-		en	=> qq{Other},
+		fr => qq{Autres cas},
+		en => qq{Other},
 	},
-	benef_label	=> {
-		fr	=> qq{Bénéficiaire du voyage},
-		en	=> qq{Person to travel},
+	benef_label => {
+		fr => qq{Bénéficiaire du voyage},
+		en => qq{Person to travel},
 	},
-	search_label	=> {
-		fr	=> qq{Recherche par nom ou sciper},
-		en	=> qq{Search by sciper or by name},
+	search_label => {
+		fr => qq{Recherche par nom ou sciper},
+		en => qq{Search by sciper or by name},
 	},
-	results_label	=> {
-		fr	=> qq{Résultats de la recherche},
-		en	=> qq{Search results},
+	results_label => {
+		fr => qq{Résultats de la recherche},
+		en => qq{Search results},
 	},
-	travelfor_label	=> {
-		fr	=> qq{Voyage pour},
-		en	=> qq{Search results},
+	travelfor_label => {
+		fr => qq{Voyage pour},
+		en => qq{Search results},
 	},
-	selecttravel_label	=> {
-		fr	=> qq{Sélectionner un voyage planifié},
-		en	=> qq{Select a planned travel},
+	selecttravel_label => {
+		fr => qq{Sélecti	onner un voyage planifié},
+		en => qq{Select a planned travel},
 	},
-	notravel_label1	=> {
-		fr	=> qq{Sans numéro de dossier de voyage},
-		en	=> qq{No planned travel already defined},
+	notravel_label1 => {
+		fr => qq{Sans numéro de dossier de voyage},
+		en => qq{No planned travel already defined},
 	},
-	nodossier_label	=> {
-		fr	=> qq{Voyage sans dossier actif} ,
-		en	=> qq{Travel without an trip number},
+	nodossier_label => {
+		fr => qq{Voyage sans dossier actif},
+		en => qq{Travel without an trip number},
 	},
-	fundsel_label	=> {
-		fr	=> qq{Sélectionner un fonds} ,
-		en	=> qq{Select a fund},
+	fundsel_label => {
+		fr => qq{Sélectionner un fonds},
+		en => qq{Select a fund},
 	},
-	choose_label	=> {
-		fr	=> qq{choisir} ,
-		en	=> qq{select},
+	choose_label => {
+		fr => qq{choisir},
+		en => qq{select},
 	},
-	tripnb_label	=> {
-		fr	=> qq{Si applicable préciser le numéro de DF} ,
-		en	=> qq{If applicable indicate DF reference},
+	tripnb_label => {
+		fr => qq{Si applicable préciser le numéro de DF},
+		en => qq{If applicable indicate DF reference},
 	},
-	cff_label	=> {
-		fr	=> qq{vers la commande de billets CFF en ligne} ,
-		en	=> qq{to Online CFF ticket shop},
+	cff_label => {
+		fr => qq{vers la commande de billets CFF en ligne},
+		en => qq{to Online CFF ticket shop},
 	},
-	continue_label	=> {
-		fr	=> qq{Continuer} ,
-		en	=> qq{Continue},
+	continue_label => {
+		fr => qq{Continuer},
+		en => qq{Continue},
 	},
-	cancel_label	=> {
-		fr	=> qq{Annuler cette requête} ,
-		en	=> qq{Cancel this operation},
+	cancel_label => {
+		fr => qq{Annuler cette requête},
+		en => qq{Cancel this operation},
 	},
-	ticketshop_label	=> {
-		fr	=> qq{Ticketshop : billets internationnaux} ,
-		en	=> qq{Ticketshop: international tickets},
+	ticketshop_label => {
+		fr => qq{Ticketshop : billets internationnaux},
+		en => qq{Ticketshop: international tickets},
 	},
-	swisspass_label	=> {
-		fr	=> qq{Swisspass : billets en Suisse} ,
-		en	=> qq{Swisspass: Swiss tickets},
+	swisspass_label => {
+		fr => qq{Swisspass : billets en Suisse},
+		en => qq{Swisspass: Swiss tickets},
 	},
-	travel_for_label	=> {
-		fr	=> qq{Voyage pour} ,
-		en	=> qq{Travel for},
+	travel_for_label => {
+		fr => qq{Voyage pour},
+		en => qq{Travel for},
 	},
-	note_label	=> {
-		fr	=> qq{Les achats d'abonnements CFF et abonnements régionaux doivent obligatoirement être effectués via les Ressources Humaines de l'EPFL.<br>Les achats privés sont interdits.<br> <a href="https://www.epfl.ch/campus/services/wp-content/uploads/2019/06/CFF_2019AvantageMobiliteFRAANG.pdf" target="_blank">Pour plus d'informations...</a> } ,
-		en	=> qq{Purchase of SBB subscriptions and regional subscriptions must be made via EPFL Human Resources Service.<br>
+	note_label => {
+		fr => qq{Les achats d'abonnements CFF et abonnements régionaux doivent obligatoirement être effectués via les Ressources Humaines de l'EPFL.<br>Les achats privés sont interdits.<br> <a href="https://www.epfl.ch/campus/services/wp-content/uploads/2019/06/CFF_2019AvantageMobiliteFRAANG.pdf" target="_blank">Pour plus d'informations...</a> },
+		en => qq{Purchase of SBB subscriptions and regional subscriptions must be made via EPFL Human Resources Service.<br>
 		Private purchases are prohibited.<br>
 		<a href="https://www.epfl.ch/campus/services/wp-content/uploads/2019/06/CFF_2019AvantageMobiliteFRAANG.pdf" target="_blank">More details...</a> },
 	},
@@ -142,15 +141,15 @@ my $messages = {
 
 # TODO: refactor every variable from the OPS code
 if (environment() eq 'prod') {
-	$cffLogon	= 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
-	$custURL	= 'Customer=epfl_new';
-	$CFFwebShop		= 'https://www.sbb.ch/';
+	$cffLogon    = 'https://www.sbb.ch/mct/wi/shop/b2b/SSOLogon.do';
+	$custURL     = 'Customer=epfl_new';
+	$CFFwebShop  = 'https://www.sbb.ch/';
 	$urlDossiers = qq'https://sapservices.epfl.ch/pop/RESTAdapter/api/fi/travelrequests';
 } else {
-	$cffLogon = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
-	$custURL	= 'Customer=epfl_new';	
-	$CFFwebShop		= 'https://int-www.sbb.ch/';
-	$urlDossiers  = qq'https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests';
+	$cffLogon    = 'https://int-www.sbb.ch/ticketshop/b2b/SSOLogon.do';
+	$custURL     = 'Customer=epfl_new';
+	$CFFwebShop  = 'https://int-www.sbb.ch/';
+	$urlDossiers = qq'https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests';
 }
 
 %args	= loadargs ();
@@ -197,7 +196,7 @@ sub main {
 #warn "--> main :: op=$args{op}, person=$args{person}\n";
 
 	my $all_fonds;
-	#	- SKIP FT03 MOTIF FONDS
+	# - SKIP FT03 MOTIF FONDS
 	my $sql = qq{select * from dinfo.fonds where etat='O' and motif <> 'FT03'};
 	my $sth = $db_dinfo->query ($sql);
 	while (my $data = $sth->fetchrow_hashref) {
@@ -205,7 +204,7 @@ sub main {
 	}
 
 	my @fondsloop;
-	map { 
+	map {
 		if ( $all_fonds->{$_} ) {
 			push @fondsloop, {
 				fond => $_,
@@ -271,7 +270,7 @@ sub main {
 					}
 	#warn "--> ERR fonds KO: $dossier->{dates} : $dossier->{concatFunds}\n" unless $dossier_ok;
 				}
-		
+
 				if ( scalar @managed_trips ) {
 					@managed_trips = sort { $a->{destination} cmp $b->{destination} } @managed_trips;
 					$template->param( sHasTravelNb => 1 );
@@ -314,7 +313,7 @@ sub go {
 		$no = $args{sNoVoyage};
 	}
 #  erreur ('Numéro du voyage absent') unless $no;
-	
+
 	unless ($Fonds) {
 		my $template = initTempl('priv.tmpl');
 		$errmsg = qq{Veuillez saisir le numéro du fonds};
@@ -397,8 +396,8 @@ sub getFonds {
 #_________________
 sub purge_transactions {
    my ($sesslife) = @_;
-   
-  return if $NO_PURGE; 
+
+  return if $NO_PURGE;
 	$dbh->query (qq{delete from transactions where addtime(datecrt,'0:$sesslife:5') < now()});
 }
 #_________________
@@ -466,7 +465,7 @@ sub authenticate {
 
 	my $rights = $Accreds->getAllUnitsWhereHasRight ($sciper, $RIGHT_NAME);	#	- 'railticket'
 	$fonds		  = getFonds ($rights);
-  
+
   $login_person = getPersonData ($sciper);
 
   erreur ("pas de droit pour ce service, veuillez contacter un de vos accréditeurs") unless scalar (keys %$fonds)  > 0;
@@ -482,7 +481,7 @@ sub getPersonsData {
   $scipers =~ s/,/','/g;
 
   my $users_data;
-  my $sql = qq{select sciper.sciper, nom_acc, prenom_acc, nom_usuel, prenom_usuel, addrlog from dinfo.sciper 
+  my $sql = qq{select sciper.sciper, nom_acc, prenom_acc, nom_usuel, prenom_usuel, addrlog from dinfo.sciper
   	left outer join dinfo.emails on sciper.sciper=emails.sciper where sciper.sciper in ('$scipers') };
   my $sth = $db_dinfo->query ($sql);
   while (my $data = $sth->fetchrow_hashref) {
@@ -494,9 +493,9 @@ sub getPersonsData {
   		nom 	 => $nom,
   		prenom => $prenom,
   		email  => $data->{addrlog},
-  	}; 
+  	};
   }
-  
+
   $users_data;
 }
 
@@ -505,7 +504,7 @@ sub getPersonData {
   my ($sciper) = @_;
   return unless $sciper;
 
-  my $sql = qq{select nom_acc,prenom_acc,nom_usuel,prenom_usuel,addrlog, sexe 
+  my $sql = qq{select nom_acc,prenom_acc,nom_usuel,prenom_usuel,addrlog, sexe
   	from dinfo.sciper 
   	left join dinfo.emails on sciper.sciper=emails.sciper
   	where sciper.sciper=?};
@@ -520,12 +519,12 @@ sub getPersonData {
   }
 
   my $phones;
-  my $sql 	 = qq{select distinct dinfo.annu.telephone1,dinfo.annu.telephone2	
+  my $sql 	 = qq{select distinct dinfo.annu.telephone1,dinfo.annu.telephone2
   	from dinfo.sciper
   	left join dinfo.annu on dinfo.sciper.sciper=dinfo.annu.sciper
   	where dinfo.annu.sciper=?};
   my $sth 	  = $db_dinfo->query ($sql, $sciper);
-		
+
   while (my ($tel1,$tel2) = $sth->fetchrow) {
     $phones .= ",$tel1" if $tel1;
     $phones .= ",$tel2" if $tel2;
@@ -541,7 +540,7 @@ sub getPersonData {
 		} else {
 			$phone .= qq{+41$_ };
 		}
-	}  	
+	}
   } split /,/, $phones;
   $phones = substr($phone, 0, 12);
   $phones = '+41216931111' unless $phones;
@@ -564,7 +563,7 @@ sub removeaccents {
 #_________________
 sub dbconnect {
 	my ($dbkey) = @_;
-	
+
 	my $dbconf_file = '/opt/dinfo/etc/dbs.conf';
 	die "dbconnect : ERR OPEN $dbconf_file [$!]" unless (open (DBCONF, "$dbconf_file")) ;
 	my ($dbname, $dbhost, $dbuser, $dbpwd) ;
@@ -586,12 +585,12 @@ sub dbconnect {
 	close DBCONF;
 
 	die "dbconnect : ERR DB CONFIG : $dbname, $dbhost, $dbuser" unless ($dbname and $dbhost and $dbuser and $dbpwd) ;
-	my $dsndb    = qq{dbi:mysql:$dbname:$dbhost:3306}; 
+	my $dsndb    = qq{dbi:mysql:$dbname:$dbhost:3306};
 	my $dbh = DBI->connect ($dsndb, $dbuser, $dbpwd);
 	$dbh->{'mysql_enable_utf8'} = 1;
 
 	die "dbconnect : ERR DBI CONNECT : $dbhost, $dbname, $dbuser" unless $dbh;
-	
+
 	return $dbh;
 }
 #_________________
@@ -608,20 +607,20 @@ sub loadargs {
 
   my $query = $ENV{QUERY_STRING};
   my $postdata;
-  
+
   if ($ENV{'REQUEST_METHOD'} && $ENV{'REQUEST_METHOD'} eq 'POST') {
    read (STDIN, $postdata, $ENV{'CONTENT_LENGTH'});
   }
   my $allargs = $query . '&' . $postdata;
   my @fields  = split (/&/, $allargs);
   foreach (@fields) {
-    s/\+/ /g;  
+    s/\+/ /g;
     s/%([0-9a-f]{2,2})/pack ("C", hex ($1))/gie;
   }
   my %args;
   foreach my $field (@fields) {
     next unless ($field =~ /=/);  
-    my ($name, $value) = split(/=/, $field, 2);  
+    my ($name, $value) = split(/=/, $field, 2);
     if ($name eq 'lang') {
     	next unless $value =~ /^(fr|en|)$/;
     }
@@ -631,7 +630,7 @@ sub loadargs {
     if ($name eq 'cf') {
     	next unless $value =~ /^\d\d\d\d$/;
     }
-    $args {$name} .= ' ' if $args {$name};  
+    $args {$name} .= ' ' if $args {$name};
     $args {$name} .= "$value";
   }
   %args
@@ -719,7 +718,7 @@ sub getUserBySciper {
 
 	return unless $sciper;
 	erreur ("numéro sciper incorrect") unless $sciper =~ /\d\d\d\d\d\d/;
-	
+
 	my $user;
 	#	- search sciper
 	my $sql = qq{select nom_acc,prenom_acc,nom_usuel,prenom_usuel,addrlog, date_naiss
