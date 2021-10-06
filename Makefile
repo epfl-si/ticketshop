@@ -32,7 +32,7 @@ tun:
 # OpenShift
 oc-build:
 	set -e -x; \
-	./../ops/cffsible -vvv -t ticketshop.build; \
+	./../ops/cffsible -vvv -t ticketshop.is; \
 	BUILDCMD=$$(oc start-build ticketshop-idevfsd); \
 	BUILDID=$$(echo "$$BUILDCMD" | grep -Eo '([0-9]*)'); \
 	oc logs -f bc/ticketshop-idevfsd --version=$$BUILDID
@@ -41,3 +41,9 @@ oc-deploy:
 	set -e -x; \
 	oc delete dc ticketshop; \
 	./../ops/cffsible  -vvv -t ticketshop.dc
+
+oc-getall:
+	oc get all,secrets,configmap,pvc -o name --namespace=ticketshop-test
+
+oc-delall:
+	oc delete all,secrets,configmap,pvc --namespace=ticketshop-test
