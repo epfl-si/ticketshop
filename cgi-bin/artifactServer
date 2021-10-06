@@ -35,7 +35,7 @@ my $PURGEDATA				= 0;
 #	 $rechnungsstelle = 'RST_EPFL_1' if $DEBUG;
 	 $CHECK_IPRANGE 	= 0 if $DEBUG;
 
-warn ">> artifactServer : IP=$ENV{REMOTE_ADDR}\n";
+warn "\n>> Get a request on artifactServer: IP=$ENV{REMOTE_ADDR}\n";
 	checkIPRange();
 
 	my $ldap = Net::LDAPS->new('ldap.epfl.ch') or die "new LDAP : $!";
@@ -54,7 +54,8 @@ warn ">> artifactServer : IP=$ENV{REMOTE_ADDR}\n";
 		dbname => 'dinfo',
 	);
 	my $Accreds	= new Cadi::Accreds (caller => '104782', utf8 => 1);
-	
+
+warn "  => doing $action->{op}\n";
 	getArtifactID ($action->{email}) 			if $action->{op} eq 'getArtifactID';
 	getArtifact	  ($action->{artifactID}) if $action->{op} eq 'getArtifact';
  	error ('22', 'Unsupported operation');
@@ -63,7 +64,7 @@ warn ">> artifactServer : IP=$ENV{REMOTE_ADDR}\n";
 
 sub getParams {
 	my $msg = shift;
-warn ">> getParams : msg\n".Dumper($msg);	
+warn ">> getParams: msg\n   "  .Dumper($msg);
 	error ('21', 'Missing parameters') unless $msg;
 
 	my $dom = XML::LibXML->load_xml(string => $msg);
@@ -71,7 +72,7 @@ warn ">> getParams : msg\n".Dumper($msg);
 	$xpc->registerNs('ns3', 'http://xmlns.sbb.ch/zvs/splp/artifact');
 	
  	my $email = $xpc->findvalue('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifactID/email');
-warn ">> email=$email\n";
+warn "  ... email=$email\n";
  	if ($email) {
 		error ('21', 'Illegal parameter') unless $email =~ m/$REGEX_EMAIL/i;
 		return { 
@@ -82,7 +83,7 @@ warn ">> email=$email\n";
 	
 	my $artifactID = $xpc->findvalue('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifact/artifactID/id');
 	error ('21', 'Unknown parameter') unless $artifactID;
-warn ">> id=$artifactID\n";
+warn "  ... id=$artifactID\n";
 	error ('21', 'Illegal parameter') unless $artifactID =~ m/$REGEX_ID/i;
  	
 	return { 
@@ -96,7 +97,7 @@ warn ">> id=$artifactID\n";
 
 sub getArtifactID {
 	my $email = shift;
-warn ">> getArtifactID : $email\n";
+warn ">> getArtifactID: $email\n";
 	error ('21', 'Missing Email parameter') unless $email;
 
 	my $user = getUserByEmail($email);
@@ -125,11 +126,11 @@ warn ">> getArtifactID : $email\n";
 
 sub getArtifact {
 	my $sciper = shift;
-warn ">> getArtifact : $sciper\n";
+warn ">> getArtifact: $sciper\n";
 	error ('21', 'Missing artifactID') unless $sciper;
  	my $user = getUser($sciper);
  	error ('2', 'User not found') unless $user;
-warn "getArtifact user\n".Dumper($user);
+warn "  ... getArtifact: user\n   ".Dumper($user);
 	my $output = qq{<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
    <soap:Body>
       <ns2:getArtifactResponse xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
@@ -155,38 +156,37 @@ warn "getArtifact user\n".Dumper($user);
 	my $no_dossier = $data->{no_dossier};
 	my $no_fond 	 = $data->{no_fond};
 
-warn ">> getArtifact : data\n".Dumper($data);
+warn "  ... getArtifact: data\n   ".Dumper($data);
 	if ($data->{benef_sciper}) {
 		my $benef = getUserBySciper($data->{benef_sciper});
 # 		utf8::encode($benef->{name});
 # 		utf8::encode($benef->{firstname});
-warn ">> getArtifact : benef\n".Dumper($benef);
+warn "  ... getArtifact: benef\n   ".Dumper($benef);
 		next unless $benef;
 		my $anrede 	= $benef->{sexe} eq 'F' ? 'FRAU' : 'HERR';
 		$traveller_data .= qq{
            <mitreisende>
-            <anrede>$anrede</anrede>
-            <name>$benef->{name}</name>
-            <vorname>$benef->{firstname}</vorname>
-            <geburtsdatum>$benef->{birthdate}</geburtsdatum>
-            <email>$benef->{email}</email>
+             <anrede>$anrede</anrede>
+             <name>$benef->{name}</name>
+             <vorname>$benef->{firstname}</vorname>
+             <geburtsdatum>$benef->{birthdate}</geburtsdatum>
+             <email>$benef->{email}</email>
            </mitreisende>};
 	}
 	
 	if ($no_fond) {
-warn ">> A getArtifact no_fond=$no_fond";
+warn "  ... getArtifact: no_fond=$no_fond";
 			$output .= qq{
               <kostenzuordnungen>
                 <bezeichnung>$no_fond</bezeichnung>
               </kostenzuordnungen>
-              <referenz>$no_fond</referenz>
-              };
+              <referenz>$no_fond</referenz>};
 	} else {
 		my $rights = $Accreds->getAllUnitsWhereHasRight ($sciper, $RIGHT_NAME);	#	- 'railticket'
 		if ($rights) {
 			my $fonds	 = getFonds ($rights);
-warn ">> B0 getArtifact rights\n".Dumper($rights);
-warn ">> B1 getArtifact fonds=".Dumper($fonds);
+warn "  ... B0 getArtifact rights\n   ".Dumper($rights);
+warn "  ... B1 getArtifact fonds=".Dumper($fonds);
 			foreach my $fond (sort keys %$fonds) {
 				$output .= qq{
                <kostenzuordnungen>
@@ -213,9 +213,7 @@ warn ">> B1 getArtifact fonds=".Dumper($fonds);
                <plz>1015</plz>
                <ort>Lausanne</ort>
                <land>CH</land>
-            </geschaeftsadresse>
-  };
-
+            </geschaeftsadresse>};
 
   $output .= qq{
           $traveller_data
@@ -225,15 +223,14 @@ warn ">> B1 getArtifact fonds=".Dumper($fonds);
         </return>
       </ns2:getArtifactResponse>
    </soap:Body>
-</soap:Envelope>
-  };
+</soap:Envelope>};
 
 	#	- remove travel data for user
 	if ($PURGEDATA) {
 		my $sql = qq{delete from transactions where sciper=?};
 		my $sth = $dbh->prepare( $sql ) or die "** ERR prepare :$sql: $DBI::errstr\n";
 		$sth->execute ($sciper) 		or die "** ERR execute : $DBI::errstr\n";
-		warn ">> getArtifact : purge transactions for sciper : $sciper\n";
+		warn ">> getArtifact: purge transactions for sciper: $sciper\n";
 	}
 	
 	SOAPreturn ($output);
@@ -244,24 +241,25 @@ warn ">> B1 getArtifact fonds=".Dumper($fonds);
 sub error {
 	my $status = shift;
 	my $msg		 = shift;
-	
-warn ">> error : $status, $msg\n";
-        print "Status: 500 Internal server error\n";  # https://go.epfl.ch/INC0423845
+
+warn ">> error: $status, $msg\n";
+
+	print "Status: 500 Internal server error\n";  # https://go.epfl.ch/INC0423845
 	SOAPreturn (qq{<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-<soap:Body>
- <soap:Fault>
-   <faultcode>soap:Server</faultcode>
-   <faultstring>Fault occurred while processing.</faultstring>
-   <detail>
-    <ns2:faultMessage xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
-      <errors>
-       <errorCode>$status</errorCode>
-       <errorMessage>$msg</errorMessage>
-      </errors>
-    </ns2:faultMessage>
-   </detail>
- </soap:Fault>
-</soap:Body>
+  <soap:Body>
+    <soap:Fault>
+      <faultcode>soap:Server</faultcode>
+      <faultstring>Fault occurred while processing.</faultstring>
+      <detail>
+        <ns2:faultMessage xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
+          <errors>
+            <errorCode>$status</errorCode>
+            <errorMessage>$msg</errorMessage>
+          </errors>
+        </ns2:faultMessage>
+      </detail>
+    </soap:Fault>
+  </soap:Body>
 </soap:Envelope>
 });
 
@@ -269,7 +267,7 @@ warn ">> error : $status, $msg\n";
 
 sub SOAPreturn {
 	my $msg = shift;
-warn ">> SOAPreturn : $msg\n";
+warn ">> SOAPreturn:\n   $msg\n";
 	return unless $msg;
 	my $msglen = length ($msg);
 	print qq{Content-Type: text/xml; charset=utf-8
@@ -293,7 +291,7 @@ sub checkIPRange {
 		my ($start_range, $end_range) = split /-/, join '', Net::CIDR::cidr2range($ip);
 		my $start_addr = ip2dec($start_range);
 		my $end_addr   = ip2dec($end_range);
-warn ">> checkIPRange $dec_addr : $start_addr, $end_addr\n";
+warn ">> checkIPRange $dec_addr: $start_addr, $end_addr\n";
 		if ($end_addr) {
 			return 1 if ($dec_addr ge $start_addr) && ($dec_addr le $end_addr);
 		} else {
@@ -385,10 +383,9 @@ sub getUserBySciper {
 		$user->{email} 	= $data->{email};
 		my ($day, $mon, $yr) = split /\./, $data->{date_naiss};
 		$user->{birthdate} = qq{$yr-$mon-$day};
-warn "ArtifactServer getUserBySciper : sciper=$sciper\n".Dumper($user);
+warn "  ... getUserBySciper: sciper=$sciper\n   ".Dumper($user);
 		return $user
 	}
-warn "ArtifactServer getUserBySciper : sciper=$sciper NOT FOUND\n";
 	return 0;
 }
 
