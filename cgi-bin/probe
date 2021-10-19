@@ -19,13 +19,13 @@ use Cadi::CadiDB;
 use Cadi::WSUtils;
 
 my $pi = $ENV {PATH_INFO};
+sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
 
 my $config_items = {
 		accreddb 	=> { active => '1', critical => 'true', label => 'mysql accred/dinfo db access',},
 		cff				=> { active => '1', critical => 'true', label => 'mysql cff db access',},
 };
-my $DEBUG					= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
- 
+
 my $query = new CGI;
 my %args;
 my @params = $query->param;
@@ -49,7 +49,7 @@ if ( $pi =~ /usage/ ) {
 }	
 
 	my $metrics;
-	my $line = $DEBUG ? 'test' : 'prod';
+	my $line = environment();
 
 	foreach my $key ( keys %$config_items ) {
 		my $item = $config_items->{$key};
