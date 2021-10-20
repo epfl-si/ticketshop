@@ -269,7 +269,7 @@ sub SOAPreturn {
 	my $msg = shift;
 warn ">> SOAPreturn:\n   $msg\n";
 	return unless $msg;
-	my $msglen = length ($msg);
+	my $msglen = bytes::length ($msg);
 	print qq{Content-Type: text/xml; charset=utf-8
 Content-Length: $msglen
 
