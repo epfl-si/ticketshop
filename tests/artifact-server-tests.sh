@@ -11,7 +11,7 @@ fatal () {
 }
 
 prereqs () {
-  which xmllint 2>/dev/null || {
+  which xmllint >/dev/null || {
     case "$(uname -s)" in
       Linux)  fatal "Please install the xmllint package" ;;
       Darwin) fatal 'Please install the xmllint package: `brew install libxml2`' ;;
