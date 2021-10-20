@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://xmlns.sbb.ch/zvs/splp/artifact/comm" xmlns:tns="http://xmlns.sbb.ch/zvs/splp/artifact/comm" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="alias">
+    <xs:annotation>
+      <xs:documentation>Description of Alias.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="aliasCC" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Kreditkarten-Alias, welches beim Kauf verwendet wird</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="maskedCC" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Maskierte Kreditkartennummer</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="50"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="error" type="tns:error" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="error">
+    <xs:annotation>
+      <xs:documentation>Dieser Typ enthaelt Informationen zu einem aufgetretenem Fehler, um das Tracking im Problemfall zu vereinfachen.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="errorCode">
+        <xs:annotation>
+          <xs:documentation>Fehler-Code</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="errorMessage">
+        <xs:annotation>
+          <xs:documentation>Fehlermeldung</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="errorDetail" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Details zur Fehlermeldung</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="4000"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="artifactID">
+    <xs:annotation>
+      <xs:documentation>Artefakt-ID
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="id">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="geschaeftsadresse">
+    <xs:annotation>
+      <xs:documentation>Die Geschaeftsadresse dient als Lieferadresse, um je nach Produkt den Versand an eine Adresse sicherzustellen.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="firmaBez">
+        <xs:annotation>
+          <xs:documentation>Firmenname</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="adressZusatz" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Organisations- bzw. Unternehmenseinheit</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="postfachNummer" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="strasse">
+        <xs:annotation>
+          <xs:documentation>Strasse und Nummer</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="plz">
+        <xs:annotation>
+          <xs:documentation>Postleitzahl</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ort">
+        <xs:annotation>
+          <xs:documentation>Ortschaft</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="18"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="land">
+        <xs:annotation>
+          <xs:documentation>ISO 3166 ALPHA-2 Laendercode gem. offizieller Laenderliste</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="3"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="kostenzuordnung">
+    <xs:annotation>
+      <xs:documentation>Der Rechnungsstelle zugehoerigen Kostenzuordnungen.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="bezeichnung">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="64"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="mitreisender">
+    <xs:annotation>
+      <xs:documentation>Mitreisende sind Personen, in deren Namen ein angemeldeter Benutzer Billette kaufen darf. Mit diesem Konstrukt wird die Stellvertreterfunktionalitaet abgedeckt. Die Uebermittlung von zusaetzlichen Attributen wie Name, Vorname etc. sind notwendig, weil ein angemeldeter SwissPass-Benutzer keine Informationen eines anderen SwissPass-Benutzers lesen darf. Die Rechnungsstellen der Mitreisenden muessen ebenfalls uebermittelt werden, sofern diese von jenen des Reisenden abweichen.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="anrede" type="tns:anrede"/>
+      <xs:element name="name">
+        <xs:annotation>
+          <xs:documentation>Name des Mitreisenden</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="60"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="vorname">
+        <xs:annotation>
+          <xs:documentation>Vorname des Mitreisenden</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="geburtsdatum" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Geburtsdatum des Mitreisenden. Format: YYYY-MM-DD</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="rechnungsstelle">
+    <xs:annotation>
+      <xs:documentation>Rechnungsstelle
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="bezeichnung">
+        <xs:annotation>
+          <xs:documentation>Name der Rechnungsstelle</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="64"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="kostenzuordnungen" type="tns:kostenzuordnung" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="referenz" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Freitext. Erscheint auf Faktura und Statistik</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="referenz2" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Freitext. Erscheint auf Faktura und Statistik</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="reisender">
+    <xs:annotation>
+      <xs:documentation>Dieser Datentyp enthaelt saemtliche Personen-Informationen, welche zu einer Durchfuehrung eines SPLP-Logins notwendig sind. Weitere Elemente dienen der Verarbeitung im Backend (Reporting, Buchhaltung) des Kunden.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="artifactID" type="tns:artifactID"/>
+      <xs:element name="email">
+        <xs:annotation>
+          <xs:documentation>Email des Mitarbeiters nach IETF RFC 2821</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="vertragsnummer">
+        <xs:annotation>
+          <xs:documentation>Vertragsnummer des Kunden (B2B Partner)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="7"/>
+            <xs:minLength value="7"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="rechnungsstellen" type="tns:rechnungsstelle" maxOccurs="unbounded"/>
+      <xs:element name="sprache" type="tns:sprache"/>
+      <xs:element name="telefonnummer">
+        <xs:annotation>
+          <xs:documentation>Festnetz- oder Mobilnummer des Mitarbeiters. Wird im Kaufprozess zwingend benoetigt</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="personalnummer" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Personalnummer des Mitarbeiters</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="geschaeftsadresse" type="tns:geschaeftsadresse"/>
+      <xs:element name="zahlungsinformation" type="tns:zahlungsinformation" minOccurs="0"/>
+      <xs:element name="zahlungsinformationDatatrans" type="tns:zahlungsinformationDatatrans" minOccurs="0"/>
+      <xs:element name="mitreisende" type="tns:mitreisender" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="zahlungsinformation">
+    <xs:annotation>
+      <xs:documentation>Informationen zur Kreditkartenzahlung, welche vom Kunden zu Datatrans uebermittelt wird.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="nummer">
+        <xs:annotation>
+          <xs:documentation>Nummer der Karte. Sie wird von Datatrans maskiert und f&#252;r SBB unkenntlich gemacht (Alias).</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="20"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="gueltigBis">
+        <xs:annotation>
+          <xs:documentation>Gueltigkeitsdatum der Karte im Format YYYYMM (vierstelliges Jahr, zweistelliger Monat). MM/YY oder MMYY werden auch akzeptiert.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="8"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="inhaber">
+        <xs:annotation>
+          <xs:documentation>Nat. Person: Vorname des Inhabers. Jur. Person: Firmen-Inhaber auf der Karte</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="firma">
+        <xs:annotation>
+          <xs:documentation>Nat. Person: Nachname des Inhabers. Jur. Person: Firmen-Name auf der Karte</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="institut">
+        <xs:annotation>
+          <xs:documentation>Herausgeber der Karte. Werte: American Express, Diners, Japan Credit Bank, PostFinance Card, Mastercard, Visa</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="zahlungsinformationDatatrans">
+    <xs:annotation>
+      <xs:documentation>Informationen zur Kreditkartenzahlung, welche von Datatrans an die SBB uebermittelt werden (KK-Alias und maskierte KK-Nummer). Dieser Datentyp ist fuer die Rueckmeldung von maskierten Kreditkartennummern reserviert und darf ausschliesslich von Datatrans verwendet werden.
+Model Version: 1.0.0</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alias" type="tns:alias"/>
+      <xs:element name="gueltigBis">
+        <xs:annotation>
+          <xs:documentation>Gueltigkeitsdatum der Karte im Format YYYYMM (vierstelliges Jahr, zweistelliger Monat). MM/YY oder MMYY werden auch akzeptiert.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="8"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="inhaber">
+        <xs:annotation>
+          <xs:documentation>Nat. Person: Vorname des Inhabers. Jur. Person: Firmen-Inhaber auf der Karte</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="firma">
+        <xs:annotation>
+          <xs:documentation>Nat. Person: Nachname des Inhabers. Jur. Person: Firmen-Name auf der Karte</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="institut">
+        <xs:annotation>
+          <xs:documentation>Herausgeber der Karte. Werte: American Express, Diners, Japan Credit Bank, PostFinance Card, Mastercard, Visa</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="anrede">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FRAU"/>
+      <xs:enumeration value="HERR"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="sprache">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="de"/>
+      <xs:enumeration value="fr"/>
+      <xs:enumeration value="it"/>
+      <xs:enumeration value="en"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

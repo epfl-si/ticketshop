@@ -2,6 +2,22 @@
 
 : ${TARGET:=test-ticketshop.epfl.ch}
 : ${USER_EMAIL:=dominique.quatravaux@epfl.ch}
+: ${USER_SCIPER:=169419}
+
+fatal () {
+  echo >&2 "$@"
+  echo "1..1"
+  exit 1
+}
+
+prereqs () {
+  which xmllint 2>/dev/null || {
+    case "$(uname -s)" in
+      Linux)  fatal "Please install the xmllint package" ;;
+      Darwin) fatal 'Please install the xmllint package: `brew install libxml2`' ;;
+    esac
+  }
+}
 
 tmpdir () {
     local tmpdir
@@ -40,6 +56,18 @@ XML
          https://"$TARGET"/cgi-bin/artifactServer
 }
 
+soap_getArtifact () {
+  local sciper=$1; shift
+
+  tmpfile_cat __soap_getArtifact_xml_req <<XML
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><SOAP-ENV:Body><ns3:getArtifact xmlns:ns3="http://xmlns.sbb.ch/zvs/splp/artifact"><artifactID><id>$sciper</id></artifactID></ns3:getArtifact></SOAP-ENV:Body></SOAP-ENV:Envelope>
+XML
+
+  curl -v -X POST -H "Content-Type: text/xml" \
+     --data-binary @$__soap_getArtifact_xml_req \
+     https://"$TARGET"/cgi-bin/artifactServer
+}
+
 run_test () {
     (set -e; set -o pipefail; $2)
     local teststatus=$?
@@ -60,7 +88,14 @@ test_500_response_on_bogus_user () {
     soap_getArtifactID "fake.email@epfl.ch"  2>&1 | (set -x; grep -q "HTTP/1.1 500")
 }
 
-echo Testing on $TARGET with $USER_EMAIL
+test_conformant_xml_on_getArtifact_on_existing_user () {
+  soap_getArtifact $USER_SCIPER | cat -v
+  # iconv -f utf8 -t utf8 | xmllint --postvalid --schema ./doc/WSDL_ArtifactService/ArtifactService_schema1.xsd -
+}
+
+prereqs
+echo Testing on $TARGET with $USER_EMAIL and $USER_SCIPER
 run_test 1 test_200_response_on_existing_user
 run_test 2 test_500_response_on_bogus_user
-echo "1..2"
+run_test 3 test_conformant_xml_on_getArtifact_on_existing_user
+echo "1..3"

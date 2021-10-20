@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://xmlns.sbb.ch/zvs/splp/artifact" xmlns:soap="http://soap/envelope/"
+ xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://xmlns.sbb.ch/zvs/splp/artifact/comm">
+
+  <xs:import namespace="http://xmlns.sbb.ch/zvs/splp/artifact/comm" schemaLocation="zvs-splp-artifact-comm.xsd"/>
+  <xs:element name="faultMessage" nillable="true">
+	  <xs:complexType>
+		  <xs:annotation>
+			  <xs:documentation>Description of FaultMessageBean.
+				  Model Version: 1.0.0</xs:documentation>
+		  </xs:annotation>
+		  <xs:sequence>
+			  <xs:element name="errors" type="ns1:error" maxOccurs="unbounded"/>
+		  </xs:sequence>
+	  </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getArtifact">
+	  <xs:complexType>
+		  <xs:sequence>
+			  <xs:element name="artifactID" type="ns1:artifactID">
+				  <xs:annotation>
+					  <xs:documentation>Die Artefakt-ID wird beim Login zur Abfrage der entsprechenden Personeninformationen uebermittelt.</xs:documentation>
+				  </xs:annotation>
+			  </xs:element>
+		  </xs:sequence>
+	  </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getArtifactID">
+	  <xs:complexType>
+		  <xs:sequence>
+			  <xs:element name="email" type="xs:string">
+				  <xs:annotation>
+					  <xs:documentation>Geschaefts-Emailadresse</xs:documentation>
+				  </xs:annotation>
+			  </xs:element>
+			  <xs:element name="vertragsnummer" type="xs:string"/>
+		  </xs:sequence>
+	  </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getArtifactIDResponse">
+	  <xs:complexType>
+		  <xs:sequence>
+			  <xs:element name="return" type="ns1:artifactID"/>
+		  </xs:sequence>
+	  </xs:complexType>
+  </xs:element>
+
+  <xs:element name="getArtifactResponse">
+	  <xs:complexType>
+		  <xs:sequence>
+			  <xs:element name="return" type="ns1:reisender"/>
+		  </xs:sequence>
+	  </xs:complexType>
+  </xs:element>
+</xs:schema>
