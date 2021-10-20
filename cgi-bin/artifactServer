@@ -29,7 +29,8 @@ my $REGEX_ID				= '^[1-9]\d{5}$';
 my $RIGHT_NAME			= 'railticket';
 
 my $CHECK_IPRANGE		= 1;
-my $DEBUG 			 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
+sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
+my $DEBUG = environment ne 'prod';
 my $PURGEDATA				= 0;
 
 #	 $rechnungsstelle = 'RST_EPFL_1' if $DEBUG;

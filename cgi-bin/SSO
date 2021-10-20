@@ -25,10 +25,9 @@ my $password 		= 'epfl05';
 my $vertragsnummer 	= 'EPFL776';
 my $no_purge 		= '1';
 
-my $DEBUG 	= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
-if ($DEBUG) {
+sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
+if (environment ne 'prod') {
 	$rechnungsstelle = 'RST_EPFL_1'; # - facture test
-} else {
 }
 
 my %args = loadargs ();
