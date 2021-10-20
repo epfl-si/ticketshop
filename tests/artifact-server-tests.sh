@@ -89,8 +89,7 @@ test_500_response_on_bogus_user () {
 }
 
 test_conformant_xml_on_getArtifact_on_existing_user () {
-  soap_getArtifact $USER_SCIPER | cat -v
-  # iconv -f utf8 -t utf8 | xmllint --postvalid --schema ./doc/WSDL_ArtifactService/ArtifactService_schema1.xsd -
+  soap_getArtifact $USER_SCIPER 2>/dev/null | iconv -f utf8 -t utf8 | xmllint --noout -
 }
 
 prereqs
