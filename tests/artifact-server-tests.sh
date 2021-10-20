@@ -82,6 +82,10 @@ test_200_response_on_existing_user () {
     soap_getArtifactID "$USER_EMAIL"  2>&1 | (set -x; grep -q "HTTP/1.1 200")
 }
 
+test_conformant_xml_on_getArtifactID_on_existing_user () {
+    soap_getArtifactID "$USER_EMAIL" 2>/dev/null | iconv -f utf8 -t utf8 | xmllint --noout -
+}
+
 test_500_response_on_bogus_user () {
     # Weird - It sounds like being in an “if” (from the caller) disables set -e altogether?
     soap_getArtifactID "fake.email@epfl.ch"  2>&1 | (set -x; grep -q "User not found")
@@ -95,6 +99,7 @@ test_conformant_xml_on_getArtifact_on_existing_user () {
 prereqs
 echo Testing on $TARGET with $USER_EMAIL and $USER_SCIPER
 run_test 1 test_200_response_on_existing_user
-run_test 2 test_500_response_on_bogus_user
-run_test 3 test_conformant_xml_on_getArtifact_on_existing_user
-echo "1..3"
+run_test 2 test_conformant_xml_on_getArtifactID_on_existing_user
+run_test 3 test_500_response_on_bogus_user
+run_test 4 test_conformant_xml_on_getArtifact_on_existing_user
+echo "1..4"
