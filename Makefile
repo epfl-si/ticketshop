@@ -19,7 +19,7 @@ exec:
 	docker exec -it $$(docker ps -a --filter "name=ticketshop_web" --format "{{.Names}}") bash
 
 .PHONY: up
-up:
+up: dbs.local.conf
 	docker-compose up --build --force-recreate --remove-orphans
 
 .PHONY: stop
@@ -60,3 +60,10 @@ oc-getall:
 .PHONY: oc-delall
 oc-delall:
 	oc delete all,secrets,configmap,pvc --namespace=ticketshop-test
+
+dbs.local.conf:
+	cp /keybase/team/epfl_ticketshop/dbs.conf $@
+
+.PHONY: realclean
+realclean:
+	rm dbs.local.conf
