@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: ${TARGET:=test-ticketshop.epfl.ch}
+: ${TARGET:=https://test-ticketshop.epfl.ch}
 : ${USER_EMAIL:=dominique.quatravaux@epfl.ch}
 : ${USER_SCIPER:=169419}
 
@@ -53,7 +53,7 @@ XML
 
     curl -v -X POST -H "Content-Type: text/xml" \
          --data-binary @$__soap_getArtifactID_xml_req \
-         https://"$TARGET"/cgi-bin/artifactServer
+         "$TARGET"/cgi-bin/artifactServer
 }
 
 soap_getArtifact () {
@@ -65,7 +65,7 @@ XML
 
   curl -v -X POST -H "Content-Type: text/xml" \
      --data-binary @$__soap_getArtifact_xml_req \
-     https://"$TARGET"/cgi-bin/artifactServer
+     "$TARGET"/cgi-bin/artifactServer
 }
 
 run_test () {
