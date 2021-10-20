@@ -5,6 +5,8 @@ LABEL maintainer "idev-fsd@groupes.epfl.ch"
 
 RUN touch /usr/local/apache2/conf/25-ticketshop.epfl.ch.conf
 
+RUN cpanm LWP::Protocol::https
+
 # Enable apache modules. `headers` and `env` modules are enabled by default.
 RUN sed -i \
     -e 's/^#\(LoadModule .*mod_rewrite.so\)/\1/' \
