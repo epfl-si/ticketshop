@@ -1,6 +1,6 @@
 # https://hub.docker.com/_/httpd
 #FROM os-docker-registry.epfl.ch/dinfo-cicd/cadi-libs-idevfsd:latest
-FROM os-docker-registry.epfl.ch/ticketshop-test/ticketshop-idevfsd:preprod
+FROM os-docker-registry.epfl.ch/ticketshop-test/ticketshop:preprod
 LABEL maintainer "idev-fsd@groupes.epfl.ch"
 
 # Enable apache modules. `headers` and `env` modules are enabled by default.
