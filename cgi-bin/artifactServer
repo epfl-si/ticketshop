@@ -17,8 +17,6 @@ use Cadi::Accreds;
 
 #	- params
 my $rechnungsstelle = 'EPFL'; # - facture
-my $firmaID 				= 'epfl.ch';
-my $password 				= 'epfl05';
 my $vertragsnummer 	= 'EPFL776';
 my @YP_IP_range			= ('128.178.1.146', '194.150.244.64/27', '195.65.152.0/24', '195.65.154.0/24');
 my $firmaBez				= 'EPFL';
@@ -231,7 +229,7 @@ warn "  ... B1 getArtifact fonds=".Dumper($fonds);
         <telefonnummer>$user->{phone}</telefonnummer>
         <personalnummer>$sciper</personalnummer>
         <geschaeftsadresse>
-          <firmaBez>EPFL</firmaBez>
+          <firmaBez>$firmaBez</firmaBez>
           <strasse>av Piccard</strasse>
           <plz>1015</plz>
           <ort>Lausanne</ort>
