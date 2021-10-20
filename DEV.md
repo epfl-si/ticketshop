@@ -3,6 +3,12 @@
 This file explain how one can develop ticketshop locally (e.g. on his own 
 laptop).
 
+## TL;DR
+
+`make build up`
+
+→ http://localhost:8080/
+
 ## Docker images
 
 First of all, the base image used for this project is built on the `dinfo-cicd`
