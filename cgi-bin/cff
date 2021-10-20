@@ -34,7 +34,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 my $me         = $ENV {SCRIPT_NAME};
 my $pi         = $ENV {PATH_INFO};
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
-my $version    = 'v1.2.10';
+my $version    = 'v1.3.0';
 my $NO_PURGE   = '';
 my $tmpldir    = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
 my @superusers = qw(169419 243371); # - nborboen, quatrava

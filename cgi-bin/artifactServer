@@ -234,8 +234,7 @@ warn "  ... B1 getArtifact fonds=".Dumper($fonds);
           <plz>1015</plz>
           <ort>Lausanne</ort>
           <land>CH</land>
-        </geschaeftsadresse>
-};
+        </geschaeftsadresse>};
 
   $output .= qq{
           $traveller_data} if $traveller_data;
