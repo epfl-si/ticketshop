@@ -196,7 +196,30 @@ warn "  ... B1 getArtifact fonds=".Dumper($fonds);
 			}
 		} else {
 			#	- error 
-			error ('21', 'No rights');
+			## October 2021 we had a meeting with SBB/CFF
+			##
+			## Q: Oliver: kindly advise, with no change in behavior on the side of your
+			##    software as of yet, for the best way to respond in the case of a user
+			##    that has a SwissPass connected to their @epfl.ch address, but no
+			##    permission (yet) to buy tickets. ⚠ I must add here that it is important
+			##    to us that such a transaction may *not* be allowed to proceed! (This
+			##    is a requirement brought about by our internal financial rules.)
+			##
+			##
+			## A: Difference between epfl and all other splp-partners is, that
+			##    epfl-employees also do the registration when they potentially don’t
+			##    have the permissions yet (for all other splp-partners permissions for
+			##    employees are there when they register for splp).
+			##    The best way is to respond with an error 3
+			##    (3: Employee has no invoice centre authorisations) in this case:
+			##    the splp-registration will be successful then (and the employee is
+			##    not able to buy tickets).
+			##    Problem is that the employees don’t see their epfl-business-accounts
+			##    when they login to webshop until they get the permissions from epfl.
+			##    We cannot change this process and behavior, because it’s a requirement
+			##    from business and implemented this way in all our applications.
+			# error ('21', 'No rights');
+			error ('3', 'Employee has no invoice centre authorisations');
 		}
 	}
 	$output .= qq{
