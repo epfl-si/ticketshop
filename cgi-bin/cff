@@ -756,6 +756,7 @@ sub getDossiers {
 	my $req  = new HTTP::Request ('GET', $urlDossiers);
 	   $req->authorization_basic( $sap_user, $sap_pwd );
 	my $res  = $lwp->request ($req);
+warn " >> getDossiers\n" . Dumper($res);
 	if ( $res->code == 200 ) {
 warn " --> getDossiers : status 200\n";
 		return '' if $res->content eq '""';
