@@ -373,7 +373,7 @@ sub getUserByEmail {
 				email  		=> $email,	  	
 				phone  		=> $phone,	  	
 	  	};
-	  	return $user;
+	  	return $user if $sciper =~ m/^\d+$/;  # No guests
 	}
 	return 0;
 }
