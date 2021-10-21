@@ -303,6 +303,8 @@ sub ip2dec ($) {
 }
 
 sub checkIPRange {
+	return 1;
+
 	return 1 unless $CHECK_IPRANGE;
 	my $addr = $ENV{REMOTE_ADDR};
 	error ('21', 'IP address not found')  unless $addr;
