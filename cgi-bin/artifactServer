@@ -83,9 +83,12 @@ warn "  ... email=$email\n";
 	my $artifactID = $xpc->findvalue('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifact/artifactID/id');
 	error ('21', 'Unknown parameter') unless $artifactID;
 warn "  ... id=$artifactID\n";
-	error ('21', 'Illegal parameter') unless $artifactID =~ m/$REGEX_ID/i;
- 	
 	return { 
+	# See INC0429583 -- for unknown reason some user get their account linked with
+	# a guest account. Returning the Error "2" is the good way to tell SBB to
+	# unlink that account.
+	error ( '2', 'User not found') unless $artifactID =~ m/$REGEX_ID/i;
+
 		op 				 => 'getArtifact',
 		artifactID => $artifactID,
 	} ;
