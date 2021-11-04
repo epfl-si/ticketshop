@@ -67,3 +67,8 @@ dbs.local.conf:
 .PHONY: realclean
 realclean:
 	rm dbs.local.conf
+
+.PHONY: test
+test:
+	./tests/artifact-server-tests.sh
+

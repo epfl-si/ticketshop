@@ -72,9 +72,9 @@ run_test () {
     (set -e; set -o pipefail; $2)
     local teststatus=$?
     if [ $teststatus = 0 ]; then
-        echo "ok $1 # $2"
+        echo "✅ ok $1 # $2"
     else
-        echo "not ok $1 # $2"
+        echo "❌ not ok $1 # $2"
     fi
 }
 
@@ -96,10 +96,17 @@ test_conformant_xml_on_getArtifact_on_existing_user () {
   soap_getArtifact $USER_SCIPER 2>/dev/null | iconv -f utf8 -t utf8 | xmllint --noout -
 }
 
+test_user_invalidation_with_guest_sciper () {
+  soap_getArtifact "G123456"  2>&1 | (set -x; grep -q "<errorCode>2</errorCode>")
+  soap_getArtifact "G123456"  2>&1 | (set -x; grep -q "User not found")
+  soap_getArtifact "G123456"  2>&1 | (set -x; grep -q "HTTP/1.1 500")
+}
+
 prereqs
 echo Testing on $TARGET with $USER_EMAIL and $USER_SCIPER
 run_test 1 test_200_response_on_existing_user
 run_test 2 test_conformant_xml_on_getArtifactID_on_existing_user
 run_test 3 test_500_response_on_bogus_user
 run_test 4 test_conformant_xml_on_getArtifact_on_existing_user
-echo "1..4"
+run_test 5 test_user_invalidation_with_guest_sciper
+echo "1..5"
