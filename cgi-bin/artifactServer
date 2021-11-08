@@ -32,7 +32,7 @@ my $DEBUG = environment ne 'prod';
 my $PURGEDATA				= 0;
 
 #	 $rechnungsstelle = 'RST_EPFL_1' if $DEBUG;
-	 $CHECK_IPRANGE 	= 0 if $DEBUG;
+$CHECK_IPRANGE 	= 0 if $DEBUG;
 
 warn "\n>> Get a request on artifactServer: IP=$ENV{REMOTE_ADDR}\n";
 	checkIPRange();
@@ -306,10 +306,12 @@ sub ip2dec ($) {
 }
 
 sub checkIPRange {
-	return 1;
-
 	return 1 unless $CHECK_IPRANGE;
-	my $addr = $ENV{REMOTE_ADDR};
+warn ">> checkIPRange " . Dumper(\%ENV{HTTP_X_FORWARDED_FOR});
+	my @forwarded_for_IPs = split(', ', %ENV{HTTP_X_FORWARDED_FOR});
+
+	# my $addr = $ENV{REMOTE_ADDR};
+	my $addr = @forwarded_for_IPs[0];
 	error ('21', 'IP address not found')  unless $addr;
 	my $dec_addr = ip2dec($addr);
 	foreach my $ip (@YP_IP_range) {
@@ -323,6 +325,7 @@ warn ">> checkIPRange $dec_addr: $start_addr, $end_addr\n";
 			return 1 if $dec_addr eq $start_addr;
 		}
 	}
+	warn ">> checkIPRange IP %ENV{HTTP_X_FORWARDED_FOR} not allowed!";
 	error ('21', 'IP access not allowed');
 }
 
