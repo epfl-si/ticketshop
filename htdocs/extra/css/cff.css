@@ -1,6 +1,6 @@
 body	{ 
 	color: #000000; 
-	font-size: 13px; 
+	/* font-size: 13px;  */
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
 }
 .redborder {
@@ -30,4 +30,10 @@ body	{
 	width:400px;
 	height:50px;
 	visibility: hidden;
+}
+#footer {
+	font-size: smaller;
+}
+#hr-footer {
+	margin-bottom: 4px;
 }

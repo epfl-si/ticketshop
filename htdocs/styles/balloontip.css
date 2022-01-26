@@ -6,7 +6,7 @@
            padding: 5px;
         visibility: hidden;
             border: 1px solid black;
-              font: normal 12px Verdana;
+              /* font: normal 12px Verdana; */
        line-height: 18px;
            z-index: 100;
   background-color: white;
@@ -20,4 +20,3 @@
         left: 0;
   visibility: hidden;
 }
-
