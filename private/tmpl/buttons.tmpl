@@ -1,13 +1,13 @@
 <!-- private/tmpl/buttons.tmpl -->
 		<div class="col-md-12">
-			<div style="width:auto; padding: 10px; border: 1px solid #aaaaaa; text-align: center; font-size: large;"">
+			<div style="width:auto; padding: 10px; border: 1px solid #aaaaaa; text-align: center; font-size: large;">
 				<TMPL_VAR NAME=note_label>
 			</div>
 		</div>
 		
 			<div class="row" style="margin-bottom: 10px;">
 				<div class="col-md-12" style="margin-top: 20px; display: flex;">
-					<div class="col-md-6" style="border: 1px solid #aaaaaa; margin: 10px; padding: 20px; ">
+					<div class="col-md-6 text-center" style="border: 1px solid #aaaaaa; margin: 10px; padding: 20px; ">
 						<a href="#" onclick="
 							document.getElementById('goto').value = 'sso';
 							if (chkSelFond('sNoVoyage') || chkSelFond('fond')) {
@@ -16,9 +16,11 @@
 								return false;
 							}
 						"><TMPL_VAR NAME=ticketshop_label></a>
+						<br />
+						<small class="text-muted"><TMPL_VAR NAME=ticketshop_info></small>
 					</div>
 
-					<div class="col-md-6" style="border: 1px solid #aaaaaa; margin: 10px; padding: 20px; ">
+					<div class="col-md-6 text-center" style="border: 1px solid #80CEAF; margin: 10px; padding: 20px; ">
 						<a href="#"onclick="
 							document.getElementById('goto').value = 'swisspass';
 							if (chkSelFond('sNoVoyage') || chkSelFond('fond')) {
@@ -27,6 +29,8 @@
 								return false;
 							}
 						"><TMPL_VAR NAME=swisspass_label></a>
+						<br />
+						<small class="text-muted"><TMPL_VAR NAME=swisspass_info></small>
 					</div>
 
 				</div>

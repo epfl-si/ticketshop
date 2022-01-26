@@ -53,12 +53,12 @@ my $help = {
 		en => qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-swiss-online-tickets.html},
 	},
 	help_cff_mobile => {
-		fr => qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remboursement-mobile-ticket.html},
-		en => qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-mobile-tickets.html},
+		fr => qq{https://business.sbb.ch/fr/abonnements-billets/achat/remboursements/billets-suisse/remboursement-mobile-ticket.html},
+		en => qq{https://business.sbb.ch/en/travelcards-tickets/purchase/refunds/tickets-switzerland/refund-mobile-tickets.html},
 	},
 	help_cff_int => {
-		fr => qq{https://www.sbb.ch/fr/clientele-commerciale/offre/remboursement/remoboursement-internationaux.html},
-		en => qq{https://www.sbb.ch/en/business-customers/product-range/refunds/refund-international-tickets.html},
+		fr => qq{https://business.sbb.ch/fr/abonnements-billets/achat/remboursements/billets-internationaux.html},
+		en => qq{https://business.sbb.ch/en/travelcards-tickets/purchase/refunds/international-tickets.html},
 	},
 };
 
@@ -120,12 +120,20 @@ my $messages = {
 		en => qq{Cancel this operation},
 	},
 	ticketshop_label => {
-		fr => qq{Ticketshop : billets internationnaux},
-		en => qq{Ticketshop: international tickets},
+		fr => qq{Ticketshop (ancienne plateforme)},
+		en => qq{Ticketshop (old platform)},
+	},
+	ticketshop_info => {
+		fr => qq{Pour les billets à destination de l'Autriche, Allemagne et Italie},
+		en => qq{For tickets to Austria, Germany and Italy},
 	},
 	swisspass_label => {
-		fr => qq{Swisspass : billets en Suisse},
-		en => qq{Swisspass: Swiss tickets},
+		fr => qq{Webshop (SwissPass)},
+		en => qq{Webshop (SwissPass)},
+	},
+	swisspass_info => {
+		fr => qq{Pour les billets en Suisse, France ou Angleterre},
+		en => qq{For tickets in Switzerland, France or England},
 	},
 	travel_for_label => {
 		fr => qq{Voyage pour},
