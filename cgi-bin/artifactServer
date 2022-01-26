@@ -307,25 +307,27 @@ sub ip2dec ($) {
 
 sub checkIPRange {
 	return 1 unless $CHECK_IPRANGE;
-warn ">> checkIPRange " . Dumper(\%ENV{HTTP_X_FORWARDED_FOR});
-	my @forwarded_for_IPs = split(', ', %ENV{HTTP_X_FORWARDED_FOR});
+warn ">> checkIPRange REMOTE_ADDR " . Dumper(%ENV{REMOTE_ADDR});
+warn ">> checkIPRange HTTP_X_FORWARDED_FOR " . Dumper(%ENV{HTTP_X_FORWARDED_FOR});
+	#my @forwarded_for_IPs = split(', ', %ENV{HTTP_X_FORWARDED_FOR});
 
-	# my $addr = $ENV{REMOTE_ADDR};
-	my $addr = @forwarded_for_IPs[0];
+	my $addr = $ENV{REMOTE_ADDR};
+	#my $addr = @forwarded_for_IPs[0];
 	error ('21', 'IP address not found')  unless $addr;
 	my $dec_addr = ip2dec($addr);
 	foreach my $ip (@YP_IP_range) {
 		my ($start_range, $end_range) = split /-/, join '', Net::CIDR::cidr2range($ip);
 		my $start_addr = ip2dec($start_range);
 		my $end_addr   = ip2dec($end_range);
-warn ">> checkIPRange $dec_addr: $start_addr, $end_addr\n";
+warn ">> checkIPRange B $dec_addr: $start_addr, $end_addr\n";
 		if ($end_addr) {
 			return 1 if ($dec_addr ge $start_addr) && ($dec_addr le $end_addr);
 		} else {
 			return 1 if $dec_addr eq $start_addr;
 		}
 	}
-	warn ">> checkIPRange IP %ENV{HTTP_X_FORWARDED_FOR} not allowed!";
+	#warn ">> checkIPRange IP %ENV{HTTP_X_FORWARDED_FOR} not allowed!";
+	warn ">> checkIPRange IP %ENV{REMOTE_ADDR} not allowed!";
 	error ('21', 'IP access not allowed');
 }
 
