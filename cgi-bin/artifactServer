@@ -18,7 +18,8 @@ use Cadi::Accreds;
 #	- params
 my $rechnungsstelle = 'EPFL'; # - facture
 my $vertragsnummer 	= 'EPFL776';
-my @YP_IP_range			= ('128.178.1.146', '194.150.244.64/27', '195.65.152.0/24', '195.65.154.0/24');
+my @YP_IP_range			= ('194.150.244.64/27', '195.65.152.0/24', '195.65.154.0/24', '35.159.8.110', '52.57.102.4', '35.157.189.230');
+
 my $firmaBez				= 'EPFL';
 
 my $REGEX_EMAIL			= '^[a-z0-9._\-+]+@[a-z0-9.-]+\.[a-z]{2,}$';
