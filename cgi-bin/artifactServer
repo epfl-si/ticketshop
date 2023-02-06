@@ -93,9 +93,6 @@ warn "  ... id=$artifactID\n";
 		op 				 => 'getArtifact',
 		artifactID => $artifactID,
 	} ;
-
- 	error ('21', 'Missing parameter');
-
 }
 
 sub getArtifactID {
@@ -106,14 +103,6 @@ warn ">> getArtifactID: $email\n";
 	my $user = getUserByEmail($email);
 	error ( '2', 'User not found') unless $user;
 
-#	- search for artifact
-# 	my $sql = qq{select id, sciper, email from transactions where email=? order by datecrt desc};
-# 	my $sth = $dbh->prepare( $sql ) or die "** ERR people prepare :$sql: $DBI::errstr\n";
-# 	$sth->execute ($email) 					or die "** ERR execute : $DBI::errstr\n";
-# 	my $data = $sth->fetchrow_hashref;
-# 	error ( '2', 'artifactID not found') unless $data->{id} && $data->{sciper} && $data->{email} eq $email;
-#warn ">> getArtifactID : user\n".Dumper($user);
-	
 	SOAPreturn (qq{<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Body>
     <ns2:getArtifactIDResponse xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
@@ -162,8 +151,6 @@ warn "  ... getArtifact: user\n   ".Dumper($user);
 warn "  ... getArtifact: data\n   ".Dumper($data);
 	if ($data->{benef_sciper}) {
 		my $benef = getUserBySciper($data->{benef_sciper});
-# 		utf8::encode($benef->{name});
-# 		utf8::encode($benef->{firstname});
 warn "  ... getArtifact: benef\n   ".Dumper($benef);
 		next unless $benef;
 		my $anrede 	= $benef->{sexe} eq 'F' ? 'FRAU' : 'HERR';

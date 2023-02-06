@@ -772,10 +772,6 @@ warn " --> getDossiers : status 200, content OK\n";
 		warn "getDossiers : ** ERR sciper=$sciper, code=".$res->code;
 		return '';
 	}
-warn " --> getDossiers : $sciper NOT FOUND\n";
-
-	return '';
-
 }
 #_________________
 sub utf8tolatin1 {
