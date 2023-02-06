@@ -15,6 +15,9 @@ use DBI;
 
 use vars qw($dbh $requesterIP);
 
+use lib '/opt/dinfo/lib/perl';
+use ticketshop_lib qw(log_event);
+
 $requesterIP = ',194.150.244.64,194.150.244.65,194.150.244.66,194.150.244.67,194.150.244.68,194.150.244.69,194.150.244.70,194.150.244.71,194.150.244.72,194.150.244.73,194.150.244.74,194.150.244.75,194.150.244.76,194.150.244.77,194.150.244.78,194.150.244.79,194.150.244.80,194.150.244.81,194.150.244.82,194.150.244.83,194.150.244.84,194.150.244.85,194.150.244.86,194.150.244.87,194.150.244.88,194.150.244.89,194.150.244.90,194.150.244.91,194.150.244.92,194.150.244.93,194.150.244.94';
 $requesterIP .= ',128.178.1.146,128.178.109.23';
 #my @forwarded_for_IPs = split(', ', %ENV{HTTP_X_FORWARDED_FOR});
@@ -36,7 +39,7 @@ if (environment ne 'prod') {
 my %args = loadargs ();
 my $id 	 = $args{artifact};
 
-warn "SSO ** confirmArtifact: id=$id, IP=$remote_addr\n";
+log_event("SSO::confirmArtifact", id => $id, IP => $remote_addr);
 
 error ('artifact missing') unless $id;
 error ("SSO - ILLEGAL REQUESTER: $remote_addr") unless ($requesterIP =~ /,$remote_addr/) ;
@@ -87,7 +90,8 @@ if (my $rec = $sth->fetchrow_hashref ()) {
 	
 	my $logTXT = $msg;
 	$logTXT =~ s/\t//g;
-warn "--> SSO : $logTXT\n";
+	$logTXT =~ s/\n//g;
+        log_event("SSO::XML_reply", xml => $logTXT);
 
 	print qq{Content-Type: application/soap+xml; charset=utf-8
 Content-Length: $msglen
@@ -95,7 +99,7 @@ Content-Length: $msglen
 $msg
 };
 } else {
-warn "SSO : No such artifact : $id";
+        log_event("SSO::no_such_artifact", id => $id);
 	error ("No such artifact : $id");
 }
 
@@ -131,7 +135,6 @@ sub dbconnect {
 	$dbh->{'mysql_enable_utf8'} = 1;
 
 	die "dbconnect : ERR DBI CONNECT : $dbhost, $dbname, $dbuser" unless $dbh;
-#warn "--> SSO dbconnect : $dsndb\n";
 
 	return $dbh;
 }
@@ -175,7 +178,6 @@ sub loadargs {
     my ($name, $value) = split(/=/, $field, 2);  
     $args{$name} .= ' ' if $args{$name};  
     $args{$name} .= "$value";
-warn "--> loadargs :: $name=$value";
   # - test validité paramètres
 	if ( $name eq 'artifact' ) {
 		 error('illegal param value : '.$name) unless $value =~ /^\w+$/i;
@@ -190,7 +192,7 @@ sub error {
 	my ($msg) = @_;
 	return unless $msg;
 
-warn "SSO :: error :: $msg\n";
+        log_event("SSO::error", error_message => $msg);
 
 	print qq{Content-Type: text/html; charset=utf-8
 

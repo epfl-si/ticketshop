@@ -17,11 +17,12 @@ use HTML::Template;
 use Net::LDAP;
 use LWP::UserAgent;
 use JSON;
-use Data::Dumper;
 
 use Cadi::CadiDB;
 use Tequila::Client;
 use Cadi::Accreds;
+
+use ticketshop_lib qw(log_event);
 
 use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person $tmpldir $lang $dbh $header_done
 			$login_as $Rights $db_dinfo $custURL $cffLogon $Accreds $rightsItems $ldap $sap_user $sap_pwd $urlDossiers $fondsByCF
@@ -30,7 +31,6 @@ use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person
 #	- get access params
 require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 
-# warn Dumper(\%ENV);
 my $me         = $ENV {SCRIPT_NAME};
 my $pi         = $ENV {PATH_INFO};
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
@@ -207,7 +207,7 @@ exit;
 sub main {
 
 	my $template = initTempl('main.tmpl');
-#warn "--> main :: op=$args{op}, person=$args{person}\n";
+        log_event("main: entry", op => $args{op}, person => $args{person});
 
 	my $all_fonds;
 	# - SKIP FT03 MOTIF FONDS
@@ -243,6 +243,7 @@ sub main {
 				} else {
 					my $users = getUsersByName( $person );
 					if ( scalar keys %$users > 1 ) {
+                                                log_event("main: multiple users", users => [keys %$users]);
 						my @persons_loop;
 						foreach my $sciper ( sort { $users->{$a}->{name} cmp $users->{$b}->{name} } keys %$users ) {
 							push @persons_loop, {
@@ -259,7 +260,6 @@ sub main {
 					$user 		 = getUserBySciper( each %$users );
 				}
 			} 
-	#warn "--> main :: user=$user\n";
 
 		if ( $args{op} eq 'found' || $user ) {
 			$user 		  = getUserBySciper( $args{sciper} ) unless $user;
@@ -281,7 +281,6 @@ sub main {
 							last;
 						}
 					}
-	#warn "--> ERR fonds KO: $dossier->{dates} : $dossier->{concatFunds}\n" unless $dossier_ok;
 				}
 
 				if ( scalar @managed_trips ) {
@@ -371,16 +370,18 @@ sub go {
   my $sth = $dbh->query ($sql, @params);
 
   write_log ($scipertodo, "$id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no");
+  my @event_details = (
+    id => $id, nom => $nom, prenom => $prenom, sexe => $sexe, email => $email, phones => $phones, fonds => $Fonds,
+    numero_voyage => $no);
 
 	my $redirect;
 	if ($args{goto} eq 'swisspass') {
-warn "--> go to Swisspass : $id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no";
+                log_event("goto:swisspass", @event_details);
 		$redirect = $CFFwebShop;
 	} else {
-warn "--> go to (old)SSO : $id:$nom:$prenom:$sexe:$email:$phones:$Fonds:$no";
+                log_event("goto:oldSSO", @event_details);
 		$redirect = qq{$cffLogon?$custURL&SAMLart=$id};
 	}
-	warn "cff redirecting to $redirect\n  -- transaction_id=$id / email=$email";
 	print qq{Location: $redirect\n\n};
 	exit;
 }
@@ -430,7 +431,7 @@ sub write_log {
 sub erreur {
   my ($err_msg) = @_;
 
-warn " ** ERROR : $err_msg\n";
+  log_error("ERROR", error_message => $err_msg);
   my $template = initTempl('err.tmpl');
   $template->param(sErrMsg => $err_msg);
   print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
@@ -470,20 +471,17 @@ sub authenticate {
   my $sciper = $tequila->{attrs}->{uniqueid};
 
   if ($login_as and grep { /$sciper/ } @superusers) {
+        log_event("impersonation", from => $sciper, to => $login_as);
   	$sciper = $login_as;
-		warn "$sciper logged as $login_as"
   }
 
 	my $rights = $Accreds->getAllUnitsWhereHasRight ($sciper, $RIGHT_NAME);	#	- 'railticket'
-warn " >> cff $sciper , $RIGHT_NAME: rights\n".Dumper($rights);
 	$fonds		  = getFonds ($rights);
 
-  $login_person = getPersonData ($sciper);
+	$login_person = getPersonData ($sciper);
 
+        log_event("authenticated", sciper => $sciper, rights => $rights, fonds => $fonds, person => $login_person);
   erreur ("pas de droit pour ce service, veuillez contacter un de vos accréditeurs") unless scalar (keys %$fonds)  > 0;
-
-warn "cff $login_person->{nom} $login_person->{prenom}";
-
 }
 
 #___________________
@@ -661,7 +659,6 @@ sub genkey {
 sub initTempl {
    my ($tmplpath) = @_;
 
-warn "cff initTempl: $tmpldir$tmplpath";
    my $template = HTML::Template->new(filename => $tmpldir.$tmplpath,
 	   strict => 0,
 	   cache 	=> 1,
@@ -714,7 +711,6 @@ sub getUsersByName {
 		next unless $data->{sciper};
 		my $nom			= $data->{nom_usuel} 		? $data->{nom_usuel} 		: $data->{nom_acc};
 		my $prenom	= $data->{prenom_usuel} ? $data->{prenom_usuel} : $data->{prenom_acc};
-#warn ">> getUsersByName : $data->{sciper}, $nom $prenom, $data->{addrlog}\n";
 		$users->{$data->{sciper}} = {
 			sciper => $data->{sciper},
 			name 	 => "$nom $prenom",
@@ -760,16 +756,13 @@ sub getDossiers {
 	my $req  = new HTTP::Request ('GET', $urlDossiers);
 	   $req->authorization_basic( $sap_user, $sap_pwd );
 	my $res  = $lwp->request ($req);
-warn " >> getDossiers\n" . Dumper($res);
 	if ( $res->code == 200 ) {
-warn " --> getDossiers : status 200\n";
-		return '' if $res->content eq '""';
-warn " --> getDossiers : status 200, content OK\n";
-		my $ret  = decode_json( $res->content );
-
-		return $ret->{travelRequests};
+		my $response  = decode_json( $res->content );
+                log_event("SAP::getDossiers::200", sciper => $sciper, response => $response);
+		return $response ? $response->{travelRequests} : '';
 	} else {
-		warn "getDossiers : ** ERR sciper=$sciper, code=".$res->code;
+		log_event("SAP::getDossiers::error", sciper => $sciper, response_code => $res->code,
+		          response_body => $res->content);
 		return '';
 	}
 }
@@ -785,7 +778,6 @@ sub convertaccented {
  my ($str) = @_;
 
  my $tmpstr = lc($str);
-#warn "convertaccented :: $tmpstr\n";
  for ( $tmpstr ) {  # the variable we work on
    s/\xe0/a/ig;
    s/\xe1/a/ig;
