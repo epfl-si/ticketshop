@@ -23,7 +23,7 @@ use Cadi::CadiDB;
 use Tequila::Client;
 use Cadi::Accreds;
 
-use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person $tmpldir $lang $errmsg $dbh $header_done
+use vars qw(%args $tequila $gaspar $menupath $authstr $key $sciper $login_person $tmpldir $lang $dbh $header_done
 			$login_as $Rights $db_dinfo $custURL $cffLogon $Accreds $rightsItems $ldap $sap_user $sap_pwd $urlDossiers $fondsByCF
 			$RIGHT_NAME $USE_DOSSIERS $fonds $CFFwebShop);
 
@@ -200,7 +200,6 @@ if      ($pi =~  /^\/go/) {
 }
 
 my $template = initTempl('default.tmpl');
-$template->param(sErrMsg => $errmsg);
 print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 exit;
 
@@ -253,7 +252,6 @@ sub main {
 								lang	=> $lang,
 							};
 						}
-						$template->param(sErrMsg 	  	=> $errmsg);
 						$template->param(sPersonsLoop => \@persons_loop);
 						print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 						exit;
@@ -298,7 +296,6 @@ sub main {
 
 	}
 
-	$template->param(sErrMsg => $errmsg);
 	print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 	exit;
 
@@ -331,8 +328,7 @@ sub go {
 
 	unless ($Fonds) {
 		my $template = initTempl('priv.tmpl');
-		$errmsg = qq{Veuillez saisir le numéro du fonds};
-		$template->param(sErrMsg => $errmsg);
+		$template->param(sErrMsg => qq{Veuillez saisir le numéro du fonds});
 		print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
 		exit;
 	}
