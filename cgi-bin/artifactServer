@@ -9,6 +9,7 @@ use Net::LDAPS;
 use XML::LibXML;
 use Net::CIDR;
 use Net::CIDR ':all';
+use JSON qw(encode_json);
 
 use Cadi::WSUtils;
 use Cadi::CadiDB;
@@ -176,7 +177,11 @@ sub getArtifact {
 
 		if ($rights) {
 			my $fonds	 = getFonds ($rights);
-			log_event("getArtifact::rights", %$data, fonds => $fonds, rights => $rights);
+                        # Note: we encode_json those data structures
+                        # that we don't want ElasticSearch to index
+                        # (since it has a limit of 1000 distinct keys
+                        # by default.)
+			log_event("getArtifact::rights", %$data, fonds => encode_json($fonds), rights => encode_json($rights));
 
 			foreach my $fond (sort keys %$fonds) {
 				$output .= qq{
