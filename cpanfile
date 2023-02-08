@@ -16,3 +16,4 @@ requires 'MIME::Lite', '3.031';
 requires 'Net::CIDR', '0.21';
 requires 'Net::IP', '1.26';
 requires 'utf8::all', '0.024';
+requires 'UUID', '0.28';
