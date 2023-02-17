@@ -27,7 +27,7 @@ my $REGEX_ID				= '^[1-9]\d{5}$';
 
 my $RIGHT_NAME			= 'railticket';
 
-my $CHECK_IPRANGE		= 1;
+my $CHECK_IPRANGE		= 0;
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
 my $DEBUG = environment ne 'prod';
 my $PURGEDATA				= 0;
@@ -328,7 +328,7 @@ warn ">> checkIPRange B $dec_addr: $start_addr, $end_addr\n";
 		}
 	}
 	#warn ">> checkIPRange IP %ENV{HTTP_X_FORWARDED_FOR} not allowed!";
-	warn ">> checkIPRange IP %ENV{REMOTE_ADDR} not allowed!";
+	warn ">> checkIPRange IP " . Dumper(%ENV{REMOTE_ADDR}) . " is not allowed!";
 	error ('21', 'IP access not allowed');
 }
 
