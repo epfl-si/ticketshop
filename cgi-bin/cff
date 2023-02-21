@@ -431,7 +431,7 @@ sub write_log {
 sub erreur {
   my ($err_msg) = @_;
 
-  log_error("ERROR", error_message => $err_msg);
+  log_event("ERROR", error_message => $err_msg);
   my $template = initTempl('err.tmpl');
   $template->param(sErrMsg => $err_msg);
   print "Content-Type: text/html; charset=utf-8\n\n", $template->output;
