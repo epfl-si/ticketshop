@@ -442,10 +442,7 @@ sub authenticate {
 
 	# Define the Tequila URL, see INC0424061
 	sub tequilaurl { 
-		if (environment eq 'prod') {
 			return 'https://tequila.epfl.ch/tequila';
-		}
-		return 'https://test-tequila.epfl.ch/tequila';
 	}
 
 	my  $tequilaurl =  tequilaurl;
