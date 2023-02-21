@@ -19,7 +19,7 @@ RUN set -e -x; for subdir in logs Tequila/Sessions; do mkdir -p $subdir; chmod 7
 
 RUN a2enmod cgi
 
-RUN echo "guests.aeskey\tnone" > /opt/dinfo/etc/secrets.conf
+RUN echo "guests.aeskey\tnone\naccred.notifier\tnone\n" > /opt/dinfo/etc/secrets.conf
 
 # Temp version marked
 RUN touch $(date "+%Y%m%d-%H%M%S")_deployed
