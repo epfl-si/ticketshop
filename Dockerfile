@@ -1,49 +1,31 @@
-# https://hub.docker.com/_/httpd
-#FROM os-docker-registry.epfl.ch/dinfo-cicd/cadi-libs-idevfsd:latest
-FROM os-docker-registry.epfl.ch/ticketshop-test/ticketshop:preprod
-LABEL maintainer "idev-fsd@groupes.epfl.ch"
+FROM ghcr.io/epfl-si/common-web:1.6.0
 
-RUN touch /usr/local/apache2/conf/25-ticketshop.epfl.ch.conf
+USER 0
 
-# Enable apache modules. `headers` and `env` modules are enabled by default.
-RUN sed -i \
-    -e 's/^#\(LoadModule .*mod_rewrite.so\)/\1/' \
-    -e 's/^\s#\(LoadModule .*mod_cgid\?.so\)/\1/' \
-    -e 's/^#\(LoadModule .*mod_remoteip.so\)/\1/' \
-    -e 's/^Listen 80$/Listen 8080/' \
-    /usr/local/apache2/conf/httpd.conf
+RUN set -e -x; apt-get update ; \
+    apt-get install -y --no-install-recommends libxml-libxml-perl uuid-dev; \
+    rm -rf /var/lib/apt/lists/*
 
-RUN echo "PassEnv FAKE_TEQUILA" >> /usr/local/apache2/conf/httpd.conf
-RUN echo "PassEnv TEQUILA_HOST" >> /usr/local/apache2/conf/httpd.conf
-RUN echo "PassEnv SITE_URL" >> /usr/local/apache2/conf/httpd.conf
+# TODO: hoist this in parent image (https://github.com/epfl-si/common-web/pull/1)
+RUN cpanm Apache::DBI
 
-# RUN echo "Include /var/www/vhosts/ticketshop.epfl.ch/conf/*.conf" >> /usr/local/apache2/conf/httpd.conf
+COPY . /var/www/vhosts/ticketshop.epfl.ch/
 
-RUN mkdir -p /var/www/Tequila/Sessions
-RUN chmod 777 -R /var/www/Tequila/Sessions
+WORKDIR /var/www/vhosts/ticketshop.epfl.ch
 
+RUN mv perllib/ticketshop_lib.pm /opt/dinfo/lib/perl/
 
-EXPOSE 8080
+RUN cpanm --installdeps --notest . || ( cat /root/.cpanm/work/*/build.log; exit 1 )
 
-## Temporary fixe
-# RUN mkdir -p /var/www/vhosts/ticketshop.epfl.ch/private/etc/
-# RUN touch /var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params
-# RUN echo '# some secrets' > /var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params
-# RUN ls /var/www/vhosts/ticketshop.epfl.ch/private/etc/
-# RUN echo "\$sap_user = 'ticketshop';" >> /var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params
-# RUN echo "\$sap_pwd  = 'PleaseChangeMe';" >> /var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params
-# RUN cat /var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params
+# Ensure that the logs and Tequila state directories exist and are writable by apache
+RUN set -e -x; for subdir in logs Tequila/Sessions; do mkdir -p $subdir; chmod 777 -R $subdir; done
 
-# Enable the default cgi-bin test
-# RUN sed -i '1i#!/bin/sh' /usr/local/apache2/cgi-bin/test-cgi ; \
-#     chmod 755 /usr/local/apache2/cgi-bin/test-cgi
-# 
-# /usr/local/lib/site_perl
-# 
-# ADD https://c4science.ch/diffusion/2517/accred-libs.git /usr/local/lib/site_perl/Accred
-# RUN git clone https://c4science.ch/diffusion/2517/accred-libs.git /usr/local/lib/site_perl
-# COPY ./cadi-libs/Cadi/. /opt/dinfo/lib/perl/Cadi/
-# COPY ./accred-libs/Accred/. /opt/dinfo/lib/perl/Accred/
-# COPY ./tequila-perl-client/Tequila/Client.pm /opt/dinfo/lib/perl/Tequila/Client.pm
-# COPY ./perllib/*.pm /opt/dinfo/lib/perl/
-# COPY ./cgi-bin/messages.txt /opt/dinfo/lib/perl/messages.txt
+RUN a2enmod cgi
+
+RUN echo "guests.aeskey\tnone" > /opt/dinfo/etc/secrets.conf
+
+# Temp version marked
+RUN touch $(date "+%Y%m%d-%H%M%S")_deployed
+
+USER 1001
+ENTRYPOINT ["/usr/sbin/apache2", "-e", "debug", "-D", "FOREGROUND"]
