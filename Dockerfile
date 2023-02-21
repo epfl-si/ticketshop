@@ -1,13 +1,10 @@
-FROM ghcr.io/epfl-si/common-web:1.6.0
+FROM ghcr.io/epfl-si/common-web:1.11.1
 
 USER 0
 
 RUN set -e -x; apt-get update ; \
     apt-get install -y --no-install-recommends libxml-libxml-perl uuid-dev; \
     rm -rf /var/lib/apt/lists/*
-
-# TODO: hoist this in parent image (https://github.com/epfl-si/common-web/pull/1)
-RUN cpanm Apache::DBI
 
 COPY . /var/www/vhosts/ticketshop.epfl.ch/
 
