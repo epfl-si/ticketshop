@@ -17,7 +17,7 @@ RUN cpanm --installdeps --notest . || ( cat /root/.cpanm/work/*/build.log; exit 
 # Ensure that the logs and Tequila state directories exist and are writable by apache
 RUN set -e -x; for subdir in logs Tequila/Sessions; do mkdir -p $subdir; chmod 777 -R $subdir; done
 
-RUN a2enmod cgi
+RUN a2enmod cgi remoteip
 
 RUN echo "guests.aeskey\tnone\naccred.notifier\tnone\n" > /opt/dinfo/etc/secrets.conf
 
