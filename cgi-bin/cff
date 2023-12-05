@@ -34,7 +34,7 @@ require '/var/www/vhosts/ticketshop.epfl.ch/private/etc/access_params';
 my $me         = $ENV {SCRIPT_NAME};
 my $pi         = $ENV {PATH_INFO};
 sub environment { $ENV{TICKETSHOP_ENVIRONMENT} || 'dev'; }
-my $version    = 'v1.5.3';
+my $version    = 'v1.6.0';
 my $NO_PURGE   = '';
 my $tmpldir    = '/var/www/vhosts/ticketshop.epfl.ch/private/tmpl/';
 my @superusers = qw(169419 243371); # - nborboen, quatrava
@@ -144,6 +144,22 @@ my $messages = {
 		en => qq{Purchase of SBB subscriptions and regional subscriptions must be made via EPFL Human Resources Service.<br>
 		Private purchases are prohibited.<br>
 		<a href="https://www.epfl.ch/campus/services/wp-content/uploads/2019/06/CFF_2019AvantageMobiliteFRAANG.pdf" target="_blank">More details...</a> },
+	},
+	eol_webshop_1a => {
+		fr => qq{Ticketshop (ancienne plateforme) sera désactivé le 10 décembre 2023.},
+		en => qq{Ticketshop (old platform) will be deactivated on December 10, 2023.},
+	},
+	eol_webshop_1b => {
+		fr => qq{Important : le Webshop que vous utilisez en vous connectant avec votre identifiant SwissPass ne seront pas désactivés.},
+		en => qq{Important: the Webshop you use when logging in with your SwissPass login will not be deactivated.},
+	},
+	eol_webshop_2a => {
+		fr => qq{Qu’est-ce que cela signifie pour vous ?},
+		en => qq{What does this mean for you?},
+	},
+	eol_webshop_2b => {
+		fr => qq{À l’avenir, veuillez effectuer tous vos achats via la nouvelle plate-forme de vente <a href="https://business.sbb.ch/fr/">www.cff.ch/business</a>.},
+		en => qq{In future, please make all purchases via the new <a href="https://business.sbb.ch/en/">www.cff.ch/business</a> sales platform.},
 	},
 };
 
