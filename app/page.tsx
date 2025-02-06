@@ -1,14 +1,14 @@
-import { auth } from "@/auth";
+"use client";
 import { SignInButton } from "./components/auth/SighInButton";
 import { SignOutButton } from "./components/auth/SignOutButton";
+import { useSession } from "next-auth/react";
 
-export default async function Home() {
-
-  const session = await auth()
+export default function Home() {
+  const { data: session, status } = useSession();
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {session ? <SignOutButton /> : <SignInButton btnValue="Sign In" redirectPath="/"/>}
+      {status == "authenticated" ? <SignOutButton /> : <SignInButton btnValue="Sign In" redirectPath="/"/>}
     </div>
   );
 }
