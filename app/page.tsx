@@ -28,7 +28,6 @@ export default function Home() {
     fetch(`/api/funds/${session?.user.sciper}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         setFunds(data);
       })
       .catch(err => console.log(err));
