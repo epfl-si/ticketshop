@@ -71,11 +71,25 @@ async function getFundsBySciper(sciper: string) {
 
     const data = await response.json();
     const result = data.authorizations.filter((auth: any) => auth.resourceid.startsWith('FF'));
-    if(!result.length) {
-        return { error: `No funds found for sciper ${sciper}` };
-    } else {
-        return result;
-    }
+    return result;
+}
+
+async function getDFsBySciper(sciper: string) {
+    const url = `https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests`;
+    const username = process.env.DFS_USERNAME;
+    const password = process.env.DFS_PASSWORD;
+
+    const headers = new Headers();
+    headers.set('Authorization', 'Basic ' + btoa(username + ':' + password));
+
+    const response = await fetch(url, { method: 'GET', headers: headers });
+
+    const data = await response.json();
+    const filteredData = data.travelRequests.filter((travelRequest: any) => {
+        return travelRequest.sciper === parseInt(sciper);
+    });
+
+    return filteredData;
 }
 
 export async function POST(req: Request) {
@@ -172,8 +186,9 @@ export async function POST(req: Request) {
         }
 
         const funds = await getFundsBySciper(artifactID);
+        const dfs = await getDFsBySciper(artifactID);
 
-        if(funds.length) {
+        if(funds.length || dfs.length) {
             const resourceIds = funds.map(item => item.resourceid.replace(/^FF/, ''));
     
             const responseXML = `
@@ -190,6 +205,7 @@ export async function POST(req: Request) {
                                 <bezeichnung>EPFL</bezeichnung>
                                 <kostenzuordnungen>
                                     ${resourceIds.map((id:string) => `<bezeichnung>${id}</bezeichnung>`).join('')}
+                                    ${dfs.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
                                 </kostenzuordnungen>
                             </rechnungsstellen>
                             <sprache>fr</sprache>
