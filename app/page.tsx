@@ -52,7 +52,7 @@ export default function Home() {
         setDfs(data);
       })
       .catch(err => console.log(err));
-  }, [session]);
+  }, [session?.user.sciper]);
 
   function displayFunds(status: "authenticated" | "loading" | "unauthenticated", funds: {error: string} | fund[]) {
     if(status !== "authenticated") {
