@@ -13,9 +13,18 @@ datasource db {
   url      = "file:./ticketshop.db"
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  createdAt DateTime @default(now())
+model Funds {
+  id            Int     @id @default(autoincrement())
+  resourceId    String
+  uniteId       Int
+  uniteName     String
+  users         Users[]
+}
+
+model Users {
+  id            Int     @id @default(autoincrement())
+  username      String
+  sciper        Int @unique
+  createdAt     DateTime @default(now())
+  funds         Funds[]
 }

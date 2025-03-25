@@ -1,6 +1,8 @@
-import NextAuth, { User, Session } from "next-auth"
+import NextAuth, { User, Session, Profile, Account } from "next-auth"
 import { JWT } from "next-auth/jwt";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     MicrosoftEntraID({
@@ -48,6 +50,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
         
       }
+    },
+    signIn: async ({ user, account, profile }: { user: User; account: Account | null; profile?: Profile }) => {
+      const dbUser = await prisma.users.findUnique({
+        where: { sciper: parseInt(user.sciper) },
+      });
+      if(!dbUser) {
+        // User does not yet exists in the database, creating it
+        await prisma.users.create({
+          data: {
+            sciper: parseInt(user.sciper),
+            username: user.username || '',
+          }
+        });
+      }
+      return true;
     }
 	},
 })
