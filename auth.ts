@@ -98,6 +98,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             });
           }
         }
+      } else if (funds.error) {
+        // If the user has no funds (or no funds ANYMORE) in API, we delete all the relation between user and funds
+        await prisma.users.update({
+          where: { sciper: parseInt(user.sciper) },
+          data: {
+            funds: {
+              deleteMany: {},
+            },
+          },
+        });
       }
       return true;
     }
