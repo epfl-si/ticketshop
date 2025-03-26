@@ -64,6 +64,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
         });
       }
+      const fundsResponse = await fetch(`${process.env.APP_URL}/api/funds/${user.sciper}`);
+      const funds = await fundsResponse.json();
+      // If no `funds.error`, it means the user has at least one fund
+      if(!funds.error) {
+        const userAndFunds = await prisma.users.findUnique({
+          where: { sciper: parseInt(user.sciper) },
+          include: { funds: true },
+        });
+        // If funds returned from api.epfl.ch does not yet exsist in the database, we create them
+        for (const fund of funds) {
+          const fundExists = userAndFunds?.funds.find(f => f.resourceId === fund.resourceid && f.uniteId === fund.accredunitid);
+          if (!fundExists) {
+            await prisma.funds.create({
+              data: {
+                resourceId: fund.resourceid,
+                uniteId: fund.accredunitid,
+                users: {
+                  connect: {
+                    sciper: parseInt(user.sciper),
+                  },
+                },
+              },
+            });
+          }
+        }
+      }
       return true;
     }
 	},
