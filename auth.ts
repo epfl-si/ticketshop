@@ -89,6 +89,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             });
           }
         }
+        // If funds does not exist anymore from api.epfl.ch but exists in TicketShop's database, we delete them
+        const fundsToDelete = userAndFunds?.funds.filter(f => !funds.find(fund => fund.resourceid === f.resourceId && fund.accredunitid === f.uniteId)) || [];
+        if (fundsToDelete.length > 0) {
+          for (const fund of fundsToDelete) {
+            await prisma.funds.delete({
+              where: { id: fund.id },
+            });
+          }
+        }
       }
       return true;
     }
