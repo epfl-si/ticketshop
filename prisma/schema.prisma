@@ -17,13 +17,11 @@ model Funds {
   id            Int     @id @default(autoincrement())
   resourceId    String
   uniteId       Int
-  uniteName     String
   users         Users[]
 }
 
 model Users {
   id            Int     @id @default(autoincrement())
-  username      String
   sciper        Int @unique
   createdAt     DateTime @default(now())
   funds         Funds[]
