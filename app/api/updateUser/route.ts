@@ -3,7 +3,6 @@ const prisma = new PrismaClient();
 
 export async function PUT(request: Request) {
   const body = await request.json();
-  console.log(body)
   if(typeof body !== 'object' || !body.sciper || typeof body.sciper !== 'number') {
       return new Response(JSON.stringify({
           error: 'Invalid body',
