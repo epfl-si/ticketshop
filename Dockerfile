@@ -24,5 +24,8 @@ RUN echo "guests.aeskey\tnone\naccred.notifier\tnone\n" > /opt/dinfo/etc/secrets
 # Temp version marked
 RUN touch $(date "+%Y%m%d-%H%M%S")_deployed
 
+# Temporary fix for OpenShift 4
+RUN sed -i "s#key => \$requestkey,#key => \$requestkey, allowedrequesthosts => '10.180.21.0/24'#" /opt/dinfo/lib/perl/Tequila/Client.pm
+
 USER 1001
 ENTRYPOINT ["/usr/sbin/apache2", "-e", "debug", "-D", "FOREGROUND"]
