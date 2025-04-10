@@ -34,12 +34,14 @@ export async function PUT(request: Request) {
     });
     // If funds returned from api.epfl.ch does not yet exsist in the database, we create them
     for (const fund of funds) {
-      const fundExists = userAndFunds?.funds.find(f => f.resourceId === fund.resourceid && f.uniteId === fund.accredunitid);
+      const fundResourceIdWithoutPrefix = fund.resourceid.slice(2);
+      const fundFinancalCenterWithoutPrefix = fund.value.slice(6);
+      const fundExists = userAndFunds?.funds.find(f => f.resourceId === fundResourceIdWithoutPrefix);
       if (!fundExists) {
         await prisma.funds.create({
           data: {
-            resourceId: fund.resourceid,
-            uniteId: fund.accredunitid,
+            resourceId: fundResourceIdWithoutPrefix,
+            cf: fundFinancalCenterWithoutPrefix,
             users: {
               connect: {
                 sciper: parseInt(body.sciper),
@@ -50,7 +52,7 @@ export async function PUT(request: Request) {
       }
     }
     // If funds does not exist anymore from api.epfl.ch but exists in TicketShop's database, we delete them
-    const fundsToDelete = userAndFunds?.funds.filter(f => !funds.find(fund => fund.resourceid === f.resourceId && fund.accredunitid === f.uniteId)) || [];
+    const fundsToDelete = userAndFunds?.funds.filter(f => !funds.find(fund => fund.resourceid.slice(2) === f.resourceId)) || [];
     if (fundsToDelete.length > 0) {
       for (const fund of fundsToDelete) {
         await prisma.funds.delete({
