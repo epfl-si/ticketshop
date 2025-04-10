@@ -15,9 +15,10 @@ datasource db {
 
 model Funds {
   id            Int     @id @default(autoincrement())
-  resourceId    String
-  uniteId       Int
+  resourceId    String @unique
+  cf            String
   users         Users[]
+  dfs           Dfs[]
 }
 
 model Users {
@@ -25,4 +26,15 @@ model Users {
   sciper        Int @unique
   createdAt     DateTime @default(now())
   funds         Funds[]
+  dfs           Dfs[]
+}
+
+model Dfs {
+  id            Int     @id @default(autoincrement())
+  requestID     Int
+  name          String
+  user          Users[]
+  dates         String
+  destination   String
+  fund         Funds[]
 }

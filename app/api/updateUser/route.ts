@@ -72,6 +72,52 @@ export async function PUT(request: Request) {
     });
   }
 
+  // DFs
+  const dfsResponse = await fetch(`${process.env.APP_URL}/api/dfs/${body.sciper}`);
+  const dfs = await dfsResponse.json();
+  if(dfs.length > 0) {
+    const userAndDfs = await prisma.users.findUnique({
+      where: { sciper: parseInt(body.sciper) },
+      include: { dfs: true },
+    });
+    // If dfs returned from the service does not yet exsist in the database, we create them
+    for (const df of dfs) {
+      const dfExists = userAndDfs?.dfs.find(d => d.requestID === df.requestID);
+      const fundOfDf = await prisma.funds.findMany({
+        where: { resourceId: df.imputation.fund.toString()},
+      })
+      // The fund of the DF does not yet exists, creating it
+      if(!fundOfDf.length) {
+        await prisma.funds.create({
+          data: {
+            resourceId: df.imputation.fund.toString(),
+            cf: df.imputation.cf.slice(1),
+          },
+        });
+      }
+      if (!dfExists) {
+        await prisma.dfs.create({
+          data: {
+            requestID: df.requestID,
+            name: df.name,
+            dates: df.dates,
+            destination: df.destination,
+            user: {
+              connect: {
+                sciper: parseInt(body.sciper),
+              },
+            },
+            fund: {
+              connect: {
+                resourceId: df.imputation.fund.toString(),
+              },
+            }
+          },
+        })
+      }
+    }
+  }
+
   return new Response(JSON.stringify({ message: `User ${body.sciper} has been updated` }), {
       headers: { 'content-type': 'application/json' },
   });
