@@ -60,38 +60,6 @@ async function getPersonBySciper(sciper: string) {
     return data
 }
 
-async function getFundsBySciper(sciper: string) {
-    const url = `https://api.epfl.ch/v1/authorizations?persid=${sciper}&authid=railticket,ndf.travel.org&type=right&expand=1`;
-    const username = process.env.API_USERNAME;
-    const password = process.env.API_PASSWORD;
-    const headers = new Headers();
-    headers.set('Authorization', 'Basic ' + btoa(username + ':' + password));
-
-    const response = await fetch(url, { method: 'GET', headers: headers });
-
-    const data = await response.json();
-    const result = data.authorizations.filter((auth: any) => auth.resourceid.startsWith('FF'));
-    return result;
-}
-
-async function getDFsBySciper(sciper: string) {
-    const url = `https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests`;
-    const username = process.env.DFS_USERNAME;
-    const password = process.env.DFS_PASSWORD;
-
-    const headers = new Headers();
-    headers.set('Authorization', 'Basic ' + btoa(username + ':' + password));
-
-    const response = await fetch(url, { method: 'GET', headers: headers });
-
-    const data = await response.json();
-    const filteredData = data.travelRequests.filter((travelRequest: any) => {
-        return travelRequest.sciper === parseInt(sciper);
-    });
-
-    return filteredData;
-}
-
 export async function POST(req: Request) {
     const xmlData = await req.text();
 
@@ -185,12 +153,15 @@ export async function POST(req: Request) {
             });
         }
 
-        const funds = await getFundsBySciper(artifactID);
-        const dfs = await getDFsBySciper(artifactID);
+        await fetch(`${process.env.APP_URL}/api/updateUser`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sciper: parseInt(artifactID) }),
+        });
+        const user = await fetch(`${process.env.APP_URL}/api/getUser/${artifactID}`);
+        const userData = await user.json();
 
-        if(funds.length || dfs.length) {
-            const resourceIds = funds.map(item => item.resourceid.replace(/^FF/, ''));
-    
+        if(userData.funds.length || userData.dfs.length) {
             const responseXML = `
             <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
                 <soap:Body>
@@ -204,8 +175,8 @@ export async function POST(req: Request) {
                             <rechnungsstellen>
                                 <bezeichnung>EPFL</bezeichnung>
                                 <kostenzuordnungen>
-                                    ${resourceIds.map((id:string) => `<bezeichnung>${id}</bezeichnung>`).join('')}
-                                    ${dfs.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
+                                    ${userData.funds.map((fund:any) => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
+                                    ${userData.dfs.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
                                 </kostenzuordnungen>
                             </rechnungsstellen>
                             <sprache>fr</sprache>
