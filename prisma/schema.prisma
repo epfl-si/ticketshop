@@ -36,5 +36,5 @@ model Dfs {
   user          Users[]
   dates         String
   destination   String
-  fund         Funds[]
+  fund          Funds[]
 }
