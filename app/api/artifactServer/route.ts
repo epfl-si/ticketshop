@@ -161,6 +161,9 @@ export async function POST(req: Request) {
         const user = await fetch(`${process.env.APP_URL}/api/getUser/${artifactID}`);
         const userData = await user.json();
 
+        const filteredFunds = userData.funds.filter((fund:any) => fund.id === userData.settings.find((s:any) => s.shown && s.fundId === fund.id)?.fundId);
+        const filteredDfs = userData.dfs.filter((df:any) => df.id === userData.settings.find((s:any) => s.shown && s.dfId === df.id)?.dfId);
+
         if(userData.funds.length || userData.dfs.length) {
             const responseXML = `
             <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -175,8 +178,8 @@ export async function POST(req: Request) {
                             <rechnungsstellen>
                                 <bezeichnung>EPFL</bezeichnung>
                                 <kostenzuordnungen>
-                                    ${userData.funds.map((fund:any) => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
-                                    ${userData.dfs.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
+                                    ${filteredFunds.map((fund:any) => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
+                                    ${filteredDfs.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
                                 </kostenzuordnungen>
                             </rechnungsstellen>
                             <sprache>fr</sprache>
