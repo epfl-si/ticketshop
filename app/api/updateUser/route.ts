@@ -38,7 +38,7 @@ export async function PUT(request: Request) {
       const fundFinancalCenterWithoutPrefix = fund.value.slice(6);
       const fundExists = userAndFunds?.funds.find(f => f.resourceId === fundResourceIdWithoutPrefix);
       if (!fundExists) {
-        await prisma.funds.create({
+        const createdFund = await prisma.funds.create({
           data: {
             resourceId: fundResourceIdWithoutPrefix,
             cf: fundFinancalCenterWithoutPrefix,
@@ -46,6 +46,18 @@ export async function PUT(request: Request) {
               connect: {
                 sciper: parseInt(body.sciper),
               },
+            },
+          },
+        });
+
+        await prisma.settings.create({
+          data: {
+            shown: true,
+            user: {
+              connect: { id: userAndFunds?.id }
+            },
+            fund: {
+              connect: { id: createdFund.id }
             },
           },
         });
@@ -96,7 +108,7 @@ export async function PUT(request: Request) {
         });
       }
       if (!dfExists) {
-        await prisma.dfs.create({
+        const createdDf = await prisma.dfs.create({
           data: {
             requestID: df.requestID,
             name: df.name,
@@ -114,6 +126,18 @@ export async function PUT(request: Request) {
             }
           },
         })
+
+        await prisma.settings.create({
+          data: {
+            shown: true,
+            user: {
+              connect: { id: userAndDfs?.id }
+            },
+            df: {
+              connect: { id: createdDf.id }
+            },
+          },
+        });
       }
     }
   }

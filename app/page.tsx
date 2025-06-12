@@ -3,13 +3,16 @@ import { SignInButton } from "./components/auth/SighInButton";
 import { SignOutButton } from "./components/auth/SignOutButton";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { updateSetting } from "./lib/database";
 
 export default function Home() {
   const [funds, setFunds] = useState([]);
   const [dfs, setDfs] = useState([]);
+  const [settings, setSettings] = useState([]);
   const { data: session, status } = useSession();
 
   type fund = {
+    id: number,
     accredunitid: number,
     attribution: string,
     authid: number,
@@ -26,6 +29,7 @@ export default function Home() {
   }
 
   type df = {
+    id: number,
     requestID: number,
     sciper: number,
     name: string,
@@ -53,6 +57,7 @@ export default function Home() {
         .then(data => {
           setFunds(data.funds);
           setDfs(data.dfs);
+          setSettings(data.settings);
         })
         .catch(err => console.log(err));
     })
@@ -64,13 +69,16 @@ export default function Home() {
     } else if("error" in funds) {
       return <h1 className="text-lg">{funds.error}</h1>;
     } else {
-      return funds.map((fund:fund) => (
-        <label className="inline-flex items-center cursor-pointer" key={fund.resourceId}>
-          <input type="checkbox" value="" className="sr-only peer" />
-          <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
-          <span className="ml-2 text-sm text-black">{fund.resourceId}</span>
-        </label>
-      ))
+      return funds.map((fund:fund) => {
+        const fundSetting = settings.find(s => s.fundId === fund.id)
+        return (
+          <label className="inline-flex items-center cursor-pointer" key={fund.resourceId}>
+            <input type="checkbox" value="" className="sr-only peer" defaultChecked={fundSetting?.shown} onChange={((event) => manageCheckboxChangeDf(event, fundSetting?.id))} />
+            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+            <span className="ml-2 text-sm text-black">{fund.resourceId}</span>
+          </label>
+        )
+      })
     }
   }
 
@@ -80,14 +88,22 @@ export default function Home() {
     } else if(!dfs.length) {
       return <h1 className="text-lg">No &quot;Décomptes de frais&quot; found</h1>
     } else {
-      return dfs.map((df:df) => (
-        <label className="inline-flex items-center cursor-pointer" key={df.requestID}>
-          <input type="checkbox" value="" className="sr-only peer" />
-          <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
-          <span className="ml-2 text-sm text-black">{df.destination} - {df.requestID}</span>
-        </label>
-      ))
+      return dfs.map((df:df) => {
+        const dfSetting = settings.find(s => s.dfId === df.id)
+        return (
+          <label className="inline-flex items-center cursor-pointer" key={df.requestID}>
+            <input type="checkbox" value="" className="sr-only peer" defaultChecked={dfSetting?.shown} onChange={((event) => manageCheckboxChangeDf(event, dfSetting?.id))} />
+            <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+            <span className="ml-2 text-sm text-black">{df.destination} - {df.requestID}</span>
+          </label>
+        )
+      })
     }
+  }
+
+  function manageCheckboxChangeDf(event: React.ChangeEvent<HTMLInputElement>, settingId: number) {
+    const isChecked = event.target.checked;
+    updateSetting(isChecked, settingId)
   }
   return (
     <div className="p-6">

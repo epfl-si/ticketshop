@@ -19,6 +19,7 @@ model Funds {
   cf            String
   users         Users[]
   dfs           Dfs[]
+  settings      Settings[]
 }
 
 model Users {
@@ -27,6 +28,7 @@ model Users {
   createdAt     DateTime @default(now())
   funds         Funds[]
   dfs           Dfs[]
+  settings      Settings[]
 }
 
 model Dfs {
@@ -37,4 +39,16 @@ model Dfs {
   dates         String
   destination   String
   fund          Funds[]
+  settings      Settings[]
+}
+
+model Settings {
+  id            Int     @id @default(autoincrement())
+  shown         Boolean @default(true)
+  user          Users   @relation(fields: [userId], references: [id])
+  userId        Int
+  dfId          Int?
+  df            Dfs?    @relation(fields: [dfId], references: [id])
+  fundId        Int?
+  fund          Funds?  @relation(fields: [fundId], references: [id])
 }

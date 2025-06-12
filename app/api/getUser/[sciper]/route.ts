@@ -6,7 +6,7 @@ export async function GET(request: Request, { params }: { params: { sciper: stri
 
     const dbUser = await prisma.users.findUnique({
         where: { sciper: parseInt(sciper) },
-        include: { dfs: true, funds: true },
+        include: { dfs: true, funds: true, settings: true },
     });
 
     return new Response(JSON.stringify(dbUser), {
