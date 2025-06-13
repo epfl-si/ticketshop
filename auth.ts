@@ -1,60 +1,68 @@
-import NextAuth, { User, Session, Profile, Account } from "next-auth"
-import { JWT } from "next-auth/jwt";
-import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
-import { updateUser } from "./app/lib/database";
+import NextAuth, { Account } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
+import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
+
+const decodeJWT = (token: string) => JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    MicrosoftEntraID({
-        clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-        clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-        issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER,
-        async profile(profile, tokens) {
-          const response = await fetch(`${process.env.AUTH_MICROSOFT_GRAPH_API_URL}/me?$select=employeeId,id,displayName,jobTitle,mail,surname,userPrincipalName,birthday,companyName,joinedTeams,department`, {
-            headers: { Authorization: `Bearer ${tokens.access_token}` },
-          });
-          const profileData = await response.json();
-          return {
-            id: profile.id,
-            sciper: profileData.employeeId,
-            name: profileData.displayName,
-            email: profile.email,
-            image: profile.picture,
-            username: profileData.userPrincipalName
-          }
-        }
-      })
-  ],
-  callbacks: {
-		jwt: async ({ token, user }: { token: JWT; user: User }): Promise<JWT> => {
-      try {
-        if (user) {
-          return {
-            ...token,
-            sciper: user?.sciper,
-          }
-        } else {
-          return token;
-        }
-      } catch (error) {
-        console.error('Token enhancement error:', error);
-        return token;
-      }
-    },
-    session: async ({ session, token }: { session: Session; token: JWT }): Promise<Session> => {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          sciper: token.sciper as string,
-        },
-        
-      }
-    },
-    signIn: async ({ user, account, profile }: { user: User; account: Account | null; profile?: Profile }) => {
-      await updateUser(user.sciper).catch((error) => {
-        console.error('Error updating user :', error);
-      });
-      return true;
-    }
+	providers: [
+		MicrosoftEntraID({
+			clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID!,
+			clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET!,
+			issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER!,
+			authorization: {
+				params: {
+					scope: 'openid email profile',
+				},
+			},
+		}),
+	],
+	callbacks: {
+		authorized: async ({ auth }) => !!auth,
+		jwt: async ({ token, account }: { token: JWT; account?: Account | null }) => {
+			try {
+				if (account?.access_token && account?.id_token) {
+					const accessToken = decodeJWT(account.access_token);
+					const idToken = decodeJWT(account.id_token);
+
+					return {
+						...token,
+						access_token: account.access_token,
+						expires_at: account.expires_at,
+						oid: idToken.oid || '',
+						tid: accessToken.tid || '',
+						email: idToken.email,
+						picture: token.picture || '',
+						uniqueid: idToken.uniqueid,
+						username: idToken.gaspar || '',
+						name: `${idToken.given_name ?? ''} ${idToken.family_name ?? ''}`.trim(),
+					};
+				}
+
+				const accessToken = decodeJWT(token.access_token);
+				if (Date.now() < accessToken.exp * 1000) {
+					return token;
+				}
+
+				return { ...token, error: 'TokenExpired' };
+			} catch (error) {
+				console.error('Error processing tokens:', error);
+				return { ...token, error: 'TokenProcessingError' };
+			}
+		},
+		session: async ({ session, token }) => {
+			return {
+				...session,
+				user: {
+					email: token?.email || session.user?.email || '',
+					name: token?.name || '',
+					image: session.user?.image || null,
+					sciper: token?.uniqueid || '',
+					username: token?.username || '',
+					oid: token.oid || '',
+					tid: token.tid || '',
+				},
+			};
+		},
 	},
-})
+});
