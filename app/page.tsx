@@ -3,12 +3,12 @@ import { SignInButton } from "./components/auth/SighInButton";
 import { SignOutButton } from "./components/auth/SignOutButton";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { updateSetting } from "./lib/database";
+import { getUser, updateSetting } from "./lib/database";
 
 export default function Home() {
-  const [funds, setFunds] = useState([]);
-  const [dfs, setDfs] = useState([]);
-  const [settings, setSettings] = useState([]);
+  const [funds, setFunds] = useState<{ id: number; resourceId: string; cf: string }[]>([]);
+  const [dfs, setDfs] = useState<{ id: number; name: string; requestID: number; dates: string; destination: string }[]>([]);
+  const [settings, setSettings] = useState<{ id: number; shown: boolean; userId: number; dfId: number | null; fundId: number | null; }[]>([]);
   const { data: session, status } = useSession();
 
   type fund = {
@@ -51,15 +51,11 @@ export default function Home() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ sciper: parseInt(session?.user.sciper) }),
-    }).then(() => {
-      fetch(`/api/getUser/${session?.user.sciper}`)
-        .then(res => res.json())
-        .then(data => {
-          setFunds(data.funds);
-          setDfs(data.dfs);
-          setSettings(data.settings);
-        })
-        .catch(err => console.log(err));
+    }).then(async () => {
+      const user = await getUser(session?.user.sciper || '') || { funds: [], dfs: [], settings: [] };
+      setFunds(user.funds);
+      setDfs(user.dfs);
+      setSettings(user.settings);
     })
   }, [session?.user.sciper]);
 

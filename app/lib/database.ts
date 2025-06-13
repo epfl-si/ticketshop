@@ -11,3 +11,12 @@ export async function updateSetting(shownValue: boolean, settingId: number) {
         },
     });
 }
+
+export async function getUser(sciper: string) {
+    const dbUser = await prisma.users.findUnique({
+        where: { sciper: parseInt(sciper) },
+        include: { dfs: true, funds: true, settings: true },
+    });
+
+    return dbUser;
+}
