@@ -3,7 +3,7 @@ import { SignInButton } from "./components/auth/SighInButton";
 import { SignOutButton } from "./components/auth/SignOutButton";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { getUser, updateSetting } from "./lib/database";
+import { getUser, updateSetting, updateUser } from "./lib/database";
 
 export default function Home() {
   const [funds, setFunds] = useState<{ id: number; resourceId: string; cf: string }[]>([]);
@@ -45,18 +45,14 @@ export default function Home() {
   useEffect(() => {
     if(!session?.user.sciper) return;
 
-    fetch(`/api/updateUser`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sciper: parseInt(session?.user.sciper) }),
-    }).then(async () => {
+    updateUser(session?.user.sciper).then(async () => {
       const user = await getUser(session?.user.sciper || '') || { funds: [], dfs: [], settings: [] };
       setFunds(user.funds);
       setDfs(user.dfs);
       setSettings(user.settings);
-    })
+    }).catch((error) => {
+      console.error('Error updating user:', error);
+    });
   }, [session?.user.sciper]);
 
   function displayFunds(status: "authenticated" | "loading" | "unauthenticated", funds: {error: string} | fund[]) {

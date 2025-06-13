@@ -1,6 +1,7 @@
 import NextAuth, { User, Session, Profile, Account } from "next-auth"
 import { JWT } from "next-auth/jwt";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id"
+import { updateUser } from "./app/lib/database";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     MicrosoftEntraID({
@@ -50,14 +51,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
     signIn: async ({ user, account, profile }: { user: User; account: Account | null; profile?: Profile }) => {
-      fetch(`${process.env.APP_URL}/api/updateUser`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ sciper: parseInt(user.sciper) }),
-      }).catch((error) => {
-        console.error('Error updating user:', error);
+      await updateUser(user.sciper).catch((error) => {
+        console.error('Error updating user :', error);
       });
       return true;
     }

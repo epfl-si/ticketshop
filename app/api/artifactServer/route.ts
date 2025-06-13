@@ -31,6 +31,7 @@ The XML for getArtifact is:
 
 import xpath from 'xpath';
 import { DOMParser } from 'xmldom';
+import { getUser, updateUser } from '@/app/lib/database';
 
 async function getPersonByEmail(email: string) {
     const url = `https://api.epfl.ch/v1/persons?query=${email}`;
@@ -153,11 +154,7 @@ export async function POST(req: Request) {
             });
         }
 
-        await fetch(`${process.env.APP_URL}/api/updateUser`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sciper: parseInt(artifactID) }),
-        });
+        await updateUser(artifactID);
         const user = await getUser(artifactID);
 
         const filteredFunds = user?.funds.filter((fund:any) => fund.id === user?.settings.find((s:any) => s.shown && s.fundId === fund.id)?.fundId);
