@@ -158,13 +158,12 @@ export async function POST(req: Request) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sciper: parseInt(artifactID) }),
         });
-        const user = await fetch(`${process.env.APP_URL}/api/getUser/${artifactID}`);
-        const userData = await user.json();
+        const user = await getUser(artifactID);
 
-        const filteredFunds = userData.funds.filter((fund:any) => fund.id === userData.settings.find((s:any) => s.shown && s.fundId === fund.id)?.fundId);
-        const filteredDfs = userData.dfs.filter((df:any) => df.id === userData.settings.find((s:any) => s.shown && s.dfId === df.id)?.dfId);
+        const filteredFunds = user?.funds.filter((fund:any) => fund.id === user?.settings.find((s:any) => s.shown && s.fundId === fund.id)?.fundId);
+        const filteredDfs = user?.dfs.filter((df:any) => df.id === user?.settings.find((s:any) => s.shown && s.dfId === df.id)?.dfId);
 
-        if(userData.funds.length || userData.dfs.length) {
+        if(user?.funds.length || user?.dfs.length) {
             const responseXML = `
             <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
                 <soap:Body>
@@ -178,8 +177,8 @@ export async function POST(req: Request) {
                             <rechnungsstellen>
                                 <bezeichnung>EPFL</bezeichnung>
                                 <kostenzuordnungen>
-                                    ${filteredFunds.map((fund:any) => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
-                                    ${filteredDfs.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
+                                    ${filteredFunds?.map((fund:any) => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
+                                    ${filteredDfs?.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
                                 </kostenzuordnungen>
                             </rechnungsstellen>
                             <sprache>fr</sprache>
