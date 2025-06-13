@@ -10,6 +10,7 @@ export default function Home() {
   const [dfs, setDfs] = useState<{ id: number; name: string; requestID: number; dates: string; destination: string }[]>([]);
   const [settings, setSettings] = useState<{ id: number; shown: boolean; userId: number; dfId: number | null; fundId: number | null; }[]>([]);
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
 
   type fund = {
     id: number,
@@ -50,6 +51,7 @@ export default function Home() {
       setFunds(user.funds);
       setDfs(user.dfs);
       setSettings(user.settings);
+      setLoading(false);
     }).catch((error) => {
       console.error('Error updating user:', error);
     });
@@ -103,14 +105,20 @@ export default function Home() {
         <h1 className="text-3xl font-semibold">Logged in as {session?.user.name}</h1>
         {status == "authenticated" ? <SignOutButton /> : <SignInButton btnValue="Sign In" redirectPath="/"/>}
       </div>
-      <div className="flex flex-col gap-2">
-        <h2 className="text-2xl font-semibold">Funds</h2>
-        {displayFunds(status, funds)}
-      </div>
-      <div className="flex flex-col gap-2 mt-5">
-        <h2 className="text-2xl font-semibold">Décomptes de frais</h2>
-        {displayDfs(status, dfs)}
-      </div>
+      {
+        !loading && (
+          <>
+            <div className="flex flex-col gap-2">
+              <h2 className="text-2xl font-semibold">Funds</h2>
+              {displayFunds(status, funds)}
+            </div>
+            <div className="flex flex-col gap-2 mt-5">
+              <h2 className="text-2xl font-semibold">Décomptes de frais</h2>
+              {displayDfs(status, dfs)}
+            </div>
+          </>
+        )
+      }
     </div>
   );
 }
