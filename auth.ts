@@ -36,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 						uniqueid: idToken.uniqueid,
 						username: idToken.gaspar || '',
 						name: `${idToken.given_name ?? ''} ${idToken.family_name ?? ''}`.trim(),
-            groups: idToken.groups || [],
+						groups: idToken.groups || [],
 					};
 				}
 
@@ -62,7 +62,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 					username: token?.username || '',
 					oid: token.oid || '',
 					tid: token.tid || '',
-          isAdmin: token.groups?.includes('ticketshop-admin_AppGrpU') || false,
+					isAdmin: token.groups?.includes('ticketshop-admin_AppGrpU') || false,
 				},
 			};
 		},
