@@ -1,5 +1,4 @@
-export async function GET(request: Request, { params }: { params: { sciper: string } }) {
-    const { sciper } = await params;
+export async function getDfs(sciper: string) {
     const url = `https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests`;
     const username = process.env.DFS_USERNAME;
     const password = process.env.DFS_PASSWORD;
@@ -14,8 +13,5 @@ export async function GET(request: Request, { params }: { params: { sciper: stri
         return travelRequest.sciper === parseInt(sciper);
     });
 
-    return new Response(JSON.stringify(filteredData), {
-        headers: { 'Content-Type': 'application/json' },
-        status: 200
-    });
+    return filteredData;
 }

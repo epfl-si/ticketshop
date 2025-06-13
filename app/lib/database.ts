@@ -1,5 +1,6 @@
 'use server';
 import { PrismaClient } from '@prisma/client';
+import { getDfs } from './api';
 
 const prisma = new PrismaClient();
 
@@ -94,8 +95,7 @@ export async function updateUser(sciper: string) {
     }
 
     // DFs
-    const dfsResponse = await fetch(`${process.env.APP_URL}/api/dfs/${sciper}`);
-    const dfs = await dfsResponse.json();
+    const dfs = await getDfs(sciper);
     if(dfs.length > 0) {
         const userAndDfs = await prisma.users.findUnique({
             where: { sciper: parseInt(sciper) },
