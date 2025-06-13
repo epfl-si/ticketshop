@@ -28,5 +28,6 @@ declare module 'next-auth/jwt' {
 		uniqueid?: string;
 		username?: string;
 		error?: string;
+		groups?: string[];
 	}
 }
