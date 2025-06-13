@@ -1,6 +1,6 @@
 'use server';
 import { PrismaClient } from '@prisma/client';
-import { getDfs } from './api';
+import { getDfs, getFunds } from './api';
 
 const prisma = new PrismaClient();
 
@@ -34,8 +34,7 @@ export async function updateUser(sciper: string) {
             }
         });
     }
-    const fundsResponse = await fetch(`${process.env.APP_URL}/api/funds/${sciper}`);
-    const funds = await fundsResponse.json();
+    const funds = await getFunds(sciper);
     // If no `funds.error`, it means the user has at least one fund
     if(!funds.error) {
         const userAndFunds = await prisma.users.findUnique({

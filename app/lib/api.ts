@@ -15,3 +15,21 @@ export async function getDfs(sciper: string) {
 
     return filteredData;
 }
+
+export async function getFunds(sciper: string) {
+    const url = `https://api.epfl.ch/v1/authorizations?persid=${sciper}&authid=railticket,ndf.travel.org&type=right&expand=1`;
+    const username = process.env.API_USERNAME;
+    const password = process.env.API_PASSWORD;
+    const headers = new Headers();
+    headers.set('Authorization', 'Basic ' + btoa(username + ':' + password));
+
+    const response = await fetch(url, { method: 'GET', headers: headers });
+
+    const data = await response.json();
+    const result = data.authorizations.filter((auth: any) => auth.resourceid.startsWith('FF'));
+    if(!result.length) {
+        return { error: `No funds found for sciper ${sciper}` };
+    } else {
+        return result;
+    }
+}
