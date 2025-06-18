@@ -13,6 +13,7 @@ declare module 'next-auth' {
 		email: string;
 		image: string | null;
 		sciper: string;
+		isAdmin: boolean;
 	}
 }
 
