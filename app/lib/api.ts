@@ -9,7 +9,7 @@ export async function getDfs(sciper: string) {
     const response = await fetch(url, { method: 'GET', headers: headers });
 
     const data = await response.json();
-    const filteredData = data.travelRequests.filter((travelRequest: any) => {
+    const filteredData = data.travelRequests.filter((travelRequest:{sciper:number}) => {
         return travelRequest.sciper === parseInt(sciper);
     });
 
@@ -26,7 +26,7 @@ export async function getFunds(sciper: string) {
     const response = await fetch(url, { method: 'GET', headers: headers });
 
     const data = await response.json();
-    const result = data.authorizations.filter((auth: any) => auth.resourceid.startsWith('FF'));
+    const result = data.authorizations.filter((auth:{resourceid: string}) => auth.resourceid.startsWith('FF'));
     if(!result.length) {
         return { error: `No funds found for sciper ${sciper}` };
     } else {

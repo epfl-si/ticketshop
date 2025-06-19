@@ -71,11 +71,11 @@ export async function POST(req: Request) {
         'SOAP-ENV': 'http://schemas.xmlsoap.org/soap/envelope/',
         'ns3': 'http://xmlns.sbb.ch/zvs/splp/artifact'
     });
-    const emailNodes = select('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifactID/email', xmlDoc);
-    const email = emailNodes && emailNodes.length > 0 ? emailNodes[0].firstChild.nodeValue : null;
+    const emailNodes = select('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifactID/email', xmlDoc) as Node[];
+    const email = emailNodes && emailNodes.length > 0 ? emailNodes[0].firstChild?.nodeValue : null;
 
-    const artifactIDNodes = select('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifact/artifactID/id', xmlDoc);
-    const artifactID = artifactIDNodes && artifactIDNodes.length > 0 ? artifactIDNodes[0].firstChild.nodeValue : null;
+    const artifactIDNodes = select('/SOAP-ENV:Envelope/SOAP-ENV:Body/ns3:getArtifact/artifactID/id', xmlDoc) as Node[];
+    const artifactID = artifactIDNodes && artifactIDNodes.length > 0 ? artifactIDNodes[0].firstChild?.nodeValue : null;
 
     if(email) {
         const persons = await getPersonByEmail(email);
@@ -157,8 +157,8 @@ export async function POST(req: Request) {
         await updateUser(artifactID);
         const user = await getUser(artifactID);
 
-        const filteredFunds = user?.funds.filter((fund:any) => fund.id === user?.settings.find((s:any) => s.shown && s.fundId === fund.id)?.fundId);
-        const filteredDfs = user?.dfs.filter((df:any) => df.id === user?.settings.find((s:any) => s.shown && s.dfId === df.id)?.dfId);
+        const filteredFunds = user?.funds.filter(fund => fund.id === user?.settings.find(s => s.shown && s.fundId === fund.id)?.fundId);
+        const filteredDfs = user?.dfs.filter(df => df.id === user?.settings.find(s => s.shown && s.dfId === df.id)?.dfId);
 
         if(user?.funds.length || user?.dfs.length) {
             const responseXML = `
@@ -174,8 +174,8 @@ export async function POST(req: Request) {
                             <rechnungsstellen>
                                 <bezeichnung>EPFL</bezeichnung>
                                 <kostenzuordnungen>
-                                    ${filteredFunds?.map((fund:any) => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
-                                    ${filteredDfs?.map((df:any) => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
+                                    ${filteredFunds?.map(fund => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
+                                    ${filteredDfs?.map(df => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
                                 </kostenzuordnungen>
                             </rechnungsstellen>
                             <sprache>fr</sprache>

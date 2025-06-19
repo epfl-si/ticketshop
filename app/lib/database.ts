@@ -1,6 +1,7 @@
 'use server';
 import { PrismaClient } from '@prisma/client';
 import { getDfs, getFunds } from './api';
+import { Fund } from '@/app/types/main';
 
 const prisma = new PrismaClient();
 
@@ -73,7 +74,7 @@ export async function updateUser(sciper: string) {
         }
         }
         // If funds does not exist anymore from api.epfl.ch but exists in TicketShop's database, we delete them
-        const fundsToDelete = userAndFunds?.funds.filter(f => !funds.find(fund => fund.resourceid.slice(2) === f.resourceId)) || [];
+        const fundsToDelete = userAndFunds?.funds.filter(f => !funds.find((fund:Fund) => fund.resourceid.slice(2) === f.resourceId)) || [];
         if (fundsToDelete.length > 0) {
         for (const fund of fundsToDelete) {
             await prisma.funds.delete({
