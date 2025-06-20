@@ -29,3 +29,11 @@ export type Df = {
         cf: string,
     }
 }
+
+export type Setting = {
+    id: number,
+    shown: boolean,
+    userId: number,
+    fundId?: number | null,
+    dfId?: number | null 
+}
