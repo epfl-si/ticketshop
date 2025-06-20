@@ -46,7 +46,7 @@ export async function updateUser(sciper: string) {
         for (const fund of funds) {
         const fundResourceIdWithoutPrefix = fund.resourceid.slice(2);
         const fundFinancalCenterWithoutPrefix = fund.value.slice(6);
-        const fundExists = userAndFunds?.funds.find(f => f.resourceId === fundResourceIdWithoutPrefix);
+        const fundExists = userAndFunds?.funds.find((f:{resourceId: string}) => f.resourceId === fundResourceIdWithoutPrefix);
         if (!fundExists) {
             const createdFund = await prisma.funds.create({
                 data: {
@@ -74,7 +74,7 @@ export async function updateUser(sciper: string) {
         }
         }
         // If funds does not exist anymore from api.epfl.ch but exists in TicketShop's database, we delete them
-        const fundsToDelete = userAndFunds?.funds.filter(f => !funds.find((fund:Fund) => fund.resourceid.slice(2) === f.resourceId)) || [];
+        const fundsToDelete = userAndFunds?.funds.filter((f:{resourceId:string}) => !funds.find((fund:Fund) => fund.resourceid.slice(2) === f.resourceId)) || [];
         if (fundsToDelete.length > 0) {
         for (const fund of fundsToDelete) {
             await prisma.funds.delete({
@@ -103,7 +103,7 @@ export async function updateUser(sciper: string) {
         });
         // If dfs returned from the service does not yet exsist in the database, we create them
         for (const df of dfs) {
-        const dfExists = userAndDfs?.dfs.find(d => d.requestID === df.requestID);
+        const dfExists = userAndDfs?.dfs.find((d:{requestID: number}) => d.requestID === df.requestID);
         const fundOfDf = await prisma.funds.findMany({
             where: { resourceId: df.imputation.fund.toString()},
         })
