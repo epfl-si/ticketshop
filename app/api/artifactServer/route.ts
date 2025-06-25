@@ -1,34 +1,3 @@
-/*
-The XML for getArtifactID is:
-
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-    <SOAP-ENV:Header/>
-    <SOAP-ENV:Body>
-        <ns3:getArtifactID xmlns:ns3="http://xmlns.sbb.ch/zvs/splp/artifact">
-            <email>$email</email>
-            <vertragsnummer>EPFL776</vertragsnummer>
-        </ns3:getArtifactID>
-    </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-
-*/
-
-/*
-The XML for getArtifact is:
-
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
-    <SOAP-ENV:Header/>
-    <SOAP-ENV:Body>
-        <ns3:getArtifact xmlns:ns3="http://xmlns.sbb.ch/zvs/splp/artifact">
-            <artifactID>
-                <id>$sciper</id>
-            </artifactID>
-        </ns3:getArtifact>
-    </SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-
-*/
-
 import xpath from 'xpath';
 import { DOMParser } from 'xmldom';
 import { getUser, updateUser } from '@/app/lib/database';
