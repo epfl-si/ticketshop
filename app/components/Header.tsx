@@ -1,6 +1,7 @@
 'use client';
 import { useSession, signOut, signIn } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export function Header() {
@@ -9,14 +10,21 @@ export function Header() {
     
     return (
         <header className="flex justify-between items-center p-4 px-8 bg-gray-200 text-white">
-            <div className="flex items-center gap-4">
-                <Image
-                    src="/epfl_logo.png"
-                    alt="EPFL Logo"
-                    width="70"
-                    height="70"
-                />
-                <h1 className="text-2xl font-bold text-black">TicketShop</h1>
+            <div className="flex items-center gap-12">
+                <div className="flex items-center gap-4">
+                    <Image
+                        src="/epfl_logo.png"
+                        alt="EPFL Logo"
+                        width="70"
+                        height="70"
+                    />
+                    <Link href="/" className="text-2xl font-bold text-black">TicketShop</Link>
+                </div>
+                {session?.user.isAdmin && (
+                    <Link href="/search" className="text-black hover:text-gray-800 transition ease-in-out">
+                        Search
+                    </Link>
+                )}
             </div>
             <nav>
                 <ul className="flex space-x-4 text-black items-center">
