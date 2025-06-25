@@ -1,0 +1,47 @@
+services:
+  postgres_db:
+    image: postgres
+    hostname: postgres_db
+    container_name: ticketshop-database
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: insanepassword
+    ports:
+      - '5432:5432'
+    networks:
+      - prisma-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+
+  server:
+    container_name: ticketshop-app
+    build: 
+      context: .  
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    stdin_open: true
+    tty: true
+    command: ['npm', 'run', 'dev']
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    networks:
+      - prisma-network
+
+networks:
+  prisma-network:
+    name: prisma-network
