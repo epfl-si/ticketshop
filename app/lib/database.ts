@@ -36,6 +36,7 @@ export async function updateUser(sciper: string) {
         });
     }
     const funds = await getFunds(sciper);
+    const fundsFromDb = await prisma.funds.findMany({});
     // If no `funds.error`, it means the user has at least one fund
     if(!funds.error) {
         const userAndFunds = await prisma.users.findUnique({
@@ -46,8 +47,9 @@ export async function updateUser(sciper: string) {
         for (const fund of funds) {
         const fundResourceIdWithoutPrefix = fund.resourceid.slice(2);
         const fundFinancalCenterWithoutPrefix = fund.value.slice(6);
-        const fundExists = userAndFunds?.funds.find((f:{resourceId: string}) => f.resourceId === fundResourceIdWithoutPrefix);
-        if (!fundExists) {
+        const fundAlreadyInDb = fundsFromDb.find((f:{resourceId: string}) => f.resourceId === fundResourceIdWithoutPrefix);
+        const fundLinkedToUser = userAndFunds?.funds.find((f:{resourceId: string}) => f.resourceId === fundResourceIdWithoutPrefix);
+        if (!fundAlreadyInDb) {
             const createdFund = await prisma.funds.create({
                 data: {
                     resourceId: fundResourceIdWithoutPrefix,
@@ -68,6 +70,30 @@ export async function updateUser(sciper: string) {
                     },
                     fund: {
                         connect: { id: createdFund.id }
+                    },
+                },
+            });
+        } else if (fundAlreadyInDb && !fundLinkedToUser) {
+            // If the fund already exists in the database but is not linked to the user, we link it
+            await prisma.users.update({
+                where: { sciper: parseInt(sciper) },
+                data: {
+                    funds: {
+                        connect: {
+                            resourceId: fundResourceIdWithoutPrefix,
+                        },
+                    },
+                },
+            });
+
+            await prisma.settings.create({
+                data: {
+                    shown: true,
+                    user: {
+                        connect: { id: userAndFunds?.id }
+                    },
+                    fund: {
+                        connect: { id: fundAlreadyInDb.id }
                     },
                 },
             });
