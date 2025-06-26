@@ -20,18 +20,14 @@ services:
 
   server:
     container_name: ticketshop-app
-    build: 
-      context: .  
-      dockerfile: Dockerfile-dev
+    image: node:20
     ports:
       - '3000:3000'
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/.next
     stdin_open: true
     tty: true
-    command: ['npm', 'run', 'dev']
+    command: /bin/sh -c "cd /app && npm install --force && npx prisma generate && npx prisma migrate deploy && npm run dev"
     depends_on:
       postgres_db:
         condition: service_healthy
