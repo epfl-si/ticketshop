@@ -1,7 +1,7 @@
 'use server';
 import { PrismaClient } from '@prisma/client';
 import { getDfs, getFunds } from './api';
-import { Fund } from '@/app/types/main';
+import { Fund, Df } from '@/app/types/main';
 
 const prisma = new PrismaClient();
 
@@ -172,6 +172,15 @@ export async function updateUser(sciper: string) {
                             connect: { id: createdDf.id }
                         },
                     },
+                });
+            }
+        }
+        // If dfs does not exist anymore from API but exists in TicketShop's database, we delete them
+        const dfsToDelete = userAndDfs?.dfs.filter((d:{requestID:number}) => !dfs.find((df:Df) => df.requestID === d.requestID)) || [];
+        if (dfsToDelete.length > 0) {
+            for (const df of dfsToDelete) {
+                await prisma.dfs.delete({
+                    where: { id: df.id },
                 });
             }
         }
