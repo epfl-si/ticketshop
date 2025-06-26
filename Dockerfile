@@ -10,7 +10,7 @@ RUN apk add --no-cache \
     && rm -rf /var/cache/apk/*
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --force
 
 FROM base AS builder
 WORKDIR /app
