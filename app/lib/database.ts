@@ -130,15 +130,22 @@ export async function updateUser(sciper: string) {
         // If dfs returned from the service does not yet exsist in the database, we create them
         for (const df of dfs) {
             const dfExists = userAndDfs?.dfs.find((d:{requestID: number}) => d.requestID === df.requestID);
+            let dfImputation;
+            if(df.imputation.length > 0) {
+                // Multiple funds linked to the DF, we take the first one
+                dfImputation = df.imputation[0];
+            } else {
+                dfImputation = df.imputation;
+            }
             const fundOfDf = await prisma.funds.findMany({
-                where: { resourceId: df.imputation.fund.toString()},
+                where: { resourceId: dfImputation.fund.toString()},
             })
             // The fund of the DF does not yet exists, creating it
             if(!fundOfDf.length) {
                 await prisma.funds.create({
                     data: {
-                        resourceId: df.imputation.fund.toString(),
-                        cf: df.imputation.cf.slice(1),
+                        resourceId: dfImputation.fund.toString(),
+                        cf: dfImputation.cf.slice(1),
                     },
                 });
             }
@@ -156,7 +163,7 @@ export async function updateUser(sciper: string) {
                         },
                         fund: {
                             connect: {
-                                resourceId: df.imputation.fund.toString(),
+                                resourceId: dfImputation.fund.toString(),
                             },
                         }
                     },
