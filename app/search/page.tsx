@@ -4,23 +4,45 @@ import { SignOutButton } from "../components/auth/SignOutButton";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { getUser, updateUser } from "../lib/database";
+import { Autocomplete, TextField, CircularProgress } from "@mui/material";
+import { getUsers } from "../lib/api";
 
 export default function Home() {
   const [funds, setFunds] = useState<{ id: number; resourceId: string; cf: string }[]>([]);
   const [dfs, setDfs] = useState<{ id: number; name: string; requestID: number; dates: string; destination: string }[]>([]);
   const [settings, setSettings] = useState<{ id: number; shown: boolean; userId: number; dfId: number | null; fundId: number | null; }[]>([]);
   const { data: session, status } = useSession();
+  let typingTimer:NodeJS.Timeout = setTimeout(() => {}, 0);
+  const [loading, setLoading] = useState(false);
+  const [noFundsOrDfs, setNoFundsOrDfs] = useState(false);
+  const [users, setUsers] = useState([]);
 
-  async function handleUserSearch(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const searchValue = formData.get('search') as string;
-    await updateUser(searchValue);
-    const user = await getUser(searchValue) || { funds: [], dfs: [], settings: [] };
-    setFunds(user.funds);
-    setDfs(user.dfs);
-    setSettings(user.settings);
-  };
+  async function handleUserChoice(sciper: string) {
+    await updateUser(sciper);
+    const user = await getUser(sciper) || { funds: [], dfs: [], settings: [] };
+    if(user.dfs.length > 0 || user.funds.length > 0) {
+      setFunds(user.funds);
+      setDfs(user.dfs);
+      setSettings(user.settings);
+      setNoFundsOrDfs(false);
+    } else {
+      setFunds([]);
+      setDfs([]);
+      setSettings([]);
+      setNoFundsOrDfs(true)
+    }
+  }
+
+  async function doneTyping(inputValue: string) {
+    const users = await getUsers(inputValue);
+    setUsers(users);
+    setLoading(false);
+  }
+
+  interface Option {
+    id: string;
+    display: string;
+  }
 
   return (
     <div className="p-6">
@@ -31,19 +53,64 @@ export default function Home() {
       {
         session?.user.isAdmin ? (
           <div>
-            <form onSubmit={handleUserSearch} className="flex gap-5">
-              <input 
-                type="text"
-                className="border-2 border-gray-300 rounded-md p-2 w-1/3 min-w-96"
-                placeholder="Search for a user..."
-                name="search"
+            <form className="flex gap-5">
+              <Autocomplete
+                id="searchBar"
+                freeSolo
+                ListboxProps={{ style: { maxHeight: 200, overflow: 'auto' } }}
+                autoHighlight={true}
+                sx={{ width: "400px", minWidth: "30vw" }}
+                onChange={async (event, newValue) => {
+                  if (typeof newValue !== "string" && newValue?.id) {
+                    await handleUserChoice(newValue.id);
+                  }
+                }}
+                disablePortal
+                disableClearable
+                options={users}
+                filterOptions={(options) => options}
+                renderOption={(props, option: string | Option) => {
+                    if (typeof option === "string") {
+                      return (
+                        <li {...props} key={option}>
+                          <span>{option}</span>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li {...props} key={option.id}>
+                        <span>{option.display} {option.id}</span>
+                      </li>
+                    );
+                }}
+                onInput={(e) => {
+                  const value = (e.target as HTMLInputElement).value;
+                  if (value.length >= 3) {
+                    clearTimeout(typingTimer);
+                    setLoading(true);
+                    typingTimer = setTimeout(() => doneTyping(value), 1000);
+                  } else {
+                    clearTimeout(typingTimer);
+                    setLoading(false);
+                    setUsers([]);
+                  }
+                }}
+                renderInput={(params) => (
+                    <TextField {...params}
+                        label="Search for a person"
+                        InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
+                                <>
+                                    {loading ? <CircularProgress color="inherit" size={20}/> : null}
+                                    {params.InputProps.endAdornment}
+                                </>
+                            )
+                        }}
+                    />
+                )}
+                getOptionLabel={(option: string | Option) => typeof option === "string" ? option : option.display}
               />
-              <button
-                type="submit"
-                className="bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-700 transition-colors ease-in-out"
-              >
-                Search
-              </button>
             </form>
             {
               (dfs.length > 0 || funds.length > 0) && (
@@ -80,6 +147,9 @@ export default function Home() {
                 </table>
               )
             }
+            { noFundsOrDfs && (
+              <p className="text-gray-500 mt-4">This user does not have any funds or DFs to display.</p>
+            )}
           </div>
         ) : (
           <>You are not authorized to see this page.</>
