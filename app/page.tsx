@@ -78,14 +78,21 @@ export default function Home() {
       {
         !loading && (
           <>
-            <div className="flex flex-col gap-2">
-              <h2 className="text-2xl font-semibold">Funds</h2>
-              {displayFunds(status, funds)}
-            </div>
-            <div className="flex flex-col gap-2 mt-5">
-              <h2 className="text-2xl font-semibold">Décomptes de frais</h2>
-              {displayDfs(status, dfs)}
-            </div>
+            {Array.isArray(funds) && funds.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <h2 className="text-2xl font-semibold">Funds</h2>
+                {displayFunds(status, funds)}
+              </div>
+            )}
+            {Array.isArray(dfs) && dfs.length > 0 && (
+              <div className="flex flex-col gap-2 mt-5">
+                <h2 className="text-2xl font-semibold">Décomptes de frais</h2>
+                {displayDfs(status, dfs)}
+              </div>
+            )}
+            {((!Array.isArray(funds) || funds.length === 0) && (!Array.isArray(dfs) || dfs.length === 0)) && (
+              <div>You do not have any funds or DFs to display.</div>
+            )}
           </>
         )
       }
