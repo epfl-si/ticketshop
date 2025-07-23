@@ -1,8 +1,10 @@
 'use client';
-import { useSession, signOut, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { SignOutButton } from "./auth/SignOutButton";
+import { SignInButton } from "./auth/SighInButton";
 
 export function Header() {
     const { data: session, status } = useSession();
@@ -40,23 +42,16 @@ export function Header() {
                         </button>
                         {pfpDropDown && (
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 py-2">
-                                {status == "unauthenticated" ? (
-                                    <button
-                                        onClick={() => signIn('microsoft-entra-id')}
-                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Connexion
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={() => signOut()}
-                                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Déconnexion
-                                    </button>  
-                                )}
+                                <button
+                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                >
+                                    TBD    
+                                </button>
                             </div>
                         )}
+                    </li>
+                    <li>
+                        {status == "authenticated" ? <SignOutButton /> : <SignInButton btnValue="Sign In" redirectPath="/"/>}
                     </li>
                 </ul>
             </nav>

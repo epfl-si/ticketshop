@@ -1,6 +1,4 @@
 "use client";
-import { SignInButton } from "../components/auth/SighInButton";
-import { SignOutButton } from "../components/auth/SignOutButton";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { getUser, updateUser } from "../lib/database";
@@ -11,7 +9,7 @@ export default function Home() {
   const [funds, setFunds] = useState<{ id: number; resourceId: string; cf: string }[]>([]);
   const [dfs, setDfs] = useState<{ id: number; name: string; requestID: number; dates: string; destination: string }[]>([]);
   const [settings, setSettings] = useState<{ id: number; shown: boolean; userId: number; dfId: number | null; fundId: number | null; }[]>([]);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   let typingTimer:NodeJS.Timeout = setTimeout(() => {}, 0);
   const [loading, setLoading] = useState(false);
   const [noFundsOrDfs, setNoFundsOrDfs] = useState(false);
@@ -48,7 +46,6 @@ export default function Home() {
     <div className="p-6">
       <div className="flex gap-3 mb-8">
         <h1 className="text-3xl font-semibold">Logged in as {session?.user.name}</h1>
-        {status == "authenticated" ? <SignOutButton /> : <SignInButton btnValue="Sign In" redirectPath="/"/>}
       </div>
       {
         session?.user.isAdmin ? (
