@@ -45,8 +45,6 @@ function logRequest(user: number, requestType: string, success: boolean, payload
 export async function POST(req: Request) {
     const xmlData = await req.text();
 
-    console.log(xmlData);
-
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlData, "application/xml");
 
@@ -160,10 +158,8 @@ export async function POST(req: Request) {
                             <vertragsnummer>EPFL776</vertragsnummer>
                             <rechnungsstellen>
                                 <bezeichnung>EPFL</bezeichnung>
-                                <kostenzuordnungen>
-                                    ${filteredFunds?.map(fund => `<bezeichnung>${fund.resourceId}</bezeichnung>`).join('')}
-                                    ${filteredDfs?.map(df => `<bezeichnung>${df.requestID}</bezeichnung>`).join('')}
-                                </kostenzuordnungen>
+                                ${filteredFunds?.map(fund => `<kostenzuordnungen><bezeichnung>${fund.resourceId}</bezeichnung></kostenzuordnungen>`).join('')}
+                                ${filteredDfs?.map(df => `<kostenzuordnungen><bezeichnung>${df.requestID}</bezeichnung></kostenzuordnungen>`).join('')}
                             </rechnungsstellen>
                             <sprache>fr</sprache>
                             <telefonnummer>${person.phones[0].number}</telefonnummer>
