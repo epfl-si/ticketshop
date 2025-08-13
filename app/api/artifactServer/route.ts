@@ -45,6 +45,8 @@ function logRequest(user: number, requestType: string, success: boolean, payload
 export async function POST(req: Request) {
     const xmlData = await req.text();
 
+    console.log(xmlData);
+
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlData, "application/xml");
 
