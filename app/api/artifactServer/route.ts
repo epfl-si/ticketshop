@@ -31,6 +31,17 @@ async function getPersonBySciper(sciper: string) {
     return data
 }
 
+function logRequest(user: number, requestType: string, success: boolean, payload: string) {
+    console.log(`
+{
+    "user": ${user},
+    "requestType": "${requestType}",
+    "success": ${success}
+    "payload": ${payload}
+}
+    `)
+}
+
 export async function POST(req: Request) {
     const xmlData = await req.text();
 
@@ -66,6 +77,8 @@ export async function POST(req: Request) {
                 </soap:Body>
             </soap:Envelope>
             `;
+
+            logRequest(artifactID, 'getArtifactID', true, xmlData);
 
             return new Response(responseXML, {
                 status: 200,
@@ -118,6 +131,8 @@ export async function POST(req: Request) {
             </soap:Envelope>
             `;
 
+            logRequest(parseInt(artifactID), 'getArtifact', false, xmlData);
+
             return new Response(responseXML, {
                 status: 500,
                 headers: { 'Content-Type': 'application/xml' },
@@ -164,6 +179,8 @@ export async function POST(req: Request) {
             </soap:Envelope>
             `;  
     
+            logRequest(parseInt(artifactID), 'getArtifact', true, xmlData)
+
             return new Response(responseXML, {
                 status: 200,
                 headers: { 'Content-Type': 'application/xml' },
@@ -187,6 +204,8 @@ export async function POST(req: Request) {
                 </soap:Body>
             </soap:Envelope>
             `;
+
+            logRequest(parseInt(artifactID), 'getArtifact', false, xmlData)
 
             return new Response(responseXML, {
                 status: 500,
