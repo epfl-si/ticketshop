@@ -82,7 +82,7 @@ export async function POST(req: Request) {
 
             return new Response(responseXML, {
                 status: 200,
-                headers: { 'Content-Type': 'application/xml' },
+                headers: { 'Content-Type': 'text/xml; charset=utf-8' },
             });
         } else {
             const responseXML = `
@@ -106,7 +106,7 @@ export async function POST(req: Request) {
 
             return new Response(responseXML, {
                 status: 500,
-                headers: { 'Content-Type': 'application/xml' },
+                headers: { 'Content-Type': 'text/xml; charset=utf-8' },
             });
         }
     } else if (artifactID) {
@@ -135,7 +135,7 @@ export async function POST(req: Request) {
 
             return new Response(responseXML, {
                 status: 500,
-                headers: { 'Content-Type': 'application/xml' },
+                headers: { 'Content-Type': 'text/xml; charset=utf-8' },
             });
         }
 
@@ -181,7 +181,7 @@ export async function POST(req: Request) {
 
             return new Response(responseXML, {
                 status: 200,
-                headers: { 'Content-Type': 'application/xml' },
+                headers: { 'Content-Type': 'text/xml; charset=utf-8' },
             });
         } else {
             const responseXML = `
@@ -207,7 +207,7 @@ export async function POST(req: Request) {
 
             return new Response(responseXML, {
                 status: 500,
-                headers: { 'Content-Type': 'application/xml' },
+                headers: { 'Content-Type': 'text/xml; charset=utf-8' },
             });
         }
 
