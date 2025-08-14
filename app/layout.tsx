@@ -3,6 +3,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { Header } from "./components/Header";
 import { auth } from "@/auth";
+import { Footer } from "./components/Footer";
 
 export const metadata: Metadata = {
   title: "TicketShop",
@@ -20,9 +21,12 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <SessionProvider session={session}>
-        <body>
+        <body className="flex flex-col min-h-screen">
           <Header />
-          {children}
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
         </body>
       </SessionProvider>
     </html>
