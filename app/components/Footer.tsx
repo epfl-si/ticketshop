@@ -1,5 +1,5 @@
 'use client';
-import * as packageJson from '../../package.json';
+import packageJson from '../../package.json' with { type: 'json' };
 
 export function Footer() {
     return (
@@ -13,21 +13,21 @@ export function Footer() {
                 <hr className="h-px bg-gray-400 border-0" />
                 <div className="flex justify-between h-20 items-center">
                     <div className="flex gap-5">
-                        <a 
+                        <a
                             className="text-xs text-gray-600 cursor-pointer underline decoration-red-500 hover:decoration-black transition ease-in-out"
                             href="https://www.epfl.ch/about/overview/fr/reglements-et-directives/mentions-legales/"
                             target="_blank"
                         >
                             Accessibilité
                         </a>
-                        <a 
+                        <a
                             className="text-xs text-gray-600 cursor-pointer underline decoration-red-500 hover:decoration-black transition ease-in-out"
                             href="https://www.epfl.ch/about/overview/fr/reglements-et-directives/mentions-legales/"
                             target="_blank"
                         >
                             Mentions légales
                         </a>
-                        <a 
+                        <a
                             className="text-xs text-gray-600 cursor-pointer underline decoration-red-500 hover:decoration-black transition ease-in-out"
                             href="https://go.epfl.ch/protection-des-donnees/"
                             target="_blank"
