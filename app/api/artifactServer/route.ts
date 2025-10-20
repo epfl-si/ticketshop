@@ -4,7 +4,7 @@ import { getUser, updateUser } from '@/app/lib/database';
 import { Df, Fund, Setting } from '@/app/types/main';
 
 async function getPersonByEmail(email: string) {
-    const url = `https://api.epfl.ch/v1/persons?query=${email}`;
+    const url = `${process.env.API_URL}/v1/persons?query=${email}`;
     const username = process.env.API_USERNAME;
     const password = process.env.API_PASSWORD;
     const headers = new Headers();
@@ -18,7 +18,7 @@ async function getPersonByEmail(email: string) {
 }
 
 async function getPersonBySciper(sciper: string) {
-    const url = `https://api.epfl.ch/v1/persons/${sciper}`;
+    const url = `${process.env.API_URL}/v1/persons/${sciper}`;
     const username = process.env.API_USERNAME;
     const password = process.env.API_PASSWORD;
     const headers = new Headers();
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
     if(email) {
         const persons = await getPersonByEmail(email);
-        
+
         if(persons.length) {
             const person = persons[0];
             const artifactID = person.id;
@@ -175,8 +175,8 @@ export async function POST(req: Request) {
                     </ns2:getArtifactResponse>
                 </soap:Body>
             </soap:Envelope>
-            `;  
-    
+            `;
+
             logRequest(parseInt(artifactID), 'getArtifact', true, xmlData)
 
             return new Response(responseXML, {

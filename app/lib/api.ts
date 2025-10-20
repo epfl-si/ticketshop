@@ -1,6 +1,6 @@
 "use server";
 export async function getDfs(sciper: string) {
-    const url = `https://testsapservices.epfl.ch/poq/RESTAdapter/api/fi/travelrequests`;
+    const url = `${process.env.SAP_URL}/poq/RESTAdapter/api/fi/travelrequests`;
     const username = process.env.DFS_USERNAME;
     const password = process.env.DFS_PASSWORD;
 
@@ -18,7 +18,7 @@ export async function getDfs(sciper: string) {
 }
 
 export async function getFunds(sciper: string) {
-    const url = `https://api.epfl.ch/v1/authorizations?persid=${sciper}&authid=railticket,ndf.travel.org&type=right&expand=1`;
+    const url = `${process.env.API_URL}/v1/authorizations?persid=${sciper}&authid=railticket,ndf.travel.org&type=right&expand=1`;
     const username = process.env.API_USERNAME;
     const password = process.env.API_PASSWORD;
     const headers = new Headers();
@@ -36,7 +36,7 @@ export async function getFunds(sciper: string) {
 }
 
 export async function getUsers(input: string) {
-    const url = `https://api.epfl.ch/v1/persons?query=${input}`;
+    const url = `${process.env.API_URL}/v1/persons?query=${input}`;
     const username = process.env.API_USERNAME;
     const password = process.env.API_PASSWORD;
     const headers = new Headers();
