@@ -1,0 +1,230 @@
+name: Smart Build and Release
+on:
+  push:
+    branches:
+      - master
+
+env:
+  REPOSITORY: "quay-its.epfl.ch"
+  APP_NAME: "ticketshop"
+  ORGANIZATION: "svc0049"
+
+jobs:
+  code-quality:
+    name: Code Quality Check
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      checks: write
+    outputs:
+      eslint_passed: ${{ steps.eslint_check.outputs.passed }}
+      has_errors: ${{ steps.eslint_check.outputs.has_errors }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - run: npm ci --legacy-peer-deps
+
+      - id: eslint_check
+        run: |
+          mkdir -p eslint-results
+          set +e
+          npm run lint -- --format json --output-file eslint-results/results.json
+          ESLINT_EXIT_CODE=$?
+          npm run lint -- --format stylish
+
+          if [ -f "eslint-results/results.json" ]; then
+            ERROR_COUNT=$(jq '[.[] | .messages[] | select(.severity == 2)] | length' eslint-results/results.json)
+            WARNING_COUNT=$(jq '[.[] | .messages[] | select(.severity == 1)] | length' eslint-results/results.json)
+
+            if [ "$ERROR_COUNT" -gt 0 ]; then
+              echo "has_errors=true" >> $GITHUB_OUTPUT
+              echo "passed=false" >> $GITHUB_OUTPUT
+            else
+              echo "has_errors=false" >> $GITHUB_OUTPUT
+              echo "passed=true" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "::error::ESLint configuration error"
+            echo "passed=false" >> $GITHUB_OUTPUT
+            echo "has_errors=true" >> $GITHUB_OUTPUT
+          fi
+
+          [ "$ERROR_COUNT" -gt 0 ] || [ "$ESLINT_EXIT_CODE" -eq 2 ] && exit 1 || exit 0
+
+      - if: always()
+        run: |
+          if [ -f "eslint-results/results.json" ]; then
+            ERROR_COUNT=$(jq '[.[] | .messages[] | select(.severity == 2)] | length' eslint-results/results.json)
+            WARNING_COUNT=$(jq '[.[] | .messages[] | select(.severity == 1)] | length' eslint-results/results.json)
+            TOTAL_FILES=$(jq '[.[] | select(.messages | length > 0)] | length' eslint-results/results.json)
+            CLEAN_FILES=$(jq '[.[] | select(.messages | length == 0)] | length' eslint-results/results.json)
+
+            echo "| Metric | Count |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| 🔴 Errors | $ERROR_COUNT |" >> $GITHUB_STEP_SUMMARY
+            echo "| 🟡 Warnings | $WARNING_COUNT |" >> $GITHUB_STEP_SUMMARY
+            echo "| 📁 Files with issues | $TOTAL_FILES |" >> $GITHUB_STEP_SUMMARY
+            echo "| ✅ Clean files | $CLEAN_FILES |" >> $GITHUB_STEP_SUMMARY
+
+            [ "$ERROR_COUNT" -gt 0 ] && echo -e "\n### ❌ Pipeline stopped due to errors" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  detect-version:
+    name: Detect Version
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      should_build: ${{ steps.check_version.outputs.should_build }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: get_version
+        run: |
+          [ ! -f "package.json" ] && exit 1
+          version=$(jq -r .version package.json)
+          [ "$version" = "null" ] || [ -z "$version" ] && exit 1
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - id: check_version
+        run: |
+          TAG_NAME="v${{ steps.get_version.outputs.version }}"
+          set +e
+          gh release view "$TAG_NAME" >/dev/null 2>&1
+          [ $? -eq 0 ] && echo "should_build=false" >> $GITHUB_OUTPUT || echo "should_build=true" >> $GITHUB_OUTPUT
+          set -e
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-push:
+    name: Build and Push
+    needs: [code-quality, detect-version]
+    if: needs.detect-version.outputs.should_build == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      version: ${{ needs.detect-version.outputs.version }}
+      build_success: ${{ steps.build_result.outputs.success }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REPOSITORY }}
+          username: ${{ secrets.QUAY_ROBOT_USERNAME }}
+          password: ${{ secrets.QUAY_ROBOT_PASSWORD }}
+
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REPOSITORY }}/${{ env.ORGANIZATION }}/${{ env.APP_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=raw,value=${{ needs.detect-version.outputs.version }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - id: build_result
+        run: echo "success=true" >> $GITHUB_OUTPUT
+
+  create-release:
+    name: Create Release
+    needs: [code-quality, detect-version, build-and-push]
+    if: needs.detect-version.outputs.should_build == 'true' && needs.build-and-push.outputs.build_success == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - id: generate_notes
+        run: |
+          VERSION="${{ needs.detect-version.outputs.version }}"
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          touch release_notes.txt
+
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS_COUNT=$(git rev-list HEAD --count)
+            AUTHORS=$(git log --pretty=format:"%an" | sort -u | sed 's/.*$/`&`/' | paste -sd ',' | sed 's/,/, /g')
+            COMMITS=$(git log --oneline -10 --pretty=format:"%h %s")
+            echo "Initial release v$VERSION with $COMMITS_COUNT commits by $AUTHORS." >> release_notes.txt
+          else
+            COMMITS_COUNT=$(git rev-list ${LAST_TAG}..HEAD --count)
+            AUTHORS=$(git log ${LAST_TAG}..HEAD --pretty=format:"%an" | sort -u | sed 's/.*$/`&`/' | paste -sd ',' | sed 's/,/, /g')
+            COMMITS=$(git log --oneline ${LAST_TAG}..HEAD --pretty=format:"%h %s")
+            echo "Release v$VERSION includes $COMMITS_COUNT commits since $LAST_TAG by $AUTHORS." >> release_notes.txt
+          fi
+
+          FEATURE_COMMITS=$(echo "$COMMITS" | grep -iE "\[(add|feat|feature)\]" | sed 's/^/- /' || echo "")
+          if [ -n "$FEATURE_COMMITS" ]; then
+            echo "" >> release_notes.txt
+            echo "### ✨ Features" >> release_notes.txt
+            echo "$FEATURE_COMMITS" >> release_notes.txt
+          fi
+
+          FIX_COMMITS=$(echo "$COMMITS" | grep -iE "\[(fix|bugfix|hotfix)\]" | sed 's/^/- /' || echo "")
+          if [ -n "$FIX_COMMITS" ]; then
+            echo "" >> release_notes.txt
+            echo "### 🐛 Bug Fixes" >> release_notes.txt
+            echo "$FIX_COMMITS" >> release_notes.txt
+          fi
+
+          MAINTENANCE_COMMITS=$(echo "$COMMITS" | grep -iE "\[(version|refactor|chore|style|perf|update|improve)\]" | sed 's/^/- /' || echo "")
+          if [ -n "$MAINTENANCE_COMMITS" ]; then
+            echo "" >> release_notes.txt
+            echo "### 🔧 Maintenance" >> release_notes.txt
+            echo "$MAINTENANCE_COMMITS" >> release_notes.txt
+          fi
+
+          DOC_COMMITS=$(echo "$COMMITS" | grep -iE "\[(docs|doc|documentation)\]" | sed 's/^/- /' || echo "")
+          if [ -n "$DOC_COMMITS" ]; then
+            echo "" >> release_notes.txt
+            echo "### 📚 Documentation" >> release_notes.txt
+            echo "$DOC_COMMITS" >> release_notes.txt
+          fi
+
+          OTHER_COMMITS=$(echo "$COMMITS" | grep -viE "\[(add|feat|feature|fix|bugfix|hotfix|version|refactor|chore|style|perf|update|improve|docs|doc|documentation)\]" | sed 's/^/- /' || echo "")
+          if [ -n "$OTHER_COMMITS" ]; then
+            echo "" >> release_notes.txt
+            echo "### 🔄 Other Changes" >> release_notes.txt
+            echo "$OTHER_COMMITS" >> release_notes.txt
+          fi
+
+      - run: |
+          VERSION="${{ needs.detect-version.outputs.version }}"
+          gh release create "v$VERSION" --title "v$VERSION" --notes-file release_notes.txt --latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  cleanup:
+    name: Cleanup Summary
+    needs: [code-quality, detect-version, build-and-push, create-release]
+    if: always() && needs.detect-version.outputs.should_build == 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          [ "${{ needs.code-quality.result }}" = "success" ] && \
+          [ "${{ needs.build-and-push.result }}" = "success" ] && \
+          [ "${{ needs.create-release.result }}" = "success" ] && \
+          echo "✅ Pipeline completed" || echo "⚠️ Pipeline completed with issues"
