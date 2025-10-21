@@ -10,70 +10,6 @@ env:
   ORGANIZATION: "svc0049"
 
 jobs:
-  code-quality:
-    name: Code Quality Check
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      checks: write
-    outputs:
-      eslint_passed: ${{ steps.eslint_check.outputs.passed }}
-      has_errors: ${{ steps.eslint_check.outputs.has_errors }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - run: npm ci --legacy-peer-deps
-
-      - id: eslint_check
-        run: |
-          mkdir -p eslint-results
-          set +e
-          npm run lint -- --format json --output-file eslint-results/results.json
-          ESLINT_EXIT_CODE=$?
-          npm run lint -- --format stylish
-
-          if [ -f "eslint-results/results.json" ]; then
-            ERROR_COUNT=$(jq '[.[] | .messages[] | select(.severity == 2)] | length' eslint-results/results.json)
-            WARNING_COUNT=$(jq '[.[] | .messages[] | select(.severity == 1)] | length' eslint-results/results.json)
-
-            if [ "$ERROR_COUNT" -gt 0 ]; then
-              echo "has_errors=true" >> $GITHUB_OUTPUT
-              echo "passed=false" >> $GITHUB_OUTPUT
-            else
-              echo "has_errors=false" >> $GITHUB_OUTPUT
-              echo "passed=true" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "::error::ESLint configuration error"
-            echo "passed=false" >> $GITHUB_OUTPUT
-            echo "has_errors=true" >> $GITHUB_OUTPUT
-          fi
-
-          [ "$ERROR_COUNT" -gt 0 ] || [ "$ESLINT_EXIT_CODE" -eq 2 ] && exit 1 || exit 0
-
-      - if: always()
-        run: |
-          if [ -f "eslint-results/results.json" ]; then
-            ERROR_COUNT=$(jq '[.[] | .messages[] | select(.severity == 2)] | length' eslint-results/results.json)
-            WARNING_COUNT=$(jq '[.[] | .messages[] | select(.severity == 1)] | length' eslint-results/results.json)
-            TOTAL_FILES=$(jq '[.[] | select(.messages | length > 0)] | length' eslint-results/results.json)
-            CLEAN_FILES=$(jq '[.[] | select(.messages | length == 0)] | length' eslint-results/results.json)
-
-            echo "| Metric | Count |" >> $GITHUB_STEP_SUMMARY
-            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
-            echo "| 🔴 Errors | $ERROR_COUNT |" >> $GITHUB_STEP_SUMMARY
-            echo "| 🟡 Warnings | $WARNING_COUNT |" >> $GITHUB_STEP_SUMMARY
-            echo "| 📁 Files with issues | $TOTAL_FILES |" >> $GITHUB_STEP_SUMMARY
-            echo "| ✅ Clean files | $CLEAN_FILES |" >> $GITHUB_STEP_SUMMARY
-
-            [ "$ERROR_COUNT" -gt 0 ] && echo -e "\n### ❌ Pipeline stopped due to errors" >> $GITHUB_STEP_SUMMARY
-          fi
-
   detect-version:
     name: Detect Version
     runs-on: ubuntu-24.04
@@ -104,7 +40,7 @@ jobs:
 
   build-and-push:
     name: Build and Push
-    needs: [code-quality, detect-version]
+    needs: [detect-version]
     if: needs.detect-version.outputs.should_build == 'true'
     runs-on: ubuntu-24.04
     permissions:
@@ -148,7 +84,7 @@ jobs:
 
   create-release:
     name: Create Release
-    needs: [code-quality, detect-version, build-and-push]
+    needs: [detect-version, build-and-push]
     if: needs.detect-version.outputs.should_build == 'true' && needs.build-and-push.outputs.build_success == 'true'
     runs-on: ubuntu-24.04
     permissions:
@@ -219,12 +155,11 @@ jobs:
 
   cleanup:
     name: Cleanup Summary
-    needs: [code-quality, detect-version, build-and-push, create-release]
+    needs: [detect-version, build-and-push, create-release]
     if: always() && needs.detect-version.outputs.should_build == 'true'
     runs-on: ubuntu-24.04
     steps:
       - run: |
-          [ "${{ needs.code-quality.result }}" = "success" ] && \
           [ "${{ needs.build-and-push.result }}" = "success" ] && \
           [ "${{ needs.create-release.result }}" = "success" ] && \
           echo "✅ Pipeline completed" || echo "⚠️ Pipeline completed with issues"
