@@ -1,0 +1,93 @@
+{
+	"app": {
+		"title": "TicketShop",
+		"subtitle": "Gestion de vos fonds et voyages"
+	},
+	"navigation": {
+		"home": "Accueil",
+		"search": "Recherche",
+		"profileAlt": "Photo de profil"
+	},
+	"actions": {
+		"loading": "Chargement...",
+		"retry": "Réessayer",
+		"save": "Enregistrer",
+		"cancel": "Annuler",
+		"close": "Fermer",
+		"back": "Retour",
+		"backToHome": "Retour à l'accueil",
+		"previousPage": "Page précédente"
+	},
+	"status": {
+		"active": "Actif",
+		"inactive": "Inactif",
+		"on": "ACTIVÉ",
+		"off": "DÉSACTIVÉ",
+		"displayed": "Affiché"
+	},
+	"entities": {
+		"fund": "Fond",
+		"funds": "Fonds",
+		"travel": "Voyage",
+		"travels": "Voyages",
+		"user": "Utilisateur",
+		"users": "Utilisateurs"
+	},
+	"fields": {
+		"type": "Type",
+		"id": "ID",
+		"name": "Nom",
+		"details": "Détails",
+		"status": "Statut",
+		"display": "Affichage",
+		"destination": "Destination",
+		"dates": "Dates",
+		"requestId": "N° de demande",
+		"unit": "Unité"
+	},
+	"pages": {
+		"home": {
+			"welcome": "Bienvenue, {name}",
+			"displayManagement": "Gestion de l'affichage",
+			"displayDescription": "Activez ou désactivez l'affichage de vos fonds et voyages",
+			"myFunds": "Mes fonds",
+			"myTravels": "Mes voyages",
+			"noData": "Aucune donnée disponible",
+			"noDataDescription": "Vous n'avez aucun fonds ou voyage à afficher."
+		},
+		"search": {
+			"title": "Recherche d'utilisateur",
+			"subtitle": "Recherchez et consultez les fonds et voyages d'autres utilisateurs",
+			"placeholder": "Rechercher une personne (min 3 caractères)...",
+			"noResults": "Aucun résultat trouvé.",
+			"results": "Résultats de la recherche",
+			"resultsDescription": "Fonds et voyages de l'utilisateur sélectionné",
+			"noData": "Aucune donnée trouvée",
+			"noDataDescription": "Cet utilisateur n'a aucun fonds ou voyage à afficher.",
+			"loadingError": "Erreur de chargement",
+			"errorMessage": "Impossible de charger les données de cet utilisateur. Vérifiez votre connexion et réessayez."
+		}
+	},
+	"errors": {
+		"generic": {
+			"title": "Oups! Une erreur s'est produite",
+			"description": "Quelque chose s'est mal passé. Nous nous excusons pour la gêne occasionnée.",
+			"errorCode": "Code d'erreur"
+		},
+		"dataLoading": {
+			"title": "Erreur de chargement des données",
+			"defaultMessage": "Impossible de récupérer vos données. Veuillez réessayer plus tard.",
+			"userDataError": "Impossible de charger les données de cet utilisateur. Vérifiez votre connexion et réessayez."
+		},
+		"accessDenied": {
+			"title": "Accès refusé",
+			"description": "Vous n'avez pas les droits nécessaires pour accéder à cette application.",
+			"requiredRights": "Droits requis:",
+			"contact": "Contactez {supportEmail} pour obtenir les droits d'accès nécessaires."
+		},
+		"notFound": {
+			"title": "Oups ! Il semble que cette page n'existe pas",
+			"contact": "Si vous pensez qu'il s'agit d'une erreur, contactez le {supportEmail}"
+		}
+	}
+}

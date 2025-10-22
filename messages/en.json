@@ -1,0 +1,93 @@
+{
+	"app": {
+		"title": "TicketShop",
+		"subtitle": "Manage your funds and travels"
+	},
+	"navigation": {
+		"home": "Home",
+		"search": "Search",
+		"profileAlt": "Profile picture"
+	},
+	"actions": {
+		"loading": "Loading...",
+		"retry": "Retry",
+		"save": "Save",
+		"cancel": "Cancel",
+		"close": "Close",
+		"back": "Back",
+		"backToHome": "Back to home",
+		"previousPage": "Previous page"
+	},
+	"status": {
+		"active": "Active",
+		"inactive": "Inactive",
+		"on": "ON",
+		"off": "OFF",
+		"displayed": "Displayed"
+	},
+	"entities": {
+		"fund": "Fund",
+		"funds": "Funds",
+		"travel": "Travel",
+		"travels": "Travels",
+		"user": "User",
+		"users": "Users"
+	},
+	"fields": {
+		"type": "Type",
+		"id": "ID",
+		"name": "Name",
+		"details": "Details",
+		"status": "Status",
+		"display": "Display",
+		"destination": "Destination",
+		"dates": "Dates",
+		"requestId": "Request ID",
+		"unit": "Unit"
+	},
+	"pages": {
+		"home": {
+			"welcome": "Welcome, {name}",
+			"displayManagement": "Display management",
+			"displayDescription": "Enable or disable the display of your funds and travels",
+			"myFunds": "My funds",
+			"myTravels": "My travels",
+			"noData": "No data available",
+			"noDataDescription": "You have no funds or travels to display."
+		},
+		"search": {
+			"title": "User search",
+			"subtitle": "Search and view other users' funds and travels",
+			"placeholder": "Search for a person (min 3 characters)...",
+			"noResults": "No results found.",
+			"results": "Search results",
+			"resultsDescription": "Funds and travels of the selected user",
+			"noData": "No data found",
+			"noDataDescription": "This user has no funds or travels to display.",
+			"loadingError": "Loading error",
+			"errorMessage": "Unable to load this user's data. Check your connection and try again."
+		}
+	},
+	"errors": {
+		"generic": {
+			"title": "Oops! An error occurred",
+			"description": "Something went wrong. We apologize for the inconvenience.",
+			"errorCode": "Error code"
+		},
+		"dataLoading": {
+			"title": "Data loading error",
+			"defaultMessage": "Unable to retrieve your data. Please try again later.",
+			"userDataError": "Unable to load this user's data. Check your connection and try again."
+		},
+		"accessDenied": {
+			"title": "Access denied",
+			"description": "You do not have the necessary rights to access this application.",
+			"requiredRights": "Required rights:",
+			"contact": "Contact {supportEmail} to obtain the necessary access rights."
+		},
+		"notFound": {
+			"title": "Oops! It looks like this page doesn't exist",
+			"contact": "If you think this is an error, contact {supportEmail}"
+		}
+	}
+}
