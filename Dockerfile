@@ -1,5 +1,8 @@
 FROM node:22-alpine AS base
 
+RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+USER nextjs
+
 FROM base AS deps
 RUN apk add --no-cache libc6-compat build-base python3 \
     && rm -rf /var/cache/apk/*
@@ -13,9 +16,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_DISABLE_ESLINT=true
-
-RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
-USER nextjs
 
 RUN npx prisma generate
 RUN npm run build
