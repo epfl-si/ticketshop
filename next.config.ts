@@ -1,15 +1,20 @@
 import type { NextConfig } from "next";
+import nextIntl from "next-intl/plugin";
 
+const withNextIntl = nextIntl();
+
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-  output: 'standalone',
-  async rewrites() {
-    return [
-      {
-        source: '/cgi-bin/artifactServer',
-        destination: '/api/artifactServer',
-      },
-    ]
-  },
+	output: "standalone",
+	outputFileTracingRoot: __dirname,
+	async rewrites() {
+		return [
+			{
+				source: "/cgi-bin/artifactServer",
+				destination: "/api/artifactServer",
+			},
+		];
+	},
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
