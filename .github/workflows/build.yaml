@@ -1,6 +1,9 @@
-name: Smart Build and Release
+name: Build and Release
 on:
   push:
+    branches:
+      - master
+  pull_request:
     branches:
       - master
 
@@ -18,10 +21,26 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.version }}
       should_build: ${{ steps.check_version.outputs.should_build }}
+      is_pr: ${{ steps.check_context.outputs.is_pr }}
+      short_hash: ${{ steps.get_commit_hash.outputs.short_hash }}
     steps:
       - uses: actions/checkout@v4
 
+      - id: check_context
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "is_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_pr=false" >> $GITHUB_OUTPUT
+          fi
+
+      - id: get_commit_hash
+        run: |
+          SHORT_HASH=$(git rev-parse --short HEAD)
+          echo "short_hash=$SHORT_HASH" >> $GITHUB_OUTPUT
+
       - id: get_version
+        if: github.event_name == 'push'
         run: |
           [ ! -f "package.json" ] && exit 1
           version=$(jq -r .version package.json)
@@ -29,6 +48,7 @@ jobs:
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - id: check_version
+        if: github.event_name == 'push'
         run: |
           TAG_NAME="v${{ steps.get_version.outputs.version }}"
           set +e
@@ -41,16 +61,30 @@ jobs:
   build-and-push:
     name: Build and Push
     needs: [detect-version]
-    if: needs.detect-version.outputs.should_build == 'true'
+    if: |
+      (github.event_name == 'pull_request') ||
+      (github.event_name == 'push' && needs.detect-version.outputs.should_build == 'true')
     runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
+      pull-requests: read
     outputs:
       version: ${{ needs.detect-version.outputs.version }}
       build_success: ${{ steps.build_result.outputs.success }}
+      image_tag: ${{ steps.set_tag.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
+
+      - id: set_tag
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            TAG="${{ needs.detect-version.outputs.short_hash }}-dev"
+          else
+            TAG="${{ needs.detect-version.outputs.version }}"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Building with tag: $TAG"
 
       - uses: docker/setup-buildx-action@v3
 
@@ -65,8 +99,8 @@ jobs:
         with:
           images: ${{ env.REPOSITORY }}/${{ env.ORGANIZATION }}/${{ env.APP_NAME }}
           tags: |
-            type=raw,value=latest
-            type=raw,value=${{ needs.detect-version.outputs.version }}
+            type=raw,value=${{ steps.set_tag.outputs.tag }}
+            type=raw,value=latest,enable=${{ github.event_name == 'push' }}
 
       - uses: docker/build-push-action@v5
         with:
@@ -82,10 +116,19 @@ jobs:
       - id: build_result
         run: echo "success=true" >> $GITHUB_OUTPUT
 
+      - name: Build Summary
+        run: |
+          echo "✅ Image pushed to Quay.io"
+          echo "Tag: ${{ steps.set_tag.outputs.tag }}"
+          echo "Full image: ${{ env.REPOSITORY }}/${{ env.ORGANIZATION }}/${{ env.APP_NAME }}:${{ steps.set_tag.outputs.tag }}"
+
   create-release:
     name: Create Release
     needs: [detect-version, build-and-push]
-    if: needs.detect-version.outputs.should_build == 'true' && needs.build-and-push.outputs.build_success == 'true'
+    if: |
+      github.event_name == 'push' &&
+      needs.detect-version.outputs.should_build == 'true' &&
+      needs.build-and-push.outputs.build_success == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -154,12 +197,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   cleanup:
-    name: Cleanup Summary
+    name: Pipeline Summary
     needs: [detect-version, build-and-push, create-release]
-    if: always() && needs.detect-version.outputs.should_build == 'true'
+    if: always()
     runs-on: ubuntu-24.04
     steps:
       - run: |
-          [ "${{ needs.build-and-push.result }}" = "success" ] && \
-          [ "${{ needs.create-release.result }}" = "success" ] && \
-          echo "✅ Pipeline completed" || echo "⚠️ Pipeline completed with issues"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            [ "${{ needs.build-and-push.result }}" = "success" ] && \
+            echo "✅ PR build completed successfully" || echo "⚠️ PR build failed"
+          else
+            [ "${{ needs.build-and-push.result }}" = "success" ] && \
+            [ "${{ needs.create-release.result }}" = "success" ] && \
+            echo "✅ Release pipeline completed" || echo "⚠️ Pipeline completed with issues"
+          fi
