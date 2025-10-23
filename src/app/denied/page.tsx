@@ -1,12 +1,16 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { Shield } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 export default function DeniedPage() {
 	const translations = {
 		error: useTranslations("errors.accessDenied"),
 	};
 	const supportEmail = "1234@epfl.ch";
+
+	const router = useRouter();
 
 	return (
 		<div className="min-h-screen flex items-center justify-center p-6">
@@ -34,14 +38,11 @@ export default function DeniedPage() {
 
 				<div className="space-y-3">
 					<p className="text-sm text-muted-foreground">
-						{translations.error.rich("contact", {
-							supportEmail: (chunks) => (
-								<a href={`mailto:${supportEmail}`} type="mail" className="text-red-600 hover:text-red-700 underline font-medium" target="_blank" rel="noopener noreferrer">
-									{chunks}
-								</a>
-							),
-						})}
+						{translations.error("contact", { supportEmail: supportEmail })}
 					</p>
+					<Button className="mt-12 cursor-pointer" onClick={() => router.push("/api/auth")}>
+						{translations.error("retry")}
+					</Button>
 				</div>
 			</div>
 		</div>
