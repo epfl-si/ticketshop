@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { updateSetting } from "../../lib/database";
 import { getUserData } from "../../lib/database";
@@ -8,12 +8,14 @@ import { Loader2, Settings } from "lucide-react";
 import { FundsAndTravelsTable } from "@/components/table";
 import { Error } from "@/components/error";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function Home() {
 	const translations = {
 		page: useTranslations("pages.home"),
 		actions: useTranslations("actions"),
 		error: useTranslations("errors.dataLoading"),
+		updateError: useTranslations("errors.updateSetting"),
 	};
 
 	const [funds, setFunds] = useState<EnrichedFund[]>([]);
@@ -48,18 +50,26 @@ export default function Home() {
 		fetchUserData();
 	}, [session?.user.userId]);
 
-	function handleToggleChange(checked: boolean, settingId: string) {
-		updateSetting(checked, settingId);
-		setFunds(prev => prev.map(fund =>
-			fund.setting?.id === settingId
-				? { ...fund, setting: { ...fund.setting, shown: checked } }
-				: fund,
-		));
-		setTravels(prev => prev.map(travel =>
-			travel.setting?.id === settingId
-				? { ...travel, setting: { ...travel.setting, shown: checked } }
-				: travel,
-		));
+	async function handleToggleChange(checked: boolean, settingId: string) {
+		try {
+			await updateSetting(checked, settingId);
+			setFunds(prev => prev.map(fund =>
+				fund.setting?.id === settingId
+					? { ...fund, setting: { ...fund.setting, shown: checked } }
+					: fund,
+			));
+			setTravels(prev => prev.map(travel =>
+				travel.setting?.id === settingId
+					? { ...travel, setting: { ...travel.setting, shown: checked } }
+					: travel,
+			));
+			toast.success(translations.actions("updateSuccess"));
+		} catch (error) {
+			console.error("Error updating setting:", error);
+			toast.error(translations.updateError("title"), {
+				description: translations.updateError("description"),
+			});
+		}
 	}
 
 	if (loading) {
@@ -86,12 +96,11 @@ export default function Home() {
 			</div>
 
 			{status === "authenticated" && (
-				<>
+				<Fragment>
 					{error ? (
 						<Error error={error} onRetry={fetchUserData} />
-
 					) : (
-						<>
+						<Fragment>
 							{(funds.length > 0 || travels.length > 0) ? (
 								<div className="space-y-4">
 									<div>
@@ -121,9 +130,9 @@ export default function Home() {
 									</p>
 								</div>
 							)}
-						</>
+						</Fragment>
 					)}
-				</>
+				</Fragment>
 			)}
 		</div>
 	);
