@@ -4,6 +4,7 @@ import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import { getPermissions } from "./policy";
 import { ApiUser } from "@/types";
 import { makeApiCall } from "@/lib/api";
+import { getUserFundAuthorizations } from "./funds";
 
 const decodeJWT = (token: string) => JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
 
@@ -29,6 +30,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 					const idToken = decodeJWT(account.id_token);
 					const permissions = await getPermissions(idToken.groups || []);
 
+					const funds = (await getUserFundAuthorizations(idToken.uniqueid)).length > 0;
+					const groups = funds ? [...idToken.groups || [], "railticket-right_AppGrpU"] : idToken.groups || [];
+
 					return {
 						...token,
 						access_token: account.access_token,
@@ -39,7 +43,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 						picture: token.picture || "",
 						uniqueId: idToken.uniqueid,
 						username: idToken.gaspar || "",
-						groups: idToken.groups || [],
+						groups: groups || [],
 						permissions: permissions,
 						name: `${idToken.given_name ?? ""} ${idToken.family_name ?? ""}`.trim(),
 					};
