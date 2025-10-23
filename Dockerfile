@@ -5,9 +5,9 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 RUN apk add --no-cache \
-    build-base \
-    python3 \
-    && rm -rf /var/cache/apk/*
+	build-base \
+	python3 \
+	&& rm -rf /var/cache/apk/*
 
 COPY package.json package-lock.json ./
 RUN npm ci --force
@@ -17,6 +17,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -30,12 +31,12 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs
+	&& adduser --system --uid 1001 nextjs
 
 RUN rm -rf /.npm && \
-    mkdir -p /.npm && \
-    chown -R nextjs:nodejs /.npm && \
-    chmod -R 777 /.npm
+	mkdir -p /.npm && \
+	chown -R nextjs:nodejs /.npm && \
+	chmod -R 777 /.npm
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
@@ -47,6 +48,7 @@ USER nextjs
 
 EXPOSE 3000
 ENV PORT=3000
+
 ENV HOSTNAME="0.0.0.0"
 
 CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
