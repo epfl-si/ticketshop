@@ -67,65 +67,65 @@ export default function SearchPage() {
 			<div className="space-y-6">
 				<div>
 					<h1 className="text-3xl font-semibold flex items-center gap-3">
-						<Search className="h-8 w-8 text-primary" />
 						{translations.page("title")}
 					</h1>
 					<p className="text-muted-foreground mt-2">{translations.page("subtitle")}</p>
 				</div>
+				<div>
+					<div className="relative max-w-md">
+						<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+						<Input
+							type="text"
+							placeholder={translations.page("placeholder")}
+							value={searchValue}
+							onChange={(e) => {
+								const value = e.target.value;
+								setSearchValue(value);
+								if (value.length >= 3) {
+									clearTimeout(typingTimer);
+									setLoading(true);
+									setIsOpen(true);
+									typingTimer = setTimeout(() => doneTyping(value), 1000);
+								} else {
+									clearTimeout(typingTimer);
+									setLoading(false);
+									setUsers([]);
+									setIsOpen(false);
+								}
+							}}
+							className="pl-10 pr-10"
+						/>
+						{loading && (
+							<Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+						)}
+					</div>
 
-				<div className="relative max-w-md">
-					<Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-					<Input
-						type="text"
-						placeholder={translations.page("placeholder")}
-						value={searchValue}
-						onChange={(e) => {
-							const value = e.target.value;
-							setSearchValue(value);
-							if (value.length >= 3) {
-								clearTimeout(typingTimer);
-								setLoading(true);
-								setIsOpen(true);
-								typingTimer = setTimeout(() => doneTyping(value), 1000);
-							} else {
-								clearTimeout(typingTimer);
-								setLoading(false);
-								setUsers([]);
-								setIsOpen(false);
-							}
-						}}
-						className="pl-10 pr-10"
-					/>
-					{loading && (
-						<Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
+					{isOpen && users.length > 0 && (
+						<div className="max-w-md bg-background">
+							<Command className="bg-background">
+								<CommandList className="max-h-48 bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
+									<CommandEmpty>{translations.page("noResults")}</CommandEmpty>
+									<CommandGroup>
+										{users.map((user) => (
+											<CommandItem
+												key={user.id}
+												onSelect={async () => {
+													await handleUserChoice(user.id);
+													setIsOpen(false);
+													setSearchValue(user.display);
+												}}
+												className="cursor-pointer"
+											>
+												<User className="mr-2 h-4 w-4" />
+												{`${user.display} (${user.id})`}
+											</CommandItem>
+										))}
+									</CommandGroup>
+								</CommandList>
+							</Command>
+						</div>
 					)}
 				</div>
-
-				{isOpen && users.length > 0 && (
-					<div className="max-w-md">
-						<Command>
-							<CommandList className="max-h-48">
-								<CommandEmpty>{translations.page("noResults")}</CommandEmpty>
-								<CommandGroup>
-									{users.map((user) => (
-										<CommandItem
-											key={user.id}
-											onSelect={async () => {
-												await handleUserChoice(user.id);
-												setIsOpen(false);
-												setSearchValue(user.display);
-											}}
-											className="cursor-pointer"
-										>
-											<User className="mr-2 h-4 w-4" />
-											{`${user.display} (${user.id})`}
-										</CommandItem>
-									))}
-								</CommandGroup>
-							</CommandList>
-						</Command>
-					</div>
-				)}
 
 				{error && (
 					<div className="rounded-lg border border-destructive bg-destructive/5 p-4">
