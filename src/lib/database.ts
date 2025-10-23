@@ -6,6 +6,7 @@ import { DbUser } from "@/types/database";
 import { UserData, EnrichedFund, EnrichedTravel } from "@/types/ui";
 import { hasPermission } from "@/services/policy";
 import { PERMISSIONS } from "@/constants/permissions";
+import { auth } from "@/services/auth";
 
 const prisma = new PrismaClient();
 
@@ -161,8 +162,15 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 
 export async function getUserData(uniqueId: string): Promise<UserData> {
 	try {
-		if (!(await hasPermission(PERMISSIONS.FUNDS.ALL) && await hasPermission(PERMISSIONS.TRAVELS.ALL))) {
+		if (!(await hasPermission(PERMISSIONS.FUNDS.LIST) && await hasPermission(PERMISSIONS.TRAVELS.LIST))) {
 			throw new Error("Unauthorized to read user data");
+		}
+
+		if (!(await hasPermission(PERMISSIONS.FUNDS.ALL) && await hasPermission(PERMISSIONS.TRAVELS.ALL))) {
+			const session = await auth();
+			if (session?.user?.userId !== uniqueId) {
+				throw new Error("Unauthorized to read other users' data");
+			}
 		}
 
 		await syncUserData(uniqueId);
