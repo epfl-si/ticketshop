@@ -84,7 +84,8 @@
 			"title": "Accès refusé",
 			"description": "Vous n'avez pas les droits nécessaires pour accéder à cette application.",
 			"requiredRights": "Droits requis:",
-			"contact": "Contactez {supportEmail} pour obtenir les droits d'accès nécessaires."
+			"contact": "Contactez {supportEmail} pour obtenir les droits d'accès nécessaires.",
+			"retry": "Réessayer l'authentification"
 		},
 		"notFound": {
 			"title": "Oups ! Il semble que cette page n'existe pas",

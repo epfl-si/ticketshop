@@ -84,7 +84,8 @@
 			"title": "Access denied",
 			"description": "You do not have the necessary rights to access this application.",
 			"requiredRights": "Required rights:",
-			"contact": "Contact {supportEmail} to obtain the necessary access rights."
+			"contact": "Contact {supportEmail} to obtain the necessary access rights.",
+			"retry": "Retry authentication"
 		},
 		"notFound": {
 			"title": "Oops! It looks like this page doesn't exist",
