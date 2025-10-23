@@ -3,7 +3,7 @@ import { getUserGroups } from "./auth";
 
 export const GROUP_PERMISSIONS: Record<string, string[]> = {
 	"ticketshop-admin_AppGrpU": Object.values(PERMISSIONS).flatMap((category) => Object.values(category)),
-	"railticket-right_AppGrpU": [PERMISSIONS.FUNDS.LIST, PERMISSIONS.FUNDS.READ, PERMISSIONS.TRAVELS.LIST, PERMISSIONS.TRAVELS.READ],
+	"railticket-right_AppGrpU": [PERMISSIONS.FUNDS.LIST, PERMISSIONS.FUNDS.READ, PERMISSIONS.TRAVELS.LIST, PERMISSIONS.TRAVELS.READ, PERMISSIONS.FUNDS.UPDATE, PERMISSIONS.TRAVELS.UPDATE],
 };
 
 export async function hasPermission(permission: string): Promise<boolean> {
