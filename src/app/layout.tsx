@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 import { auth } from "@/services/auth";
 import { SessionProvider } from "@/components/session-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			<body className={cn("antialiased h-full flex flex-col", inter.className)}>
 				<NextIntlClientProvider messages={messages}>
 					<SessionProvider session={session}>{children}</SessionProvider>
+					<Toaster position="bottom-center" />
 				</NextIntlClientProvider>
 			</body>
 		</html>
