@@ -19,7 +19,7 @@ export default async function middleware(req: NextRequest) {
 				for (const permission of route.PERMISSIONS) {
 					const hasPerm = await hasPermission(permission);
 					if (!hasPerm) {
-						return NextResponse.rewrite(new URL("/denied", req.url));
+						return NextResponse.rewrite(new URL(route.REWRITE || "/not-found", req.url));
 					}
 				}
 			}
