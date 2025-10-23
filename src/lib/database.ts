@@ -4,10 +4,16 @@ import { getUserFundAuthorizations, getFundDetails } from "../services/funds";
 import { getUserTravels } from "../services/travels";
 import { DbUser } from "@/types/database";
 import { UserData, EnrichedFund, EnrichedTravel } from "@/types/ui";
+import { hasPermission } from "@/services/policy";
+import { PERMISSIONS } from "@/constants/permissions";
 
 const prisma = new PrismaClient();
 
 export async function updateSetting(shownValue: boolean, settingId: string) {
+	if (!(await hasPermission(PERMISSIONS.FUNDS.UPDATE) && await hasPermission(PERMISSIONS.TRAVELS.UPDATE))) {
+		throw new Error("Unauthorized to update settings");
+	}
+
 	return await prisma.setting.update({
 		where: { id: settingId },
 		data: {
@@ -155,6 +161,10 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 
 export async function getUserData(uniqueId: string): Promise<UserData> {
 	try {
+		if (!(await hasPermission(PERMISSIONS.FUNDS.ALL) && await hasPermission(PERMISSIONS.TRAVELS.ALL))) {
+			throw new Error("Unauthorized to read user data");
+		}
+
 		await syncUserData(uniqueId);
 
 		const dbUser = await getUser(uniqueId);
