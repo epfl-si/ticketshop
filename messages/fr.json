@@ -15,6 +15,7 @@
 		"cancel": "Annuler",
 		"close": "Fermer",
 		"back": "Retour",
+		"updateSuccess": "Mise à jour réussie",
 		"backToHome": "Retour à l'accueil",
 		"previousPage": "Page précédente"
 	},
@@ -88,6 +89,10 @@
 		"notFound": {
 			"title": "Oups ! Il semble que cette page n'existe pas",
 			"contact": "Si vous pensez qu'il s'agit d'une erreur, contactez le {supportEmail}"
+		},
+		"updateSetting": {
+			"title": "Erreur de mise à jour",
+			"description": "Impossible de mettre à jour le paramètre d'affichage. Veuillez réessayer plus tard."
 		}
 	}
 }

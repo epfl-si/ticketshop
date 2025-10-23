@@ -15,6 +15,7 @@
 		"cancel": "Cancel",
 		"close": "Close",
 		"back": "Back",
+		"updateSuccess": "Update successful",
 		"backToHome": "Back to home",
 		"previousPage": "Previous page"
 	},
@@ -88,6 +89,10 @@
 		"notFound": {
 			"title": "Oops! It looks like this page doesn't exist",
 			"contact": "If you think this is an error, contact {supportEmail}"
+		},
+		"updateSetting": {
+			"title": "Error updating setting",
+			"description": "Unable to update the display setting. Please try again later."
 		}
 	}
 }
