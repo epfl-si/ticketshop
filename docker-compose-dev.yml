@@ -1,13 +1,13 @@
 services:
   postgres_db:
     image: postgres
-    hostname: postgres_db
+    hostname: postgres_host
     container_name: ticketshop-database
     restart: always
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: insanepassword
+      POSTGRES_DB: postgres_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_password
     ports:
       - '5432:5432'
     networks:
