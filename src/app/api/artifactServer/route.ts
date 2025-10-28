@@ -12,11 +12,9 @@ export async function POST(req: Request) {
 
 			if (result.success && result.data) {
 				const responseXML = generateArtifactIDResponse(result.data as ArtifactIDResponse);
-				console.info("responseXML:", responseXML);
 				return createXmlResponse(responseXML, 200);
 			} else if (result.error) {
 				const errorXML = generateSoapFault(result.error);
-				console.info("errorXML:", errorXML);
 				return createXmlResponse(errorXML, 500);
 			}
 		}
@@ -26,11 +24,9 @@ export async function POST(req: Request) {
 
 			if (result.success && result.data) {
 				const responseXML = generateArtifactResponse(result.data as ArtifactResponse);
-				console.info("responseXML:", responseXML);
 				return createXmlResponse(responseXML, 200);
 			} else if (result.error) {
 				const errorXML = generateSoapFault(result.error);
-				console.info("errorXML:", errorXML);
 				return createXmlResponse(errorXML, 500);
 			}
 		}
