@@ -49,6 +49,7 @@ export async function getUserArtifactData(uniqueId: string): Promise<{ funds: Ap
 
 export async function logArtifactRequest(log: ArtifactLog): Promise<void> {
 	console.info(`${new Date().toISOString()} | user: ${log.user} | type: ${log.requestType} | success: ${log.success}`);
+	console.debug("payload:", log.payload);
 }
 
 export async function processArtifactIDRequest(email: string, payload: string): Promise<ArtifactProcessingResult> {
