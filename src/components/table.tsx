@@ -28,7 +28,6 @@ export function FundsAndTravelsTable({ funds, travels, showToggle = false, onTog
 						<TableHead>{translations.fields("id")}</TableHead>
 						<TableHead>{translations.fields("name")}</TableHead>
 						<TableHead>{translations.fields("details")}</TableHead>
-						<TableHead>{translations.fields("status")}</TableHead>
 						{showToggle ? (
 							<TableHead className="text-center">{translations.fields("display")}</TableHead>
 						) : (
@@ -67,9 +66,6 @@ export function FundsAndTravelsTable({ funds, travels, showToggle = false, onTog
 										</div>
 									)}
 								</div>
-							</TableCell>
-							<TableCell>
-								<Badge variant="default">{translations.status("active")}</Badge>
 							</TableCell>
 							<TableCell className="text-center">
 								{showToggle ? (
