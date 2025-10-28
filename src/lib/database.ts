@@ -83,8 +83,17 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 				const settingExists = currentSettings.find((s) => s.fund?.resourceId === resourceId);
 
 				if (!settingExists) {
-					await prisma.setting.create({
-						data: {
+					await prisma.setting.upsert({
+						where: {
+							userId_fundId: {
+								userId: dbUser.id,
+								fundId: fund.id,
+							},
+						},
+						update: {
+							shown: true,
+						},
+						create: {
 							shown: true,
 							userId: dbUser.id,
 							fundId: fund.id,
