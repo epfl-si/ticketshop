@@ -29,9 +29,7 @@ export function generateArtifactIDResponse(data: ArtifactIDResponse): string {
     <soap:Body>
         <ns2:getArtifactIDResponse xmlns:ns2="http://xmlns.sbb.ch/zvs/splp/artifact">
             <return>
-                <artifactID>
-                    <id>${data.artifactID}</id>
-                </artifactID>
+                <id>${data.artifactID}</id>
             </return>
         </ns2:getArtifactIDResponse>
     </soap:Body>
