@@ -20,8 +20,6 @@
 		"previousPage": "Page précédente"
 	},
 	"status": {
-		"active": "Actif",
-		"inactive": "Inactif",
 		"on": "ACTIVÉ",
 		"off": "DÉSACTIVÉ",
 		"displayed": "Affiché"
