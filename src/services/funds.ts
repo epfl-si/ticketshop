@@ -33,14 +33,24 @@ export async function getUserFundAuthorizations(sciper: string): Promise<{ resou
 export async function getFundDetails(fundIds: string[]): Promise<ApiFund[]> {
 	if (fundIds.length === 0) return [];
 
-	const data = await makeApiCall<FundResponse>("/v1/funds", "api", {
-		ids: fundIds.join(","),
-	});
+	const batchSize = 500;
+	const allFunds: ApiFund[] = [];
 
-	return (data.funds || []).map((fund) => ({
-		...fund,
-		id: fund.id.slice(2),
-		cf: fund.cf.slice(2),
+	for (let i = 0; i < fundIds.length; i += batchSize) {
+		const batch = fundIds.slice(i, i + batchSize);
 
-	}));
+		const data = await makeApiCall<FundResponse>("/v1/funds", "api", {
+			ids: batch.join(","),
+		});
+
+		const batchFunds = (data.funds || []).map((fund) => ({
+			...fund,
+			id: fund.id.slice(2),
+			cf: fund.cf.slice(2),
+		}));
+
+		allFunds.push(...batchFunds);
+	}
+
+	return allFunds;
 }
