@@ -16,6 +16,8 @@ export default function Home() {
 		actions: useTranslations("actions"),
 		error: useTranslations("errors.dataLoading"),
 		updateError: useTranslations("errors.updateSetting"),
+		status: useTranslations("status"),
+		entities: useTranslations("entities"),
 	};
 
 	const [funds, setFunds] = useState<EnrichedFund[]>([]);
@@ -52,6 +54,9 @@ export default function Home() {
 
 	async function handleToggleChange(checked: boolean, settingId: string) {
 		try {
+			const fund = funds.find(f => f.setting?.id === settingId);
+			const travel = travels.find(t => t.setting?.id === settingId);
+
 			await updateSetting(checked, settingId);
 			setFunds(prev => prev.map(fund =>
 				fund.setting?.id === settingId
@@ -63,7 +68,24 @@ export default function Home() {
 					? { ...travel, setting: { ...travel.setting, shown: checked } }
 					: travel,
 			));
-			toast.success(translations.actions("updateSuccess"));
+
+			if (fund) {
+				const status = checked ? translations.status("shown") : translations.status("hidden");
+				toast.success(translations.actions("updateSuccess", {
+					type: translations.entities("fund"),
+					name: fund.label,
+					status: status,
+				}));
+			} else if (travel) {
+				const status = checked ? translations.status("shown") : translations.status("hidden");
+				toast.success(translations.actions("updateSuccess", {
+					type: translations.entities("travel"),
+					name: travel.name,
+					status: status,
+				}));
+			} else {
+				toast.success(translations.actions("updateSuccess"));
+			}
 		} catch (error) {
 			console.error("Error updating setting:", error);
 			toast.error(translations.updateError("title"), {
