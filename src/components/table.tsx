@@ -68,16 +68,11 @@ export function FundsAndTravelsTable({ funds, travels, showToggle = false, onTog
 								</div>
 							</TableCell>
 							<TableCell className="text-center">
-								{showToggle ? (
-									<Switch
-										checked={fund.setting?.shown ?? true}
-										onCheckedChange={(checked) => onToggleChange?.(checked, fund.setting?.id || "")}
-									/>
-								) : (
-									<Badge variant={fund.setting?.shown ?? true ? "default" : "outline"}>
-										{fund.setting?.shown ?? true ? translations.status("on") : translations.status("off")}
-									</Badge>
-								)}
+								<Switch
+									checked={fund.setting?.shown ?? true}
+									onCheckedChange={(checked) => onToggleChange?.(checked, fund.setting?.id || "")}
+									className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"
+								/>
 							</TableCell>
 						</TableRow>
 					))}
