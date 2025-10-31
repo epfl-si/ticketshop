@@ -20,14 +20,16 @@
 		"cancel": "Cancel",
 		"close": "Close",
 		"back": "Back",
-		"updateSuccess": "Update successful",
+		"updateSuccess": "{type} \"{name}\" has been {status}.",
 		"backToHome": "Back to home",
 		"previousPage": "Previous page"
 	},
 	"status": {
 		"on": "ON",
 		"off": "OFF",
-		"displayed": "Displayed"
+		"displayed": "Displayed",
+		"shown": "shown",
+		"hidden": "hidden"
 	},
 	"entities": {
 		"fund": "Fund",
