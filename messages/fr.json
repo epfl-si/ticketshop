@@ -15,14 +15,16 @@
 		"cancel": "Annuler",
 		"close": "Fermer",
 		"back": "Retour",
-		"updateSuccess": "Mise à jour réussie",
+		"updateSuccess": "{type} \"{name}\" a été {status} avec succès.",
 		"backToHome": "Retour à l'accueil",
 		"previousPage": "Page précédente"
 	},
 	"status": {
 		"on": "ACTIVÉ",
 		"off": "DÉSACTIVÉ",
-		"displayed": "Affiché"
+		"displayed": "Affiché",
+		"shown": "affiché",
+		"hidden": "masqué"
 	},
 	"entities": {
 		"fund": "Fond",
