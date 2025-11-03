@@ -20,7 +20,8 @@
 		"previousPage": "Page précédente",
 		"flatView": "Vue liste",
 		"groupedByCF": "Groupé par CF",
-		"all": "Tous"
+		"all": "Tous",
+		"showOfTotal": "{show} de {total}"
 	},
 	"status": {
 		"on": "ACTIVÉ",
