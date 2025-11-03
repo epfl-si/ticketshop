@@ -22,7 +22,7 @@ export const Header: React.FC<{ user: User; }> = ({ user }) => {
 				<div className="flex items-center gap-2 sm:gap-4 p-1 sm:p-3">
 					<Image src="https://epfl-si.github.io/elements/svg/epfl-logo.svg" alt="EPFL" width={97} height={28} className="h-4 sm:h-7" />
 					<span className="border-l-2 border-solid sm:h-6 h-4 w-1 border-gray-300"></span>
-					<Link href="/" className="hover:text-[#FF0000]">
+					<Link href="/" className="hover:text-primary">
 						<h1 className="text-base sm:text-2xl font-bold -ml-1 sm:ml-0">TicketShop</h1>
 					</Link>
 				</div>
