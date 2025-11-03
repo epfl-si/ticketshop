@@ -43,3 +43,20 @@ export async function searchUsers(query: string): Promise<ApiUser[]> {
 
 	return result;
 }
+
+export async function getUserById(userId: string): Promise<ApiUser | null> {
+	try {
+		const data = await makeApiCall<{ persons: ApiUser[] }>("/v1/persons", "api", {
+			query: userId,
+			pagesize: "1",
+			pageindex: "0",
+		});
+
+		const users = data.persons || [];
+		const user = users.find(u => u.id === userId);
+		return user || null;
+	} catch (error) {
+		console.error("Error fetching user by ID:", error);
+		return null;
+	}
+}
