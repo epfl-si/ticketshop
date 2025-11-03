@@ -41,7 +41,10 @@ export async function searchUsers(query: string): Promise<ApiUser[]> {
 		}
 	}
 
-	return result;
+	return result.map(user => ({
+		...user,
+		name: `${user.firstname} ${user.lastname}`,
+	}));
 }
 
 export async function getUserById(userId: string): Promise<ApiUser | null> {
