@@ -15,12 +15,14 @@ interface FundsAndTravelsTableProps {
 }
 
 type ViewMode = "flat" | "grouped";
+type FilterMode = "all" | "funds" | "travels";
 type SortField = "type" | "id" | "name" | "details" | "display";
 type SortOrder = "asc" | "desc";
 type Item = (EnrichedFund & { itemType: "fund" }) | (EnrichedTravel & { itemType: "travel" });
 
 export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAndTravelsTableProps) {
-	const [viewMode, setViewMode] = useState<ViewMode>("flat");
+	const [viewMode, setViewMode] = useState<ViewMode>("grouped");
+	const [filterMode, setFilterMode] = useState<FilterMode>("all");
 	const [sortField, setSortField] = useState<SortField | null>(null);
 	const [sortOrder, setSortOrder] = useState<SortOrder | null>(null);
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
@@ -33,11 +35,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 
 	const handleSort = (field: SortField) => {
 		if (sortField === field) {
-			if (sortOrder === "asc") {
-				setSortOrder("desc");
-			} else {
-				setSortOrder("asc");
-			}
+			setSortOrder(sortOrder === "asc" ? "desc" : "asc");
 		} else {
 			setSortField(field);
 			setSortOrder("asc");
@@ -45,13 +43,15 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	};
 
 	const toggleGroup = (cf: string) => {
-		const newExpanded = new Set(expandedGroups);
-		if (newExpanded.has(cf)) {
-			newExpanded.delete(cf);
-		} else {
-			newExpanded.add(cf);
-		}
-		setExpandedGroups(newExpanded);
+		setExpandedGroups(prev => {
+			const newSet = new Set(prev);
+			if (newSet.has(cf)) {
+				newSet.delete(cf);
+			} else {
+				newSet.add(cf);
+			}
+			return newSet;
+		});
 	};
 
 	const toggleAllInGroup = (cf: string, checked: boolean) => {
@@ -67,14 +67,29 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		const isActive = sortField === field;
 		return (
 			<div className="flex flex-col ml-1">
-				<ChevronUp strokeWidth={4} className={cn("h-3 w-3 -mb-1", isActive && sortOrder === "asc" ? "text-primary" : "text-gray-300")} />
-				<ChevronDown strokeWidth={4} className={cn("h-3 w-3", isActive && sortOrder === "desc" ? "text-primary" : "text-gray-300")} />
+				<ChevronUp
+					strokeWidth={4}
+					className={cn(
+						"h-3 w-3 -mb-1 transition-colors",
+						isActive && sortOrder === "asc" ? "text-primary" : "text-gray-300",
+					)}
+				/>
+				<ChevronDown
+					strokeWidth={4}
+					className={cn(
+						"h-3 w-3 transition-colors",
+						isActive && sortOrder === "desc" ? "text-primary" : "text-gray-300",
+					)}
+				/>
 			</div>
 		);
 	};
 
 	const SortableHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
-		<button onClick={() => handleSort(field)} className="flex items-center hover:text-foreground transition-colors cursor-pointer">
+		<button
+			onClick={() => handleSort(field)}
+			className="flex items-center hover:text-foreground transition-colors cursor-pointer"
+		>
 			{children}
 			<SortIcon field={field} />
 		</button>
@@ -84,6 +99,12 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		...funds.map(fund => ({ ...fund, itemType: "fund" as const })),
 		...travels.map(travel => ({ ...travel, itemType: "travel" as const })),
 	];
+
+	const filteredItems = allItems.filter(item => {
+		if (filterMode === "funds") return item.itemType === "fund";
+		if (filterMode === "travels") return item.itemType === "travel";
+		return true;
+	});
 
 	const getSortValue = (item: Item, field: SortField): string => {
 		switch (field) {
@@ -101,13 +122,13 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	};
 
 	const sortedItems = sortField && sortOrder
-		? [...allItems].sort((first, second) => {
+		? [...filteredItems].sort((first, second) => {
 			const firstValue = getSortValue(first, sortField);
 			const secondValue = getSortValue(second, sortField);
 			const comparison = firstValue.localeCompare(secondValue);
 			return sortOrder === "asc" ? comparison : -comparison;
 		})
-		: allItems;
+		: filteredItems;
 
 	const groupedByCF = funds.reduce((acc, fund) => {
 		const cf = fund.cf || "No CF";
@@ -126,7 +147,9 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					</Badge>
 				</TableCell>
 			)}
-			<TableCell className={cn("font-mono text-sm", grouped && "pl-12")}>{fund.id}</TableCell>
+			<TableCell className={cn("font-mono text-sm", grouped && "pl-12")}>
+				{fund.id}
+			</TableCell>
 			<TableCell>
 				<div className="font-medium">{fund.label}</div>
 				{fund.unit && (
@@ -181,7 +204,15 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					)}
 					{travel.imputation && (
 						<div className="text-sm text-muted-foreground">
-							{translations.entities("fund")}: {Array.isArray(travel.imputation) ? travel.imputation[0]?.fund : travel.imputation.fund} - CF: {Array.isArray(travel.imputation) ? travel.imputation[0]?.cf : travel.imputation.cf}
+							{translations.entities("fund")}: {
+								Array.isArray(travel.imputation)
+									? travel.imputation[0]?.fund
+									: travel.imputation.fund
+							} - CF: {
+								Array.isArray(travel.imputation)
+									? travel.imputation[0]?.cf
+									: travel.imputation.cf
+							}
 						</div>
 					)}
 				</div>
@@ -196,48 +227,109 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		</TableRow>
 	);
 
-	const renderGroupedView = () => (
-		<Fragment>
-			{Object.entries(groupedByCF).map(([cf, groupFunds]) => {
-				const isExpanded = expandedGroups.has(cf);
-				const allShown = groupFunds.every(fund => fund.setting?.shown ?? true);
+	const renderGroupedView = () => {
+		const filteredGroups = filterMode === "travels" ? {} : groupedByCF;
 
-				return (
-					<Fragment key={cf}>
-						<TableRow className="h-13">
-							<TableCell colSpan={2}>
-								<Button variant="ghost" size="sm" onClick={() => toggleGroup(cf)} className="flex items-center gap-2 p-0 h-auto hover:bg-transparent">
-									<ChevronRight className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-90")} />
-									<span className="font-semibold">CF: {cf}</span>
-									<Badge variant="outline" className="ml-2">{groupFunds.length}</Badge>
-								</Button>
-							</TableCell>
-							<TableCell colSpan={2}>
-								<div className="text-sm text-muted-foreground">
-									{groupFunds[0]?.unit?.path}
-								</div>
-							</TableCell>
-							<TableCell className="text-center">
-								<Switch checked={allShown} onCheckedChange={(checked) => toggleAllInGroup(cf, checked)} className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400" />
-							</TableCell>
-						</TableRow>
-						{isExpanded && groupFunds.map(fund => renderFundRow({ ...fund, itemType: "fund" as const }, true))}
-					</Fragment>
-				);
-			})}
-			{travels.map(travel => renderTravelRow({ ...travel, itemType: "travel" as const }))}
-		</Fragment>
-	);
+		const filteredTravels = filterMode === "funds" ? [] : travels;
+
+		return (
+			<Fragment>
+				{Object.entries(filteredGroups).map(([cf, groupFunds]) => {
+					const isExpanded = expandedGroups.has(cf);
+					const allShown = groupFunds.every(fund => fund.setting?.shown ?? true);
+
+					return (
+						<Fragment key={cf}>
+							<TableRow className="h-13 bg-muted/50">
+								<TableCell colSpan={2}>
+									<Button
+										variant="ghost"
+										size="sm"
+										onClick={() => toggleGroup(cf)}
+										className="flex items-center gap-2 p-0 h-auto hover:bg-transparent"
+									>
+										<ChevronRight
+											className={cn(
+												"h-4 w-4 transition-transform",
+												isExpanded && "rotate-90",
+											)}
+										/>
+										<span className="font-semibold">CF: {cf}</span>
+										<Badge variant="outline" className="ml-2">
+											{groupFunds.length}
+										</Badge>
+									</Button>
+								</TableCell>
+								<TableCell colSpan={2}>
+									<div className="text-sm text-muted-foreground">
+										{groupFunds[0]?.unit?.path}
+									</div>
+								</TableCell>
+								<TableCell className="text-center">
+									<Switch
+										checked={allShown}
+										onCheckedChange={(checked) => toggleAllInGroup(cf, checked)}
+										className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"
+									/>
+								</TableCell>
+							</TableRow>
+							{isExpanded && groupFunds.map(fund =>
+								renderFundRow({ ...fund, itemType: "fund" as const }, true),
+							)}
+						</Fragment>
+					);
+				})}
+				{filteredTravels.map(travel =>
+					renderTravelRow({ ...travel, itemType: "travel" as const }),
+				)}
+			</Fragment>
+		);
+	};
 
 	return (
 		<div className="space-y-4">
-			<div className="flex gap-2">
-				<Button variant={viewMode === "flat" ? "default" : "outline"} size="sm" onClick={() => setViewMode("flat")}>
-					Flat View
-				</Button>
-				<Button variant={viewMode === "grouped" ? "default" : "outline"} size="sm" onClick={() => setViewMode("grouped")}>
-					Grouped by CF
-				</Button>
+			<div className="flex flex-wrap gap-4">
+				<div className="flex gap-2">
+					<Button
+						variant={viewMode === "flat" ? "default" : "outline"}
+						size="sm"
+						onClick={() => setViewMode("flat")}
+					>
+						Flat View
+					</Button>
+					<Button
+						variant={viewMode === "grouped" ? "default" : "outline"}
+						size="sm"
+						onClick={() => setViewMode("grouped")}
+					>
+						Grouped by CF
+					</Button>
+				</div>
+				<div className="flex gap-2 border-l pl-4">
+					<Button
+						variant={filterMode === "all" ? "default" : "outline"}
+						size="sm"
+						onClick={() => setFilterMode("all")}
+					>
+						All ({funds.length + travels.length})
+					</Button>
+					<Button
+						variant={filterMode === "funds" ? "default" : "outline"}
+						size="sm"
+						onClick={() => setFilterMode("funds")}
+					>
+						<DollarSign className="h-3 w-3" />
+						Funds ({funds.length})
+					</Button>
+					<Button
+						variant={filterMode === "travels" ? "default" : "outline"}
+						size="sm"
+						onClick={() => setFilterMode("travels")}
+					>
+						<MapPin className="h-3 w-3" />
+						Travels ({travels.length})
+					</Button>
+				</div>
 			</div>
 			<div className="rounded-lg border">
 				<Table>
@@ -245,26 +337,40 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 						<TableRow>
 							{viewMode === "flat" && (
 								<TableHead className="w-32">
-									<SortableHeader field="type">{translations.fields("type")}</SortableHeader>
+									<SortableHeader field="type">
+										{translations.fields("type")}
+									</SortableHeader>
 								</TableHead>
 							)}
 							<TableHead>
-								<SortableHeader field="id">{translations.fields("id")}</SortableHeader>
+								<SortableHeader field="id">
+									{translations.fields("id")}
+								</SortableHeader>
 							</TableHead>
 							<TableHead>
-								<SortableHeader field="name">{translations.fields("name")}</SortableHeader>
+								<SortableHeader field="name">
+									{translations.fields("name")}
+								</SortableHeader>
 							</TableHead>
 							<TableHead>
-								<SortableHeader field="details">{translations.fields("details")}</SortableHeader>
+								<SortableHeader field="details">
+									{translations.fields("details")}
+								</SortableHeader>
 							</TableHead>
 							<TableHead className="flex justify-center">
-								<SortableHeader field="display">{translations.fields("display")}</SortableHeader>
+								<SortableHeader field="display">
+									{translations.fields("display")}
+								</SortableHeader>
 							</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{viewMode === "flat"
-							? sortedItems.map(item => item.itemType === "fund" ? renderFundRow(item) : renderTravelRow(item))
+							? sortedItems.map(item =>
+								item.itemType === "fund"
+									? renderFundRow(item)
+									: renderTravelRow(item),
+							)
 							: renderGroupedView()
 						}
 					</TableBody>
