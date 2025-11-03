@@ -22,7 +22,10 @@
 		"back": "Back",
 		"updateSuccess": "{type} \"{name}\" has been {status}.",
 		"backToHome": "Back to home",
-		"previousPage": "Previous page"
+		"previousPage": "Previous page",
+		"flatView": "Flat View",
+		"groupedByCF": "Grouped by CF",
+		"all": "All"
 	},
 	"status": {
 		"on": "ON",
@@ -49,7 +52,9 @@
 		"destination": "Destination",
 		"dates": "Dates",
 		"requestId": "Request ID",
-		"unit": "Unit"
+		"unit": "Unit",
+		"cf": "CF",
+		"noCF": "No CF"
 	},
 	"pages": {
 		"home": {
