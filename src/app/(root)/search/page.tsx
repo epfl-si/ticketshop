@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getUserData, updateSetting } from "../../../lib/database";
-import { searchUsers } from "../../../services/users";
+import { searchUsers, getUserById } from "../../../services/users";
 import { ApiUser, EnrichedFund, EnrichedTravel } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
@@ -11,6 +12,9 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 export default function SearchPage() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
 	const translations = {
 		page: useTranslations("pages.search"),
 		actions: useTranslations("actions"),
@@ -19,6 +23,7 @@ export default function SearchPage() {
 		status: useTranslations("status"),
 		entities: useTranslations("entities"),
 	};
+
 	const [funds, setFunds] = useState<EnrichedFund[]>([]);
 	const [travels, setTravels] = useState<EnrichedTravel[]>([]);
 	const [error, setError] = useState<string | null>(null);
@@ -29,6 +34,20 @@ export default function SearchPage() {
 	const [searchValue, setSearchValue] = useState("");
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+	useEffect(() => {
+		const userId = searchParams.get("u");
+		if (userId) {
+			fetchUserData(userId);
+			getUserById(userId).then(user => {
+				if (user) {
+					setSearchValue(user.display);
+				} else {
+					setSearchValue(userId);
+				}
+			});
+		}
+	}, [searchParams]);
 
 	const fetchUserData = async (sciper: string) => {
 		setError(null);
@@ -61,6 +80,7 @@ export default function SearchPage() {
 	};
 
 	async function handleUserChoice(sciper: string) {
+		router.push(`/search?u=${sciper}`);
 		await fetchUserData(sciper);
 	}
 
@@ -153,7 +173,7 @@ export default function SearchPage() {
 					{isOpen && users.length > 0 && (
 						<div className="max-w-md bg-background">
 							<Command className="bg-background">
-								<CommandList className="max-h-48 max-w-md w-full absolute bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
+								<CommandList className="max-h-48 max-w-md w-full absolute z-40 bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
 									<CommandEmpty>{translations.page("noResults")}</CommandEmpty>
 									<CommandGroup>
 										{users.map((user) => (
