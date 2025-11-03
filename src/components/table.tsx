@@ -138,7 +138,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	}, {} as Record<string, EnrichedFund[]>);
 
 	const renderFundRow = (fund: EnrichedFund & { itemType: "fund" }, grouped = false) => (
-		<TableRow key={fund.id} className={grouped ? "bg-muted/30" : ""}>
+		<TableRow key={fund.id} className={cn(grouped && "bg-muted/30")}>
 			{!grouped && (
 				<TableCell>
 					<Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
@@ -229,7 +229,6 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 
 	const renderGroupedView = () => {
 		const filteredGroups = filterMode === "travels" ? {} : groupedByCF;
-
 		const filteredTravels = filterMode === "funds" ? [] : travels;
 
 		return (
@@ -240,13 +239,13 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 
 					return (
 						<Fragment key={cf}>
-							<TableRow className="h-13 bg-muted/50">
+							<TableRow className="h-13">
 								<TableCell colSpan={2}>
 									<Button
 										variant="ghost"
 										size="sm"
 										onClick={() => toggleGroup(cf)}
-										className="flex items-center gap-2 p-0 h-auto hover:bg-transparent"
+										className="flex cursor-pointer items-center gap-2 p-0 h-auto hover:bg-transparent"
 									>
 										<ChevronRight
 											className={cn(
