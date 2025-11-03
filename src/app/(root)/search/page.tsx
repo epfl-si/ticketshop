@@ -208,7 +208,7 @@ export default function SearchPage() {
 						<div>
 							<h2 className="text-lg font-semibold">{translations.page("results")}</h2>
 							<p className="text-sm text-muted-foreground">
-								{translations.page("resultsDescription")}
+								{translations.page("resultsDescription", { user: searchValue })}
 							</p>
 						</div>
 						<FundsAndTravelsTable
