@@ -46,18 +46,11 @@ export default function Error({
 				)}
 
 				<div className="flex flex-col sm:flex-row gap-3 justify-center">
-					<Button
-						onClick={reset}
-						className="flex items-center gap-2"
-					>
+					<Button onClick={reset} className="flex items-center gap-2 cursor-pointer">
 						<RefreshCw className="h-4 w-4" />
 						{translations.actions("retry")}
 					</Button>
-					<Button
-						variant="outline"
-						onClick={() => window.location.href = "/"}
-						className="flex items-center gap-2"
-					>
+					<Button variant="outline" onClick={() => window.location.href = "/"} className="flex items-center gap-2 cursor-pointer">
 						<Home className="h-4 w-4" />
 						{translations.actions("backToHome")}
 					</Button>
