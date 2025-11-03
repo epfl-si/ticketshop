@@ -1,7 +1,10 @@
 export interface ApiUser {
 	id: string;
 	display: string;
-	name?: string;
+	name: string;
+	firstname?: string;
+	lastname?: string;
+	email: string;
 }
 
 export interface ApiUnit {
