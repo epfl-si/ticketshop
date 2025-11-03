@@ -94,7 +94,7 @@
 		},
 		"notFound": {
 			"title": "Oops! It looks like this page doesn't exist",
-			"contact": "If you think this is an error, contact {supportEmail}"
+			"contact": "If you think this is an error, contact"
 		},
 		"updateSetting": {
 			"title": "Error updating setting",
