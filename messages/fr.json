@@ -89,7 +89,7 @@
 		},
 		"notFound": {
 			"title": "Oups ! Il semble que cette page n'existe pas",
-			"contact": "Si vous pensez qu'il s'agit d'une erreur, contactez le {supportEmail}"
+			"contact": "Si vous pensez qu'il s'agit d'une erreur, contactez le"
 		},
 		"updateSetting": {
 			"title": "Erreur de mise à jour",
