@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { getUserData } from "../../../lib/database";
+import { getUserData, updateSetting } from "../../../lib/database";
 import { searchUsers } from "../../../services/users";
 import { ApiUser, EnrichedFund, EnrichedTravel } from "@/types";
 import { Input } from "@/components/ui/input";
@@ -8,17 +8,22 @@ import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@
 import { Loader2, Search, User } from "lucide-react";
 import { FundsAndTravelsTable } from "@/components/table";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function SearchPage() {
 	const translations = {
 		page: useTranslations("pages.search"),
 		actions: useTranslations("actions"),
+		error: useTranslations("errors.dataLoading"),
+		updateError: useTranslations("errors.updateSetting"),
+		status: useTranslations("status"),
+		entities: useTranslations("entities"),
 	};
 	const [funds, setFunds] = useState<EnrichedFund[]>([]);
 	const [travels, setTravels] = useState<EnrichedTravel[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	let typingTimer: NodeJS.Timeout = setTimeout(() => { }, 0);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState({ search: false, data: false });
 	const [noData, setNoData] = useState(false);
 	const [users, setUsers] = useState<ApiUser[]>([]);
 	const [searchValue, setSearchValue] = useState("");
@@ -29,6 +34,7 @@ export default function SearchPage() {
 		setError(null);
 		setNoData(false);
 		setSelectedUserId(sciper);
+		setLoading(prev => ({ ...prev, data: true }));
 
 		try {
 			const userData = await getUserData(sciper);
@@ -49,6 +55,8 @@ export default function SearchPage() {
 			setError(translations.page("errorMessage"));
 			setFunds([]);
 			setTravels([]);
+		} finally {
+			setLoading(prev => ({ ...prev, data: false }));
 		}
 	};
 
@@ -59,7 +67,49 @@ export default function SearchPage() {
 	async function doneTyping(inputValue: string) {
 		const users = await searchUsers(inputValue);
 		setUsers(users);
-		setLoading(false);
+		setLoading(prev => ({ ...prev, search: false }));
+	}
+
+	async function handleToggleChange(checked: boolean, settingId: string) {
+		try {
+			const fund = funds.find(f => f.setting?.id === settingId);
+			const travel = travels.find(t => t.setting?.id === settingId);
+
+			await updateSetting(checked, settingId);
+			setFunds(prev => prev.map(fund =>
+				fund.setting?.id === settingId
+					? { ...fund, setting: { ...fund.setting, shown: checked } }
+					: fund,
+			));
+			setTravels(prev => prev.map(travel =>
+				travel.setting?.id === settingId
+					? { ...travel, setting: { ...travel.setting, shown: checked } }
+					: travel,
+			));
+
+			if (fund) {
+				const status = checked ? translations.status("shown") : translations.status("hidden");
+				toast.success(translations.actions("updateSuccess", {
+					type: translations.entities("fund"),
+					name: fund.label,
+					status: status,
+				}));
+			} else if (travel) {
+				const status = checked ? translations.status("shown") : translations.status("hidden");
+				toast.success(translations.actions("updateSuccess", {
+					type: translations.entities("travel"),
+					name: travel.name,
+					status: status,
+				}));
+			} else {
+				toast.success(translations.actions("updateSuccess"));
+			}
+		} catch (error) {
+			console.error("Error updating setting:", error);
+			toast.error(translations.updateError("title"), {
+				description: translations.updateError("description"),
+			});
+		}
 	}
 
 	return (
@@ -83,19 +133,19 @@ export default function SearchPage() {
 								setSearchValue(value);
 								if (value.length >= 3) {
 									clearTimeout(typingTimer);
-									setLoading(true);
+									setLoading(prev => ({ ...prev, search: true }));
 									setIsOpen(true);
 									typingTimer = setTimeout(() => doneTyping(value), 1000);
 								} else {
 									clearTimeout(typingTimer);
-									setLoading(false);
+									setLoading(prev => ({ ...prev, search: false }));
 									setUsers([]);
 									setIsOpen(false);
 								}
 							}}
 							className="pl-10 pr-10"
 						/>
-						{loading && (
+						{loading.search && (
 							<Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted-foreground" />
 						)}
 					</div>
@@ -103,7 +153,7 @@ export default function SearchPage() {
 					{isOpen && users.length > 0 && (
 						<div className="max-w-md bg-background">
 							<Command className="bg-background">
-								<CommandList className="max-h-48 bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
+								<CommandList className="max-h-48 max-w-md w-full absolute bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
 									<CommandEmpty>{translations.page("noResults")}</CommandEmpty>
 									<CommandGroup>
 										{users.map((user) => (
@@ -142,7 +192,18 @@ export default function SearchPage() {
 					</div>
 				)}
 
-				{(travels.length > 0 || funds.length > 0) && (
+				{loading.data && (
+					<div className="container mx-auto p-6">
+						<div className="flex items-center justify-center min-h-[400px]">
+							<div className="flex items-center gap-2">
+								<Loader2 className="h-6 w-6 animate-spin" />
+								<span>{translations.actions("loading")}</span>
+							</div>
+						</div>
+					</div>
+				)}
+
+				{!loading.data && (travels.length > 0 || funds.length > 0) && (
 					<div className="space-y-4">
 						<div>
 							<h2 className="text-lg font-semibold">{translations.page("results")}</h2>
@@ -153,6 +214,7 @@ export default function SearchPage() {
 						<FundsAndTravelsTable
 							funds={funds}
 							travels={travels}
+							onToggleChange={handleToggleChange}
 						/>
 					</div>
 				)}
