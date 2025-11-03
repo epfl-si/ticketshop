@@ -67,7 +67,7 @@
 			"placeholder": "Search for a person (min 3 characters)...",
 			"noResults": "No results found.",
 			"results": "Search results",
-			"resultsDescription": "Funds and travels of the selected user",
+			"resultsDescription": "Funds and travels of {user}.",
 			"noData": "No data found",
 			"noDataDescription": "This user has no funds or travels to display.",
 			"loadingError": "Loading error",

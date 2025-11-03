@@ -67,7 +67,7 @@
 			"placeholder": "Rechercher une personne (min 3 caractères)...",
 			"noResults": "Aucun résultat trouvé.",
 			"results": "Résultats de la recherche",
-			"resultsDescription": "Fonds et voyages de l'utilisateur sélectionné",
+			"resultsDescription": "Fonds et voyages de {user}.",
 			"noData": "Aucune donnée trouvée",
 			"noDataDescription": "Cet utilisateur n'a aucun fonds ou voyage à afficher.",
 			"loadingError": "Erreur de chargement",
