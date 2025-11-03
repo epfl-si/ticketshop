@@ -225,7 +225,7 @@ export default function SearchPage() {
 							<Search className="h-6 w-6 text-muted-foreground" />
 						</div>
 						<h3 className="mt-4 text-lg font-semibold">{translations.page("noData")}</h3>
-						<p className="mt-2 text-muted-foreground">
+						<p className="text-sm text-muted-foreground">
 							{translations.page("noDataDescription")}
 						</p>
 					</div>
