@@ -262,9 +262,9 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 			<Fragment>
 				{Object.entries(filteredGroups).map(([cf, groupFunds]: [string, EnrichedFund[]]) => {
 					const isExpanded = expandedGroups.has(cf);
-					const allShown = groupStates[cf] !== undefined
-						? groupStates[cf]
-						: groupFunds.every((fund: EnrichedFund) => fund.setting?.shown ?? true);
+					const shownFunds = groupFunds.filter((fund: EnrichedFund) => fund.setting?.shown ?? true);
+					const allShown = groupStates[cf] !== undefined ? groupStates[cf] : shownFunds.length === groupFunds.length;
+					const isPartial = groupStates[cf] === undefined && shownFunds.length > 0 && shownFunds.length < groupFunds.length;
 
 					return (
 						<Fragment key={cf}>
@@ -297,7 +297,8 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 									<Switch
 										checked={allShown}
 										onCheckedChange={(checked) => toggleAllInGroup(cf, checked)}
-										className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"
+										className={isPartial ? "data-[state=checked]:bg-yellow-300 data-[state=unchecked]:bg-yellow-300" : "data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"
+										}
 									/>
 								</TableCell>
 							</TableRow>
