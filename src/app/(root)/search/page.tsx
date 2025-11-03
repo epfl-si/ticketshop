@@ -33,7 +33,7 @@ export default function SearchPage() {
 	const [users, setUsers] = useState<ApiUser[]>([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+	const [selectedUser, setSelectedUser] = useState<ApiUser | null>(null);
 
 	useEffect(() => {
 		const userId = searchParams.get("u");
@@ -42,6 +42,7 @@ export default function SearchPage() {
 			getUserById(userId).then(user => {
 				if (user) {
 					setSearchValue(user.name);
+					setSelectedUser(user);
 				} else {
 					setSearchValue(userId);
 				}
@@ -52,7 +53,7 @@ export default function SearchPage() {
 	const fetchUserData = async (sciper: string) => {
 		setError(null);
 		setNoData(false);
-		setSelectedUserId(sciper);
+		setSelectedUser(prev => (prev && prev.id === sciper ? prev : null));
 		setLoading(prev => ({ ...prev, data: true }));
 
 		try {
@@ -201,9 +202,9 @@ export default function SearchPage() {
 					<div className="rounded-lg border border-destructive bg-destructive/5 p-4">
 						<h3 className="font-semibold text-destructive">{translations.page("loadingError")}</h3>
 						<p className="text-sm text-muted-foreground mt-1">{error}</p>
-						{selectedUserId && (
+						{selectedUser?.id && (
 							<button
-								onClick={() => fetchUserData(selectedUserId)}
+								onClick={() => fetchUserData(selectedUser?.id)}
 								className="mt-3 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
 							>
 								{translations.actions("retry")}
@@ -228,7 +229,7 @@ export default function SearchPage() {
 						<div>
 							<h2 className="text-lg font-semibold">{translations.page("results")}</h2>
 							<p className="text-sm text-muted-foreground">
-								{translations.page("resultsDescription", { user: searchValue })}
+								{translations.page("resultsDescription", { user: selectedUser?.name || "" })}
 							</p>
 						</div>
 						<FundsAndTravelsTable
