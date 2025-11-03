@@ -8,11 +8,10 @@ import { useTranslations } from "next-intl";
 interface FundsAndTravelsTableProps {
 	funds: EnrichedFund[];
 	travels: EnrichedTravel[];
-	showToggle?: boolean;
 	onToggleChange?: (checked: boolean, settingId: string) => void;
 }
 
-export function FundsAndTravelsTable({ funds, travels, showToggle = false, onToggleChange }: FundsAndTravelsTableProps) {
+export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAndTravelsTableProps) {
 	const translations = {
 		fields: useTranslations("fields"),
 		entities: useTranslations("entities"),
@@ -28,11 +27,7 @@ export function FundsAndTravelsTable({ funds, travels, showToggle = false, onTog
 						<TableHead>{translations.fields("id")}</TableHead>
 						<TableHead>{translations.fields("name")}</TableHead>
 						<TableHead>{translations.fields("details")}</TableHead>
-						{showToggle ? (
-							<TableHead className="text-center">{translations.fields("display")}</TableHead>
-						) : (
-							<TableHead className="text-center">{translations.status("displayed")}</TableHead>
-						)}
+						<TableHead className="text-center">{translations.fields("display")}</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -107,16 +102,10 @@ export function FundsAndTravelsTable({ funds, travels, showToggle = false, onTog
 								<Badge variant="default">{translations.status("active")}</Badge>
 							</TableCell>
 							<TableCell className="text-center">
-								{showToggle ? (
-									<Switch
-										checked={travel.setting?.shown ?? true}
-										onCheckedChange={(checked) => onToggleChange?.(checked, travel.setting?.id || "")}
-									/>
-								) : (
-									<Badge variant={travel.setting?.shown ?? true ? "default" : "outline"}>
-										{travel.setting?.shown ?? true ? translations.status("on") : translations.status("off")}
-									</Badge>
-								)}
+								<Switch
+									checked={travel.setting?.shown ?? true}
+									onCheckedChange={(checked) => onToggleChange?.(checked, travel.setting?.id || "")}
+								/>
 							</TableCell>
 						</TableRow>
 					))}
