@@ -41,7 +41,7 @@ export default function SearchPage() {
 			fetchUserData(userId);
 			getUserById(userId).then(user => {
 				if (user) {
-					setSearchValue(user.display);
+					setSearchValue(user.name);
 				} else {
 					setSearchValue(userId);
 				}
@@ -182,12 +182,12 @@ export default function SearchPage() {
 												onSelect={async () => {
 													await handleUserChoice(user.id);
 													setIsOpen(false);
-													setSearchValue(user.display);
+													setSearchValue(user.name);
 												}}
 												className="cursor-pointer"
 											>
 												<User className="mr-2 h-4 w-4" />
-												{`${user.display} (${user.id})`}
+												{`${user.name} (${user.id})`}
 											</CommandItem>
 										))}
 									</CommandGroup>
