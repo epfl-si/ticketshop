@@ -17,7 +17,10 @@
 		"back": "Retour",
 		"updateSuccess": "{type} \"{name}\" a été {status} avec succès.",
 		"backToHome": "Retour à l'accueil",
-		"previousPage": "Page précédente"
+		"previousPage": "Page précédente",
+		"flatView": "Vue liste",
+		"groupedByCF": "Groupé par CF",
+		"all": "Tous"
 	},
 	"status": {
 		"on": "ACTIVÉ",
@@ -44,7 +47,9 @@
 		"destination": "Destination",
 		"dates": "Dates",
 		"requestId": "N° de demande",
-		"unit": "Unité"
+		"unit": "Unité",
+		"cf": "CF",
+		"noCF": "Aucun CF"
 	},
 	"pages": {
 		"home": {
