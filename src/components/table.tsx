@@ -266,6 +266,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 				{Object.entries(filteredGroups).map(([cf, groupFunds]: [string, EnrichedFund[]]) => {
 					const isExpanded = expandedGroups.has(cf);
 					const shownFunds = groupFunds.filter((fund: EnrichedFund) => fund.setting?.shown ?? true);
+					const hiddenCount = groupFunds.length - shownFunds.length;
 					const allShown = groupStates[cf] !== undefined ? groupStates[cf] : shownFunds.length === groupFunds.length;
 					const isPartial = groupStates[cf] === undefined && shownFunds.length > 0 && shownFunds.length < groupFunds.length;
 
@@ -287,7 +288,10 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 										/>
 										<span className="font-semibold">{translations.fields("cf")}: {cf}</span>
 										<Badge variant="outline" className="ml-2">
-											{groupFunds.length}
+											{hiddenCount > 0
+												? translations.actions("showOfTotal", { show: shownFunds.length, total: groupFunds.length })
+												: groupFunds.length
+											}
 										</Badge>
 									</Button>
 								</TableCell>
