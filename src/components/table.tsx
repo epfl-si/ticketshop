@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect, useMemo } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
@@ -26,12 +26,41 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	const [sortField, setSortField] = useState<SortField | null>(null);
 	const [sortOrder, setSortOrder] = useState<SortOrder | null>(null);
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+	const [groupStates, setGroupStates] = useState<Record<string, boolean>>({});
 
 	const translations = {
 		fields: useTranslations("fields"),
 		entities: useTranslations("entities"),
 		status: useTranslations("status"),
 	};
+
+	const groupedByCF = useMemo(() => {
+		return funds.reduce((acc, fund) => {
+			const cf = fund.cf || "No CF";
+			if (!acc[cf]) acc[cf] = [];
+			acc[cf].push(fund);
+			return acc;
+		}, {} as Record<string, EnrichedFund[]>);
+	}, [funds]);
+
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			setGroupStates(prev => {
+				const newStates = { ...prev };
+				Object.entries(groupedByCF).forEach(([cf, groupFunds]) => {
+					const allShown = groupFunds.every((fund: EnrichedFund) => fund.setting?.shown ?? true);
+					const allHidden = groupFunds.every((fund: EnrichedFund) => !(fund.setting?.shown ?? true));
+
+					if (allShown || allHidden) {
+						delete newStates[cf];
+					}
+				});
+				return newStates;
+			});
+		}, 100);
+
+		return () => clearTimeout(timeoutId);
+	}, [groupedByCF]);
 
 	const handleSort = (field: SortField) => {
 		if (sortField === field) {
@@ -55,12 +84,16 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	};
 
 	const toggleAllInGroup = (cf: string, checked: boolean) => {
-		const groupFunds = funds.filter(fund => fund.cf === cf);
-		groupFunds.forEach(fund => {
-			if (fund.setting?.id) {
-				onToggleChange?.(checked, fund.setting.id);
-			}
-		});
+		setGroupStates(prev => ({ ...prev, [cf]: checked }));
+
+		setTimeout(() => {
+			const groupFunds = funds.filter(fund => fund.cf === cf);
+			groupFunds.forEach(fund => {
+				if (fund.setting?.id) {
+					onToggleChange?.(checked, fund.setting.id);
+				}
+			});
+		}, 0);
 	};
 
 	const SortIcon = ({ field }: { field: SortField }) => {
@@ -130,12 +163,6 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		})
 		: filteredItems;
 
-	const groupedByCF = funds.reduce((acc, fund) => {
-		const cf = fund.cf || "No CF";
-		if (!acc[cf]) acc[cf] = [];
-		acc[cf].push(fund);
-		return acc;
-	}, {} as Record<string, EnrichedFund[]>);
 
 	const renderFundRow = (fund: EnrichedFund & { itemType: "fund" }, grouped = false) => (
 		<TableRow key={fund.id} className={cn(grouped && "bg-muted/30")}>
@@ -233,9 +260,11 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 
 		return (
 			<Fragment>
-				{Object.entries(filteredGroups).map(([cf, groupFunds]) => {
+				{Object.entries(filteredGroups).map(([cf, groupFunds]: [string, EnrichedFund[]]) => {
 					const isExpanded = expandedGroups.has(cf);
-					const allShown = groupFunds.every(fund => fund.setting?.shown ?? true);
+					const allShown = groupStates[cf] !== undefined
+						? groupStates[cf]
+						: groupFunds.every((fund: EnrichedFund) => fund.setting?.shown ?? true);
 
 					return (
 						<Fragment key={cf}>
@@ -272,7 +301,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 									/>
 								</TableCell>
 							</TableRow>
-							{isExpanded && groupFunds.map(fund =>
+							{isExpanded && groupFunds.map((fund: EnrichedFund) =>
 								renderFundRow({ ...fund, itemType: "fund" as const }, true),
 							)}
 						</Fragment>
