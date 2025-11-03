@@ -54,7 +54,12 @@ export async function getUserById(userId: string): Promise<ApiUser | null> {
 
 		const users = data.persons || [];
 		const user = users.find(u => u.id === userId);
-		return user || null;
+		if (!user) return null;
+
+		return {
+			...user,
+			name: `${user.firstname} ${user.lastname}`,
+		};
 	} catch (error) {
 		console.error("Error fetching user by ID:", error);
 		return null;
