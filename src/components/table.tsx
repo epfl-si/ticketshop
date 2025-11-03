@@ -32,16 +32,19 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		fields: useTranslations("fields"),
 		entities: useTranslations("entities"),
 		status: useTranslations("status"),
+		actions: useTranslations("actions"),
 	};
+
+	const noCFLabel = translations.fields("noCF");
 
 	const groupedByCF = useMemo(() => {
 		return funds.reduce((acc, fund) => {
-			const cf = fund.cf || "No CF";
+			const cf = fund.cf || noCFLabel;
 			if (!acc[cf]) acc[cf] = [];
 			acc[cf].push(fund);
 			return acc;
 		}, {} as Record<string, EnrichedFund[]>);
-	}, [funds]);
+	}, [funds, noCFLabel]);
 
 	useEffect(() => {
 		const timeoutId = setTimeout(() => {
@@ -189,7 +192,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 				<div className="space-y-1">
 					{fund.cf && !grouped && (
 						<div className="text-sm">
-							<span className="font-medium">CF:</span> {fund.cf}
+							<span className="font-medium">{translations.fields("cf")}:</span> {fund.cf}
 						</div>
 					)}
 					{fund.unit?.path && (
@@ -235,7 +238,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 								Array.isArray(travel.imputation)
 									? travel.imputation[0]?.fund
 									: travel.imputation.fund
-							} - CF: {
+							} - {translations.fields("cf")}: {
 								Array.isArray(travel.imputation)
 									? travel.imputation[0]?.cf
 									: travel.imputation.cf
@@ -282,7 +285,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 												isExpanded && "rotate-90",
 											)}
 										/>
-										<span className="font-semibold">CF: {cf}</span>
+										<span className="font-semibold">{translations.fields("cf")}: {cf}</span>
 										<Badge variant="outline" className="ml-2">
 											{groupFunds.length}
 										</Badge>
@@ -322,41 +325,46 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					<Button
 						variant={viewMode === "flat" ? "default" : "outline"}
 						size="sm"
+						className="cursor-pointer"
 						onClick={() => setViewMode("flat")}
 					>
-						Flat View
+						{translations.actions("flatView")}
 					</Button>
 					<Button
 						variant={viewMode === "grouped" ? "default" : "outline"}
 						size="sm"
+						className="cursor-pointer"
 						onClick={() => setViewMode("grouped")}
 					>
-						Grouped by CF
+						{translations.actions("groupedByCF")}
 					</Button>
 				</div>
 				<div className="flex gap-2 border-l pl-4">
 					<Button
 						variant={filterMode === "all" ? "default" : "outline"}
 						size="sm"
+						className="cursor-pointer"
 						onClick={() => setFilterMode("all")}
 					>
-						All ({funds.length + travels.length})
+						{translations.actions("all")} ({funds.length + travels.length})
 					</Button>
 					<Button
 						variant={filterMode === "funds" ? "default" : "outline"}
 						size="sm"
+						className="cursor-pointer"
 						onClick={() => setFilterMode("funds")}
 					>
 						<DollarSign className="h-3 w-3" />
-						Funds ({funds.length})
+						{translations.entities("funds")} ({funds.length})
 					</Button>
 					<Button
 						variant={filterMode === "travels" ? "default" : "outline"}
 						size="sm"
+						className="cursor-pointer"
 						onClick={() => setFilterMode("travels")}
 					>
 						<MapPin className="h-3 w-3" />
-						Travels ({travels.length})
+						{translations.entities("travels")} ({travels.length})
 					</Button>
 				</div>
 			</div>
