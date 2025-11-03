@@ -325,7 +325,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					<Button
 						variant={viewMode === "flat" ? "default" : "outline"}
 						size="sm"
-						className="cursor-pointer"
+						className="cursor-pointer shadow-none"
 						onClick={() => setViewMode("flat")}
 					>
 						{translations.actions("flatView")}
@@ -333,7 +333,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					<Button
 						variant={viewMode === "grouped" ? "default" : "outline"}
 						size="sm"
-						className="cursor-pointer"
+						className="cursor-pointer shadow-none"
 						onClick={() => setViewMode("grouped")}
 					>
 						{translations.actions("groupedByCF")}
@@ -343,7 +343,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					<Button
 						variant={filterMode === "all" ? "default" : "outline"}
 						size="sm"
-						className="cursor-pointer"
+						className="cursor-pointer shadow-none"
 						onClick={() => setFilterMode("all")}
 					>
 						{translations.actions("all")} ({funds.length + travels.length})
@@ -351,7 +351,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					<Button
 						variant={filterMode === "funds" ? "default" : "outline"}
 						size="sm"
-						className="cursor-pointer"
+						className="cursor-pointer shadow-none"
 						onClick={() => setFilterMode("funds")}
 					>
 						<DollarSign className="h-3 w-3" />
@@ -360,7 +360,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					<Button
 						variant={filterMode === "travels" ? "default" : "outline"}
 						size="sm"
-						className="cursor-pointer"
+						className="cursor-pointer shadow-none"
 						onClick={() => setFilterMode("travels")}
 					>
 						<MapPin className="h-3 w-3" />
