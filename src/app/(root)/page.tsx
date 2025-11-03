@@ -137,7 +137,6 @@ export default function Home() {
 									<FundsAndTravelsTable
 										funds={funds}
 										travels={travels}
-										showToggle={true}
 										onToggleChange={handleToggleChange}
 									/>
 								</div>
