@@ -14,11 +14,6 @@ export const Footer: React.FC<{  }> = ({  }) => {
 	return (
 		<footer className="text-primary-secondary py-2 px-2 sm:py-3 sm:px-6 flex items-center justify-between border-t-2 border-0 select-none">
 			<div>
-				<Link href="/help" className="flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
-					{translations.footer("help")}
-				</Link>
-			</div>
-			<div>
 				<Link href={`https://github.com/epfl-si/ticketshop/releases/tag/v${packageConfig.version}`} target="_blank" className="flex items-center gap-2 px-3 py-2 rounded-md transition-colors text-muted-foreground hover:text-foreground">
 					{translations.footer("version")} v{packageConfig.version}
 				</Link>

@@ -10,11 +10,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
 	return (
 		<Fragment>
-			<Header user={user} />
-			<main className="flex">
-				{children}
+			<main className="flex flex-col h-screen justify-between">
+				<Header user={user} />
+				<section className="mb-auto">
+					{children}
+				</section>
+				<Footer/>
 			</main>
-			<Footer/>
 		</Fragment>
 	);
 }
