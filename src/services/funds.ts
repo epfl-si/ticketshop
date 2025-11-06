@@ -23,7 +23,7 @@ export async function getUserFundAuthorizations(sciper: string): Promise<{ resou
 
 	return data.authorizations
 		.filter((auth) => auth.resourceid.startsWith("FF"))
-		.filter((auth) => !auth.resourceid.startsWith("FF7"))
+		.filter((auth) => !auth.resourceid.startsWith("FF7") && !auth.resourceid.startsWith("FFC"))
 		.map((auth) => ({
 			resourceId: auth.resourceid.slice(2),
 			fund: auth.value?.slice(6),
