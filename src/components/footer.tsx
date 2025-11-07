@@ -2,11 +2,10 @@
 import React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
 
-import packageConfig from '../../package.json' with { type: 'json' };
+import packageConfig from "../../package.json" with { type: "json" };
 
-export const Footer: React.FC<{  }> = ({  }) => {
+export const Footer: React.FC = ({ }) => {
 	const translations = {
 		footer: useTranslations("footer"),
 	};
