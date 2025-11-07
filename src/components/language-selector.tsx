@@ -19,7 +19,7 @@ export const LanguageSelector: React.FC = () => {
 
 	return (
 		<nav className="ml-auto flex items-center space-x-4 text-sm sm:text-base">
-			<ul className="flex items-center space-x-1">
+			<ol className="flex items-center space-x-1">
 				<li>
 					<button onClick={() => changeLocale("fr")} className={cn("cursor-pointer font-bold", isPending && "pointer-events-none", locale === "fr" ? "text-red-500" : "hover:text-gray-400 text-gray-300")}>
 						FR
@@ -31,7 +31,7 @@ export const LanguageSelector: React.FC = () => {
 						EN
 					</button>
 				</li>
-			</ul>
+			</ol>
 		</nav>
 	);
 };
