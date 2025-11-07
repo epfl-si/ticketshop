@@ -88,3 +88,21 @@
 		@apply bg-background text-foreground;
 	}
 }
+
+h2 {
+	font-size: 30px;
+}
+
+a {
+	color: var(--muted-foreground);
+	font-weight: 500;
+}
+
+a:hover {
+	color: var(--primary);
+}
+
+ul {
+	list-style-type: disc;
+	margin-left: 32px;
+}

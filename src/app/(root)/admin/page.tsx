@@ -4,15 +4,21 @@ import { getUserData, updateSetting } from "../../../lib/database";
 import { searchUsers } from "../../../services/users";
 import { ApiUser, EnrichedFund, EnrichedTravel } from "@/types";
 import { Input } from "@/components/ui/input";
-import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandItem,
+	CommandList,
+} from "@/components/ui/command";
 import { Loader2, Search, User } from "lucide-react";
 import { FundsAndTravelsTable } from "@/components/table";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
-export default function SearchPage() {
+export default function AdminPage() {
 	const translations = {
-		page: useTranslations("pages.search"),
+		page: useTranslations("pages.admin"),
 		actions: useTranslations("actions"),
 		error: useTranslations("errors.dataLoading"),
 		updateError: useTranslations("errors.updateSetting"),
@@ -22,7 +28,7 @@ export default function SearchPage() {
 	const [funds, setFunds] = useState<EnrichedFund[]>([]);
 	const [travels, setTravels] = useState<EnrichedTravel[]>([]);
 	const [error, setError] = useState<string | null>(null);
-	let typingTimer: NodeJS.Timeout = setTimeout(() => { }, 0);
+	let typingTimer: NodeJS.Timeout = setTimeout(() => {}, 0);
 	const [loading, setLoading] = useState({ search: false, data: false });
 	const [noData, setNoData] = useState(false);
 	const [users, setUsers] = useState<ApiUser[]>([]);
@@ -34,7 +40,7 @@ export default function SearchPage() {
 		setError(null);
 		setNoData(false);
 		setSelectedUserId(sciper);
-		setLoading(prev => ({ ...prev, data: true }));
+		setLoading((prev) => ({ ...prev, data: true }));
 
 		try {
 			const userData = await getUserData(sciper);
@@ -42,7 +48,10 @@ export default function SearchPage() {
 				setError(userData.error);
 				setFunds([]);
 				setTravels([]);
-			} else if (userData.funds.length > 0 || userData.travels.length > 0) {
+			} else if (
+				userData.funds.length > 0 ||
+				userData.travels.length > 0
+			) {
 				setFunds(userData.funds);
 				setTravels(userData.travels);
 			} else {
@@ -56,7 +65,7 @@ export default function SearchPage() {
 			setFunds([]);
 			setTravels([]);
 		} finally {
-			setLoading(prev => ({ ...prev, data: false }));
+			setLoading((prev) => ({ ...prev, data: false }));
 		}
 	};
 
@@ -67,40 +76,58 @@ export default function SearchPage() {
 	async function doneTyping(inputValue: string) {
 		const users = await searchUsers(inputValue);
 		setUsers(users);
-		setLoading(prev => ({ ...prev, search: false }));
+		setLoading((prev) => ({ ...prev, search: false }));
 	}
 
 	async function handleToggleChange(checked: boolean, settingId: string) {
 		try {
-			const fund = funds.find(f => f.setting?.id === settingId);
-			const travel = travels.find(t => t.setting?.id === settingId);
+			const fund = funds.find((f) => f.setting?.id === settingId);
+			const travel = travels.find((t) => t.setting?.id === settingId);
 
 			await updateSetting(checked, settingId);
-			setFunds(prev => prev.map(fund =>
-				fund.setting?.id === settingId
-					? { ...fund, setting: { ...fund.setting, shown: checked } }
-					: fund,
-			));
-			setTravels(prev => prev.map(travel =>
-				travel.setting?.id === settingId
-					? { ...travel, setting: { ...travel.setting, shown: checked } }
-					: travel,
-			));
+			setFunds((prev) =>
+				prev.map((fund) =>
+					fund.setting?.id === settingId
+						? {
+								...fund,
+								setting: { ...fund.setting, shown: checked },
+							}
+						: fund,
+				),
+			);
+			setTravels((prev) =>
+				prev.map((travel) =>
+					travel.setting?.id === settingId
+						? {
+								...travel,
+								setting: { ...travel.setting, shown: checked },
+							}
+						: travel,
+				),
+			);
 
 			if (fund) {
-				const status = checked ? translations.status("shown") : translations.status("hidden");
-				toast.success(translations.actions("updateSuccess", {
-					type: translations.entities("fund"),
-					name: fund.label,
-					status: status,
-				}));
+				const status = checked
+					? translations.status("shown")
+					: translations.status("hidden");
+				toast.success(
+					translations.actions("updateSuccess", {
+						type: translations.entities("fund"),
+						name: fund.label,
+						status: status,
+					}),
+				);
 			} else if (travel) {
-				const status = checked ? translations.status("shown") : translations.status("hidden");
-				toast.success(translations.actions("updateSuccess", {
-					type: translations.entities("travel"),
-					name: travel.name,
-					status: status,
-				}));
+				const status = checked
+					? translations.status("shown")
+					: translations.status("hidden");
+				toast.success(
+					translations.actions("updateSuccess", {
+						type: translations.entities("travel"),
+						name: travel.name,
+						status: status,
+					}),
+				);
 			} else {
 				toast.success(translations.actions("updateSuccess"));
 			}
@@ -119,7 +146,9 @@ export default function SearchPage() {
 					<h1 className="text-3xl font-semibold flex items-center gap-3">
 						{translations.page("title")}
 					</h1>
-					<p className="text-muted-foreground mt-2">{translations.page("subtitle")}</p>
+					<p className="text-muted-foreground mt-2">
+						{translations.page("subtitle")}
+					</p>
 				</div>
 				<div>
 					<div className="relative max-w-md">
@@ -133,12 +162,21 @@ export default function SearchPage() {
 								setSearchValue(value);
 								if (value.length >= 3) {
 									clearTimeout(typingTimer);
-									setLoading(prev => ({ ...prev, search: true }));
+									setLoading((prev) => ({
+										...prev,
+										search: true,
+									}));
 									setIsOpen(true);
-									typingTimer = setTimeout(() => doneTyping(value), 1000);
+									typingTimer = setTimeout(
+										() => doneTyping(value),
+										1000,
+									);
 								} else {
 									clearTimeout(typingTimer);
-									setLoading(prev => ({ ...prev, search: false }));
+									setLoading((prev) => ({
+										...prev,
+										search: false,
+									}));
 									setUsers([]);
 									setIsOpen(false);
 								}
@@ -154,15 +192,21 @@ export default function SearchPage() {
 						<div className="max-w-md bg-background">
 							<Command className="bg-background">
 								<CommandList className="max-h-48 max-w-md w-full absolute bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
-									<CommandEmpty>{translations.page("noResults")}</CommandEmpty>
+									<CommandEmpty>
+										{translations.page("noResults")}
+									</CommandEmpty>
 									<CommandGroup>
 										{users.map((user) => (
 											<CommandItem
 												key={user.id}
 												onSelect={async () => {
-													await handleUserChoice(user.id);
+													await handleUserChoice(
+														user.id,
+													);
 													setIsOpen(false);
-													setSearchValue(user.display);
+													setSearchValue(
+														user.display,
+													);
 												}}
 												className="cursor-pointer"
 											>
@@ -179,8 +223,12 @@ export default function SearchPage() {
 
 				{error && (
 					<div className="rounded-lg border border-destructive bg-destructive/5 p-4">
-						<h3 className="font-semibold text-destructive">{translations.page("loadingError")}</h3>
-						<p className="text-sm text-muted-foreground mt-1">{error}</p>
+						<h3 className="font-semibold text-destructive">
+							{translations.page("loadingError")}
+						</h3>
+						<p className="text-sm text-muted-foreground mt-1">
+							{error}
+						</p>
 						{selectedUserId && (
 							<button
 								onClick={() => fetchUserData(selectedUserId)}
@@ -206,7 +254,9 @@ export default function SearchPage() {
 				{!loading.data && (travels.length > 0 || funds.length > 0) && (
 					<div className="space-y-4">
 						<div>
-							<h2 className="text-lg font-semibold">{translations.page("results")}</h2>
+							<h2 className="text-lg font-semibold">
+								{translations.page("results")}
+							</h2>
 							<p className="text-sm text-muted-foreground">
 								{translations.page("resultsDescription")}
 							</p>
@@ -224,7 +274,9 @@ export default function SearchPage() {
 						<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
 							<Search className="h-6 w-6 text-muted-foreground" />
 						</div>
-						<h3 className="mt-4 text-lg font-semibold">{translations.page("noData")}</h3>
+						<h3 className="mt-4 text-lg font-semibold">
+							{translations.page("noData")}
+						</h3>
 						<p className="mt-2 text-muted-foreground">
 							{translations.page("noDataDescription")}
 						</p>

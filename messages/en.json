@@ -5,8 +5,17 @@
 	},
 	"navigation": {
 		"home": "Home",
-		"search": "Search",
-		"profileAlt": "Profile picture"
+		"admin": "Admin",
+		"settings": "Settings",
+		"profileAlt": "Profile picture",
+		"signin": "Sign In",
+		"signout": "Sign Out",
+		"account": "My Account"
+	},
+	"footer": {
+		"help": "Get help",
+		"version": "Version",
+		"code": "Source code"
 	},
 	"actions": {
 		"loading": "Loading...",
@@ -56,8 +65,8 @@
 			"noData": "No data available",
 			"noDataDescription": "You have no funds or travels to display."
 		},
-		"search": {
-			"title": "User search",
+		"admin": {
+			"title": "Admin page",
 			"subtitle": "Search and view other users' funds and travels",
 			"placeholder": "Search for a person (min 3 characters)...",
 			"noResults": "No results found.",
@@ -94,6 +103,53 @@
 		"updateSetting": {
 			"title": "Error updating setting",
 			"description": "Unable to update the display setting. Please try again later."
+		}
+	},
+	"info": {
+		"about": {
+			"title": "About",
+			"paragraph1": "Ticketshop allows the CFF to control the authorizations of EPFL members who need to order transport tickets using EPFL funds. In other words, Ticketshop provides an API for the CFF (called ArtifacServer) and allows:",
+			"paragraph2": "Additionally, the web application allows managing the list of funds that will be visible in the CFF’s (web or mobile) application. People who have access to a large list of funds can then simplify this list when they need to obtain a transport ticket from the CFF portal.",
+			"ul1": "<li>the CFF to validate authorizations (i.e., the <i>Accred</i> “railticket” right of a person).</li><li>the CFF to retrieve the list of funds (and trips in some cases) for which a person has the <i>Accred</i> “railticket” right.</li>"
+		},
+		"help": {
+			"title": "Help",
+			"paragraph1": "Different help pages are available, starting with <a>KB0012580</a> (managed by the VPT) and the <a>PDF</a> that explains how to link your SwissPass account with your EPFL account.",
+			"paragraph2": "In general, make sure you have the <i>Accred</i> “railticket” right on at least one fund. Without this, you will not have access to the system.",
+			"paragraph3": "There are several ways to get help, but before submitting a support request, make sure you have read <a>KB0012580</a>.",
+			"ul1li1": "For questions related to SwissPass issues or the sbb.ch website, contact the CFF hotline;",
+			"ul1li2": "For <i>Accred</i>, access rights, or fund-related issues, open a ticket at 1234;",
+			"ul1li3": "For issues using the ticketshop.epfl.ch site or for feature requests, open a ticket at 1234 (queue SI_CFF);",
+			"ul1li4": "For technical questions or to contribute to the application, visit the <a>GitHub</a> repository and, if needed, open an <a>issue</a>."
+		},
+		"faq": {
+			"title": "FAQ",
+			"questions": {
+				"locked": {
+					"title": "My CFF account is locked? What can I do?",
+					"description": "Your CFF account will be locked after several failed logins. This is not a Tequila/Gaspar problem, no need to change this password. Please contact <LinkFAQ>the Service Desk</LinkFAQ>."
+				},
+				"right": {
+					"title": "I am accreditor for unit XYZ but I cannot give the right railticket?",
+					"description": "The right railticket is managed only by people with the respadmin role."
+				},
+				"sync": {
+					"title": "Why changes doesn't apply in CFF when I hide / show funds in ticketshop ?",
+					"description": "Synchronization between ticketshop and CFF might take approximatly [...temps à calculer et remplacer ici]. After this delay, changes will be affected."
+				},
+				"link": {
+					"title": "How to link my SwissPass account with my EPFL account ?",
+					"description": "Please refer to PDF document in attachment of <LinkFAQ>KB0012580</LinkFAQ>."
+				},
+				"change": {
+					"title": "How to switch from personal account to EPFL account in CFF apps ?",
+					"description": "Identify \"factory\" icon for business account, and person icon for personal account. In mobile app, it's possible to change during the payment step. Read <LinkFAQ>KB0012580</LinkFAQ>."
+				}
+			}
+		},
+		"tech": {
+			"title": "Technologies used",
+			"paragraph": "ticketshop.epfl.ch is developed with <a>Next.js</a>, a JavaScript framework based on React.js. Its authentication relies on EntraID. Fund data is retrieved from api.epfl.ch. The application is hosted on Kubernetes (OpenShift) at EPFL."
 		}
 	}
 }

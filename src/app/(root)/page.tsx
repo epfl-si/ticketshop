@@ -1,160 +1,102 @@
-"use client";
-import { Fragment, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { updateSetting } from "../../lib/database";
-import { getUserData } from "../../lib/database";
-import { EnrichedFund, EnrichedTravel } from "@/types";
-import { Loader2, Settings } from "lucide-react";
-import { FundsAndTravelsTable } from "@/components/table";
-import { Error } from "@/components/error";
-import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
+import { useTranslations, useMessages } from "next-intl";
 
-export default function Home() {
+export default function Info() {
 	const translations = {
-		page: useTranslations("pages.home"),
-		actions: useTranslations("actions"),
-		error: useTranslations("errors.dataLoading"),
-		updateError: useTranslations("errors.updateSetting"),
-		status: useTranslations("status"),
-		entities: useTranslations("entities"),
+		about: useTranslations("info.about"),
+		help: useTranslations("info.help"),
+		faq: useTranslations("info.faq"),
+		tech: useTranslations("info.tech")
 	};
-
-	const [funds, setFunds] = useState<EnrichedFund[]>([]);
-	const [travels, setTravels] = useState<EnrichedTravel[]>([]);
-	const [error, setError] = useState<string | null>(null);
-	const { data: session, status } = useSession();
-	const [loading, setLoading] = useState(true);
-
-	const fetchUserData = async () => {
-		if (!session?.user.userId) return;
-
-		setLoading(true);
-		setError(null);
-
-		try {
-			const userData = await getUserData(session.user.userId);
-			if (userData.error) {
-				setError(userData.error);
-			} else {
-				setFunds(userData.funds);
-				setTravels(userData.travels);
-			}
-		} catch (error) {
-			console.error("Error fetching user data:", error);
-			setError(translations.error("defaultMessage"));
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		fetchUserData();
-	}, [session?.user.userId]);
-
-	async function handleToggleChange(checked: boolean, settingId: string) {
-		try {
-			const fund = funds.find(f => f.setting?.id === settingId);
-			const travel = travels.find(t => t.setting?.id === settingId);
-
-			await updateSetting(checked, settingId);
-			setFunds(prev => prev.map(fund =>
-				fund.setting?.id === settingId
-					? { ...fund, setting: { ...fund.setting, shown: checked } }
-					: fund,
-			));
-			setTravels(prev => prev.map(travel =>
-				travel.setting?.id === settingId
-					? { ...travel, setting: { ...travel.setting, shown: checked } }
-					: travel,
-			));
-
-			if (fund) {
-				const status = checked ? translations.status("shown") : translations.status("hidden");
-				toast.success(translations.actions("updateSuccess", {
-					type: translations.entities("fund"),
-					name: fund.label,
-					status: status,
-				}));
-			} else if (travel) {
-				const status = checked ? translations.status("shown") : translations.status("hidden");
-				toast.success(translations.actions("updateSuccess", {
-					type: translations.entities("travel"),
-					name: travel.name,
-					status: status,
-				}));
-			} else {
-				toast.success(translations.actions("updateSuccess"));
-			}
-		} catch (error) {
-			console.error("Error updating setting:", error);
-			toast.error(translations.updateError("title"), {
-				description: translations.updateError("description"),
-			});
-		}
-	}
-
-	if (loading) {
-		return (
-			<div className="container mx-auto p-6">
-				<div className="flex items-center justify-center min-h-[400px]">
-					<div className="flex items-center gap-2">
-						<Loader2 className="h-6 w-6 animate-spin" />
-						<span>{translations.actions("loading")}</span>
-					</div>
-				</div>
-			</div>
-		);
-	}
-
+	const messages = useMessages();
 	return (
-		<div className="container mx-auto p-6 space-y-6">
-			<div className="flex items-center gap-3">
-				<h1 className="text-3xl font-semibold">
-					{translations.page("welcome", {
-						name: session?.user.name || session?.user.email || "User",
+		<div className="mx-auto p-6 space-y-6">
+			<h2>{translations.about("title")}</h2>
+			<p>
+				{translations.about("paragraph1")}
+			</p>
+			<ul>
+				{translations.about.rich("ul1",
+					{
+						li: (chunks) => <li>{chunks}</li>,
+						i: (chunks) => <i>{chunks}</i>
 					})}
-				</h1>
-			</div>
-
-			{status === "authenticated" && (
-				<Fragment>
-					{error ? (
-						<Error error={error} onRetry={fetchUserData} />
-					) : (
-						<Fragment>
-							{(funds.length > 0 || travels.length > 0) ? (
-								<div className="space-y-4">
-									<div>
-										<h2 className="text-lg font-semibold flex items-center gap-2">
-											<Settings className="h-5 w-5" />
-											{translations.page("displayManagement")}
-										</h2>
-										<p className="text-sm text-muted-foreground">
-											{translations.page("displayDescription")}
-										</p>
-									</div>
-									<FundsAndTravelsTable
-										funds={funds}
-										travels={travels}
-										onToggleChange={handleToggleChange}
-									/>
-								</div>
-							) : (
-								<div className="rounded-lg border-2 border-dashed border-muted-foreground/25 p-8 text-center">
-									<div className="mx-auto flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-										<Settings className="h-6 w-6 text-muted-foreground" />
-									</div>
-									<h3 className="mt-4 text-lg font-semibold">{translations.page("noData")}</h3>
-									<p className="mt-2 text-muted-foreground">
-										{translations.page("noDataDescription")}
-									</p>
-								</div>
-							)}
-						</Fragment>
-					)}
-				</Fragment>
-			)}
+			</ul>
+			<p>
+				{translations.about("paragraph2")}
+			</p>
+			<h2>{translations.help("title")}</h2>
+			<p>
+				{translations.help.rich("paragraph1", {
+					a: (chunks) => <a className="text-primary" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>
+				})}
+			</p>
+			<p>
+				{translations.help.rich("paragraph2", {
+					i: (chunks) => <i>{chunks}</i>
+				})}
+			</p>
+			<p>
+				{translations.help.rich("paragraph3", {
+					a: (chunks) => <a className="text-primary" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>
+				})}
+			</p>
+			<ul>
+				<li>
+					{translations.help("ul1li1")}
+				</li>
+				<li>
+					{translations.help.rich("ul1li2", {
+						i: (chunks) => <i>{chunks}</i>
+					})}
+				</li>
+				<li>
+					{translations.help("ul1li3")}
+				</li>
+				<li>
+					{translations.help.rich("ul1li4", {
+						a: (chunks) => <a className="text-primary" href={String(chunks).toLowerCase() === "GitHub" ? "https:/github.com/epfl-si/ticketshop" : "https:/github.com/epfl-si/ticketshop/issues"}>{chunks}</a>
+					})}
+				</li>
+			</ul>
+			<h2>{translations.tech("title")}</h2>
+			<section className="w-full px-2">
+				<Accordion type="single" collapsible className="mx-2">
+					{Object.keys(messages.info.faq.questions).map((question) => (
+						<AccordionItem value={question} key={question}>
+							<AccordionTrigger>
+								{translations.faq(`questions.${question}.title`)}
+							</AccordionTrigger>
+							<AccordionContent>
+								{translations.faq.rich(
+									`questions.${question}.description`,
+									{
+										LinkFAQ: (chunks) => (
+											<a
+												href={String(chunks).replaceAll(" ", "").toLowerCase() == "servicedesk" ? "mailto:1234@epfl.ch" : `https://go.epfl.ch/${chunks}`}
+												className="text-primary hover:text-red-700 font-medium"
+												target="_blank"
+											>
+												{chunks}
+											</a>
+										)
+									},
+								)}
+							</AccordionContent>
+						</AccordionItem>
+					))}
+				</Accordion>
+			</section>
+			<h2>{translations.tech("title")}</h2>
+			<p>
+				{translations.tech.rich("paragraph", { a: (chunks) => <a className="text-primary" href="https://nextjs.org/" target="_blank">{chunks}</a>})}
+			</p>
+			<section></section>
 		</div>
 	);
 }

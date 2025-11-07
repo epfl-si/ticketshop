@@ -14,13 +14,13 @@ export const PERMISSIONS = {
 };
 
 export const PROTECTED_ROUTES = {
-	SEARCH: {
-		PATH: "/search",
+	ADMIN: {
+		PATH: "/admin",
 		PERMISSIONS: [PERMISSIONS.FUNDS.ALL, PERMISSIONS.TRAVELS.ALL],
 		REWRITE: "/not-found",
 	},
 	HOME: {
-		PATH: "/",
+		PATH: "/settings",
 		PERMISSIONS: [PERMISSIONS.FUNDS.LIST, PERMISSIONS.TRAVELS.LIST],
 		REWRITE: "/denied",
 	},
