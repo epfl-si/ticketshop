@@ -8,6 +8,11 @@
 		"search": "Recherche",
 		"profileAlt": "Photo de profil"
 	},
+	"footer": {
+		"help": "Obtenir de l'aide",
+		"version": "Version",
+		"code": "Code source"
+	},
 	"actions": {
 		"loading": "Chargement...",
 		"retry": "Réessayer",
