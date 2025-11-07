@@ -7,6 +7,7 @@ interface TravelResponse {
 }
 
 export async function getUserTravels(sciper: string): Promise<ApiTravel[]> {
+	return [];
 	const data = await makeApiCall<TravelResponse>("/poq/RESTAdapter/api/fi/travelrequests", "sap");
 
 	return data.travelRequests.filter((travelRequest) => {
