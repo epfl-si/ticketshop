@@ -114,19 +114,19 @@
 	"info": {
 		"about": {
 			"title": "About",
-			"paragraph1": "Ticketshop allows the CFF to control the authorizations of EPFL members who need to order transport tickets using EPFL funds. In other words, Ticketshop provides an API for the CFF (called ArtifactServer) and allows:",
-			"paragraph2": "Additionally, the web application allows managing the list of funds that will be visible in the CFF’s (web or mobile) application. People who have access to a large list of funds can then simplify this list when they need to obtain a transport ticket from the CFF portal.",
+			"description": "<strong>Ticketshop</strong> allows the CFF to control the authorizations of EPFL members who need to order transport tickets using EPFL funds. In other words, Ticketshop provides an API for the CFF (called ArtifactServer) and allows:",
+			"additionalInfo": "Additionally, the web application allows managing the list of funds that will be visible in the CFF's (web or mobile) application. People who have access to a large list of funds can then simplify this list when they need to obtain a transport ticket from the CFF portal.",
 			"ul1": "<li>the CFF to validate authorizations (i.e., the <i>Accred</i> “railticket” right of a person).</li><li>the CFF to retrieve the list of funds (and trips in some cases) for which a person has the <i>Accred</i> “railticket” right.</li>"
 		},
 		"help": {
 			"title": "Help",
-			"paragraph1": "Different help pages are available, starting with <a>KB0012580</a> (managed by the VPT) and the <a>PDF</a> that explains how to link your SwissPass account with your EPFL account.",
-			"paragraph2": "In general, make sure you have the <i>Accred</i> “railticket” right on at least one fund. Without this, you will not have access to the system.",
-			"paragraph3": "There are several ways to get help, but before submitting a support request, make sure you have read <a>KB0012580</a>.",
-			"ul1li1": "For questions related to SwissPass issues or the sbb.ch website, contact the CFF hotline;",
-			"ul1li2": "For <i>Accred</i>, access rights, or fund-related issues, open a ticket at 1234;",
-			"ul1li3": "For issues using the ticketshop.epfl.ch site or for feature requests, open a ticket at 1234 (queue SI_CFF);",
-			"ul1li4": "For technical questions or to contribute to the application, visit the <a>GitHub</a> repository and, if needed, open an <a>issue</a>."
+			"availableHelp": "Different help pages are available, starting with <a>KB0012580</a> (managed by the VPT) and the <a>PDF</a> that explains how to link your SwissPass account with your EPFL account.",
+			"accredRequirement": "In general, make sure you have the <i>Accred</i> 'railticket' right on at least one fund. Without this, you will not have access to the system.",
+			"supportIntro": "There are several ways to get help, but before submitting a support request, make sure you have read <a>KB0012580</a>.",
+			"helpSwissPass": "For questions related to SwissPass issues or the sbb.ch website, contact the CFF hotline;",
+			"helpAccredRights": "For <i>Accred</i>, access rights, or fund-related issues, open a ticket at 1234;",
+			"helpTicketshopIssues": "For issues using the ticketshop.epfl.ch site or for feature requests, open a ticket at 1234 (queue SI_CFF);",
+			"helpTechnicalContrib": "For technical questions or to contribute to the application, visit the <a>GitHub</a> repository and, if needed, open an <a>issue</a>."
 		},
 		"faq": {
 			"title": "FAQ",
