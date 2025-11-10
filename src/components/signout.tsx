@@ -3,12 +3,7 @@ import React from "react";
 import { User } from "next-auth";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
 
 export const SignOut: React.FC<{ user: User }> = ({ user }) => {
@@ -33,7 +28,7 @@ export const SignOut: React.FC<{ user: User }> = ({ user }) => {
 				</div>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuItem onSelect={() => signOut({redirectTo: "/"})}>
+				<DropdownMenuItem onSelect={() => signOut({ redirectTo: "/" })}>
 					{translations.navigation("signout")}
 				</DropdownMenuItem>
 			</DropdownMenuContent>
