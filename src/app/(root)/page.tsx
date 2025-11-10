@@ -19,7 +19,7 @@ export default function Info() {
 					</h1>
 				</div>
 				<div className="space-y-4">
-					<p className="text-muted-foreground leading-relaxed">
+					<p className="text-foreground/90 leading-relaxed">
 						{translations.about.rich("description", {
 							strong: (chunks) => <strong>{chunks}</strong>,
 						})}
@@ -27,11 +27,11 @@ export default function Info() {
 					<ul className="space-y-2">
 						{translations.about.rich("ul1",
 							{
-								li: (chunks) => <li className="text-muted-foreground">{chunks}</li>,
+								li: (chunks) => <li className="text-foreground/90">{chunks}</li>,
 								i: (chunks) => <i>{chunks}</i>,
 							})}
 					</ul>
-					<p className="text-muted-foreground leading-relaxed">
+					<p className="text-foreground/90 leading-relaxed">
 						{translations.about("additionalInfo")}
 					</p>
 				</div>
@@ -43,34 +43,34 @@ export default function Info() {
 					</h2>
 				</div>
 				<div className="space-y-4">
-					<p className="text-muted-foreground leading-relaxed">
+					<p className="text-foreground/90 leading-relaxed">
 						{translations.help.rich("availableHelp", {
 							a: (chunks) => <a className="text-primary hover:underline" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>,
 						})}
 					</p>
-					<p className="text-muted-foreground leading-relaxed">
+					<p className="text-foreground/90 leading-relaxed">
 						{translations.help.rich("accredRequirement", {
 							i: (chunks) => <i className="text-foreground">{chunks}</i>,
 						})}
 					</p>
-					<p className="text-muted-foreground leading-relaxed">
+					<p className="text-foreground/90 leading-relaxed">
 						{translations.help.rich("supportIntro", {
 							a: (chunks) => <a className="text-primary hover:underline" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>,
 						})}
 					</p>
 					<ul className="space-y-3 mt-4">
-						<li className="text-muted-foreground leading-relaxed">
+						<li className="text-foreground/90 leading-relaxed">
 							{translations.help("helpSwissPass")}
 						</li>
-						<li className="text-muted-foreground leading-relaxed">
+						<li className="text-foreground/90 leading-relaxed">
 							{translations.help.rich("helpAccredRights", {
 								i: (chunks) => <i className="text-foreground">{chunks}</i>,
 							})}
 						</li>
-						<li className="text-muted-foreground leading-relaxed">
+						<li className="text-foreground/90 leading-relaxed">
 							{translations.help("helpTicketshopIssues")}
 						</li>
-						<li className="text-muted-foreground leading-relaxed">
+						<li className="text-foreground/90 leading-relaxed">
 							{translations.help.rich("helpTechnicalContrib", {
 								a: (chunks) => <a className="text-primary hover:underline" href={String(chunks).toLowerCase() === "GitHub" ? "https:/github.com/epfl-si/ticketshop" : "https:/github.com/epfl-si/ticketshop/issues"}>{chunks}</a>,
 							})}
@@ -113,7 +113,7 @@ export default function Info() {
 						{translations.tech("title")}
 					</h2>
 				</div>
-				<p className="text-muted-foreground leading-relaxed">
+				<p className="text-foreground/90 leading-relaxed">
 					{translations.tech.rich("paragraph", { a: (chunks) => <a className="text-primary hover:underline" href="https://nextjs.org/" target="_blank">{chunks}</a> })}
 				</p>
 			</section>
