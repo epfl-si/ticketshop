@@ -5,9 +5,8 @@ import { PROTECTED_ROUTES } from "./constants/permissions";
 
 export default async function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
-	if (pathname === "/") {
-		return;
-	}
+	if (pathname === "/") return NextResponse.next();
+
 	if (!Object.values(PROTECTED_ROUTES).map(route => String(route.PATH)).includes(pathname)) {
 		return NextResponse.rewrite(new URL("/not-found", req.url));
 	}
