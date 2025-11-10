@@ -140,7 +140,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 
 	const filteredItems = allItems.filter(item => {
 		if (filterMode === "funds") return item.itemType === "fund";
-		if (filterMode === "travels") return item.itemType === "travel";
+		// if (filterMode === "travels") return item.itemType === "travel";
 		return true;
 	});
 
