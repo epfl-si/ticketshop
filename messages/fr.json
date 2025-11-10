@@ -141,7 +141,7 @@
 				},
 				"sync": {
 					"title": "Pourquoi lorsque je cache ou affiche des fonds depuis ticketshop, les changements ne sont pas effectués sur CFF ?",
-					"description": "La synchronisation entre ticketshop et CFF peut demander dans les [...temps à calculer et remplacer ici]. Après ce délais, les changements devraient s'effectuer sur CFF."
+					"description": "La synchronisation entre ticketshop et CFF peut demander plusieurs heures. Après ce délais, les changements devraient s'effectuer sur CFF."
 				},
 				"link": {
 					"title": "Comment lier mon compte SwissPass avec mon compte EPFL ?",

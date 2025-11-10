@@ -141,7 +141,7 @@
 				},
 				"sync": {
 					"title": "Why changes doesn't apply in CFF when I hide / show funds in ticketshop ?",
-					"description": "Synchronization between ticketshop and CFF might take approximatly [...temps à calculer et remplacer ici]. After this delay, changes will be affected."
+					"description": "Synchronization between ticketshop and CFF might take many hours. After this delay, changes will be affected."
 				},
 				"link": {
 					"title": "How to link my SwissPass account with my EPFL account ?",
