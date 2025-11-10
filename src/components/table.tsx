@@ -260,7 +260,8 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	);
 
 	const renderGroupedView = () => {
-		const filteredGroups = filterMode === "travels" ? {} : groupedByCF;
+		// const filteredGroups = filterMode === "travels" ? {} : groupedByCF;
+		const filteredGroups = groupedByCF;
 		const filteredTravels = filterMode === "funds" ? [] : travels;
 
 		return (
