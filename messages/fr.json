@@ -17,6 +17,11 @@
 		"version": "Version",
 		"code": "Code source"
 	},
+	"footer": {
+		"help": "Obtenir de l'aide",
+		"version": "Version",
+		"code": "Code source"
+	},
 	"actions": {
 		"loading": "Chargement...",
 		"retry": "Réessayer",
@@ -26,7 +31,11 @@
 		"back": "Retour",
 		"updateSuccess": "{type} \"{name}\" a été {status} avec succès.",
 		"backToHome": "Retour à l'accueil",
-		"previousPage": "Page précédente"
+		"previousPage": "Page précédente",
+		"flatView": "Vue liste",
+		"groupedByCF": "Groupé par CF",
+		"all": "Tous",
+		"showOfTotal": "{show} de {total}"
 	},
 	"status": {
 		"on": "ACTIVÉ",
@@ -36,7 +45,7 @@
 		"hidden": "masqué"
 	},
 	"entities": {
-		"fund": "Fond",
+		"fund": "Fonds",
 		"funds": "Fonds",
 		"travel": "Voyage",
 		"travels": "Voyages",
@@ -53,7 +62,9 @@
 		"destination": "Destination",
 		"dates": "Dates",
 		"requestId": "N° de demande",
-		"unit": "Unité"
+		"unit": "Unité",
+		"cf": "CF",
+		"noCF": "Aucun CF"
 	},
 	"pages": {
 		"home": {
@@ -71,7 +82,7 @@
 			"placeholder": "Rechercher une personne (min 3 caractères)...",
 			"noResults": "Aucun résultat trouvé.",
 			"results": "Résultats de la recherche",
-			"resultsDescription": "Fonds et voyages de l'utilisateur sélectionné",
+			"resultsDescription": "Fonds et voyages de {user}.",
 			"noData": "Aucune donnée trouvée",
 			"noDataDescription": "Cet utilisateur n'a aucun fonds ou voyage à afficher.",
 			"loadingError": "Erreur de chargement",
@@ -98,7 +109,7 @@
 		},
 		"notFound": {
 			"title": "Oups ! Il semble que cette page n'existe pas",
-			"contact": "Si vous pensez qu'il s'agit d'une erreur, contactez le {supportEmail}"
+			"contact": "Si vous pensez qu'il s'agit d'une erreur, contactez le"
 		},
 		"updateSetting": {
 			"title": "Erreur de mise à jour",

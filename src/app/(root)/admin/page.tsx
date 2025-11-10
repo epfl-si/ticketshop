@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getUserData, updateSetting } from "../../../lib/database";
-import { searchUsers } from "../../../services/users";
+import { searchUsers, getUserById } from "../../../services/users";
 import { ApiUser, EnrichedFund, EnrichedTravel } from "@/types";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,6 +18,9 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 export default function AdminPage() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
 	const translations = {
 		page: useTranslations("pages.admin"),
 		actions: useTranslations("actions"),
@@ -25,21 +29,36 @@ export default function AdminPage() {
 		status: useTranslations("status"),
 		entities: useTranslations("entities"),
 	};
+
 	const [funds, setFunds] = useState<EnrichedFund[]>([]);
 	const [travels, setTravels] = useState<EnrichedTravel[]>([]);
 	const [error, setError] = useState<string | null>(null);
-	let typingTimer: NodeJS.Timeout = setTimeout(() => {}, 0);
+	let typingTimer: NodeJS.Timeout = setTimeout(() => { }, 0);
 	const [loading, setLoading] = useState({ search: false, data: false });
 	const [noData, setNoData] = useState(false);
 	const [users, setUsers] = useState<ApiUser[]>([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+	const [selectedUser, setSelectedUser] = useState<ApiUser | null>(null);
+
+	useEffect(() => {
+		const userId = searchParams.get("u");
+		if (userId) {
+			fetchUserData(userId);
+			getUserById(userId).then(user => {
+				if (user) {
+					setSearchValue(user.name);
+					setSelectedUser(user);
+				} else {
+					setSearchValue(userId);
+				}
+			});
+		}
+	}, [searchParams]);
 
 	const fetchUserData = async (sciper: string) => {
 		setError(null);
 		setNoData(false);
-		setSelectedUserId(sciper);
 		setLoading((prev) => ({ ...prev, data: true }));
 
 		try {
@@ -70,6 +89,7 @@ export default function AdminPage() {
 	};
 
 	async function handleUserChoice(sciper: string) {
+		router.push(`/search?u=${sciper}`);
 		await fetchUserData(sciper);
 	}
 
@@ -89,9 +109,9 @@ export default function AdminPage() {
 				prev.map((fund) =>
 					fund.setting?.id === settingId
 						? {
-								...fund,
-								setting: { ...fund.setting, shown: checked },
-							}
+							...fund,
+							setting: { ...fund.setting, shown: checked },
+						}
 						: fund,
 				),
 			);
@@ -99,9 +119,9 @@ export default function AdminPage() {
 				prev.map((travel) =>
 					travel.setting?.id === settingId
 						? {
-								...travel,
-								setting: { ...travel.setting, shown: checked },
-							}
+							...travel,
+							setting: { ...travel.setting, shown: checked },
+						}
 						: travel,
 				),
 			);
@@ -211,7 +231,7 @@ export default function AdminPage() {
 												className="cursor-pointer"
 											>
 												<User className="mr-2 h-4 w-4" />
-												{`${user.display} (${user.id})`}
+												{`${user.name} (${user.id})`}
 											</CommandItem>
 										))}
 									</CommandGroup>
@@ -229,9 +249,9 @@ export default function AdminPage() {
 						<p className="text-sm text-muted-foreground mt-1">
 							{error}
 						</p>
-						{selectedUserId && (
+						{selectedUser && (
 							<button
-								onClick={() => fetchUserData(selectedUserId)}
+								onClick={() => fetchUserData(selectedUser?.id)}
 								className="mt-3 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
 							>
 								{translations.actions("retry")}
@@ -258,7 +278,7 @@ export default function AdminPage() {
 								{translations.page("results")}
 							</h2>
 							<p className="text-sm text-muted-foreground">
-								{translations.page("resultsDescription")}
+								{translations.page("resultsDescription", { user: selectedUser?.name || "" })}
 							</p>
 						</div>
 						<FundsAndTravelsTable

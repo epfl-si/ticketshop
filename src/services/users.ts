@@ -41,5 +41,30 @@ export async function searchUsers(query: string): Promise<ApiUser[]> {
 		}
 	}
 
-	return result;
+	return result.map(user => ({
+		...user,
+		name: `${user.firstname} ${user.lastname}`,
+	}));
+}
+
+export async function getUserById(userId: string): Promise<ApiUser | null> {
+	try {
+		const data = await makeApiCall<{ persons: ApiUser[] }>("/v1/persons", "api", {
+			query: userId,
+			pagesize: "1",
+			pageindex: "0",
+		});
+
+		const users = data.persons || [];
+		const user = users.find(u => u.id === userId);
+		if (!user) return null;
+
+		return {
+			...user,
+			name: `${user.firstname} ${user.lastname}`,
+		};
+	} catch (error) {
+		console.error("Error fetching user by ID:", error);
+		return null;
+	}
 }

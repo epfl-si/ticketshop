@@ -3,7 +3,7 @@ import { Fragment, ReactNode } from "react";
 import React from "react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { auth } from "@/services/auth";
+import { getUser } from "@/services/auth";
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
 	const user = (await auth())?.user;
@@ -15,7 +15,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 				<section className="mb-auto">
 					{children}
 				</section>
-				<Footer/>
+				<Footer />
 			</main>
 		</Fragment>
 	);

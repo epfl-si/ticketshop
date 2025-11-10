@@ -38,13 +38,10 @@ export default function NotFoundPage() {
 						</Button>
 					</div>
 					<p className="text-sm text-gray-500 px-4">
-						{translations.error.rich("contact", {
-							supportEmail: (chunks) => (
-								<a href="mailto:1234@epfl.ch" type="mail" className="text-red-600 hover:text-red-700 underline font-medium" target="_blank" rel="noopener noreferrer">
-									{chunks}
-								</a>
-							),
-						})}
+						{translations.error("contact")}{" "}
+						<a href="mailto:1234@epfl.ch" type="mail" className="text-red-600 hover:text-red-700 underline font-medium" target="_blank" rel="noopener noreferrer">
+							1234
+						</a>
 					</p>
 				</div>
 			</div>
