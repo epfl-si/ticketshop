@@ -15,14 +15,16 @@ interface FundsAndTravelsTableProps {
 }
 
 type ViewMode = "flat" | "grouped";
-type FilterMode = "all" | "funds" | "travels";
+// type FilterMode = "all" | "funds" | "travels";
+type FilterMode = "funds";
 type SortField = "type" | "id" | "name" | "details" | "display";
 type SortOrder = "asc" | "desc";
 type Item = (EnrichedFund & { itemType: "fund" }) | (EnrichedTravel & { itemType: "travel" });
 
 export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAndTravelsTableProps) {
 	const [viewMode, setViewMode] = useState<ViewMode>("grouped");
-	const [filterMode, setFilterMode] = useState<FilterMode>("all");
+	// const [filterMode, setFilterMode] = useState<FilterMode>("all");
+	const [filterMode, setFilterMode] = useState<FilterMode>("funds");
 	const [sortField, setSortField] = useState<SortField | null>(null);
 	const [sortOrder, setSortOrder] = useState<SortOrder | null>(null);
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
@@ -344,14 +346,14 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					</Button>
 				</div>
 				<div className="flex gap-2 border-l pl-4">
-					<Button
+					{/* <Button
 						variant={filterMode === "all" ? "default" : "outline"}
 						size="sm"
 						className="cursor-pointer shadow-none"
 						onClick={() => setFilterMode("all")}
 					>
 						{translations.actions("all")} ({funds.length + travels.length})
-					</Button>
+					</Button> */}
 					<Button
 						variant={filterMode === "funds" ? "default" : "outline"}
 						size="sm"
@@ -361,7 +363,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 						<DollarSign className="h-3 w-3" />
 						{translations.entities("funds")} ({funds.length})
 					</Button>
-					<Button
+					{/* <Button
 						variant={filterMode === "travels" ? "default" : "outline"}
 						size="sm"
 						className="cursor-pointer shadow-none"
@@ -369,7 +371,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					>
 						<MapPin className="h-3 w-3" />
 						{translations.entities("travels")} ({travels.length})
-					</Button>
+					</Button> */}
 				</div>
 			</div>
 			<div className="rounded-lg border">
