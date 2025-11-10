@@ -17,11 +17,6 @@
 		"version": "Version",
 		"code": "Source code"
 	},
-	"footer": {
-		"help": "Get help",
-		"version": "Version",
-		"code": "Source code"
-	},
 	"actions": {
 		"loading": "Loading...",
 		"retry": "Retry",
@@ -119,7 +114,7 @@
 	"info": {
 		"about": {
 			"title": "About",
-			"paragraph1": "Ticketshop allows the CFF to control the authorizations of EPFL members who need to order transport tickets using EPFL funds. In other words, Ticketshop provides an API for the CFF (called ArtifacServer) and allows:",
+			"paragraph1": "Ticketshop allows the CFF to control the authorizations of EPFL members who need to order transport tickets using EPFL funds. In other words, Ticketshop provides an API for the CFF (called ArtifactServer) and allows:",
 			"paragraph2": "Additionally, the web application allows managing the list of funds that will be visible in the CFF’s (web or mobile) application. People who have access to a large list of funds can then simplify this list when they need to obtain a transport ticket from the CFF portal.",
 			"ul1": "<li>the CFF to validate authorizations (i.e., the <i>Accred</i> “railticket” right of a person).</li><li>the CFF to retrieve the list of funds (and trips in some cases) for which a person has the <i>Accred</i> “railticket” right.</li>"
 		},
