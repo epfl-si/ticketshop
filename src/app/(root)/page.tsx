@@ -64,6 +64,7 @@ export default function Info() {
 						</li>
 						<li className="text-foreground/90 leading-relaxed">
 							{translations.help.rich("helpAccredRights", {
+								apostrophe: "'",
 								i: (chunks) => <i className="text-foreground">{chunks}</i>,
 							})}
 						</li>
