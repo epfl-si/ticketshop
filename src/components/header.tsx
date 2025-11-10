@@ -12,7 +12,7 @@ import { useTranslations } from "next-intl";
 import { SignIn } from "./signin";
 import { SignOut } from "./signout";
 
-export const Header: React.FC<{ user: User | undefined}> = ({ user }) => {
+export const Header: React.FC<{ user: User | undefined }> = ({ user }) => {
 	const pathname = usePathname();
 	const translations = {
 		navigation: useTranslations("navigation"),
@@ -30,7 +30,7 @@ export const Header: React.FC<{ user: User | undefined}> = ({ user }) => {
 						className="h-4 sm:h-7"
 					/>
 					<span className="border-l-2 border-solid sm:h-6 h-4 w-1 border-gray-300"></span>
-					<Link href="/" className="text-black! hover:text-primary!">
+					<Link href="/" className="text-black hover:text-primary">
 						<h1 className="text-base sm:text-2xl font-bold -ml-1 sm:ml-0">
 							Ticketshop
 						</h1>
@@ -39,31 +39,20 @@ export const Header: React.FC<{ user: User | undefined}> = ({ user }) => {
 
 				<nav className="flex items-center gap-4 mt-1">
 					{user && <Link
-							href="/settings"
-							className={cn(
-								"flex items-center gap-2 px-3 py-2 rounded-md transition-colors",
-								pathname === "/settings"
-									? "text-primary!"
-									: "text-muted-foreground! hover:text-foreground!",
-							)}
-						>
-							<Settings className="h-4 w-4" />
-							<span className="hidden sm:inline font-semibold">
-								{translations.navigation("settings")}
-							</span>
-						</Link>
+						href="/settings"
+						className={cn("flex items-center gap-2 px-3 py-2 rounded-md transition-colors", pathname === "/settings" ? "text-primary" : "text-muted-foreground hover:text-foreground")}
+					>
+						<Settings className="h-4 w-4" />
+						<span className="hidden sm:inline font-semibold">
+							{translations.navigation("settings")}
+						</span>
+					</Link>
 					}
 
-					{user && (user?.permissions.includes(PERMISSIONS.FUNDS.ALL) ||
-						user?.permissions.includes(PERMISSIONS.TRAVELS.ALL)) && (
+					{user && (user?.permissions.includes(PERMISSIONS.FUNDS.ALL) || user?.permissions.includes(PERMISSIONS.TRAVELS.ALL)) && (
 						<Link
 							href="/admin"
-							className={cn(
-								"flex items-center gap-2 px-3 py-2 rounded-md transition-colors",
-								pathname === "/admin"
-									? "text-primary!"
-									: "text-muted-foreground! hover:text-foreground!",
-							)}
+							className={cn("flex items-center gap-2 px-3 py-2 rounded-md transition-colors", pathname === "/admin" ? "text-primary!" : "text-muted-foreground! hover:text-foreground!")}
 						>
 							<UserRoundCog className="h-4 w-4" />
 							<span className="hidden sm:inline font-semibold">
@@ -75,9 +64,7 @@ export const Header: React.FC<{ user: User | undefined}> = ({ user }) => {
 			</div>
 
 			<div className="flex items-center gap-2 sm:gap-8">
-				{
-					user ? <SignOut user={user}/> : <SignIn/>
-				}
+				{user ? <SignOut user={user} /> : <SignIn />}
 				<LanguageSelector />
 			</div>
 		</header>
