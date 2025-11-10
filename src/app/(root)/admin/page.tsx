@@ -83,7 +83,7 @@ export default function AdminPage() {
 	};
 
 	async function handleUserChoice(sciper: string) {
-		router.push(`/search?u=${sciper}`);
+		router.push(`/admin?u=${sciper}`);
 		await fetchUserData(sciper);
 	}
 
