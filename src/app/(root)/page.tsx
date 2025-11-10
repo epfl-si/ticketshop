@@ -1,9 +1,4 @@
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useTranslations, useMessages } from "next-intl";
 
 export default function Info() {
@@ -11,60 +6,79 @@ export default function Info() {
 		about: useTranslations("info.about"),
 		help: useTranslations("info.help"),
 		faq: useTranslations("info.faq"),
-		tech: useTranslations("info.tech")
+		tech: useTranslations("info.tech"),
 	};
 	const messages = useMessages();
+
 	return (
-		<div className="mx-auto p-6 space-y-6">
-			<h2>{translations.about("title")}</h2>
-			<p>
-				{translations.about("paragraph1")}
-			</p>
-			<ul>
-				{translations.about.rich("ul1",
-					{
-						li: (chunks) => <li>{chunks}</li>,
-						i: (chunks) => <i>{chunks}</i>
-					})}
-			</ul>
-			<p>
-				{translations.about("paragraph2")}
-			</p>
-			<h2>{translations.help("title")}</h2>
-			<p>
-				{translations.help.rich("paragraph1", {
-					a: (chunks) => <a className="text-primary" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>
-				})}
-			</p>
-			<p>
-				{translations.help.rich("paragraph2", {
-					i: (chunks) => <i>{chunks}</i>
-				})}
-			</p>
-			<p>
-				{translations.help.rich("paragraph3", {
-					a: (chunks) => <a className="text-primary" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>
-				})}
-			</p>
-			<ul>
-				<li>
-					{translations.help("ul1li1")}
-				</li>
-				<li>
-					{translations.help.rich("ul1li2", {
-						i: (chunks) => <i>{chunks}</i>
-					})}
-				</li>
-				<li>
-					{translations.help("ul1li3")}
-				</li>
-				<li>
-					{translations.help.rich("ul1li4", {
-						a: (chunks) => <a className="text-primary" href={String(chunks).toLowerCase() === "GitHub" ? "https:/github.com/epfl-si/ticketshop" : "https:/github.com/epfl-si/ticketshop/issues"}>{chunks}</a>
-					})}
-				</li>
-			</ul>
-			<h2>{translations.tech("title")}</h2>
+		<div className="container mx-auto p-6 space-y-6">
+			<section className="space-y-4">
+				<div>
+					<h1 className="text-3xl font-semibold">
+						{translations.about("title")}
+					</h1>
+				</div>
+				<div className="space-y-4">
+					<p className="text-muted-foreground leading-relaxed">
+						{translations.about.rich("description", {
+							strong: (chunks) => <strong>{chunks}</strong>,
+						})}
+					</p>
+					<ul className="space-y-2">
+						{translations.about.rich("ul1",
+							{
+								li: (chunks) => <li className="text-muted-foreground">{chunks}</li>,
+								i: (chunks) => <i>{chunks}</i>,
+							})}
+					</ul>
+					<p className="text-muted-foreground leading-relaxed">
+						{translations.about("additionalInfo")}
+					</p>
+				</div>
+			</section>
+			<section className="space-y-4">
+				<div>
+					<h2 className="text-2xl font-semibold">
+						{translations.help("title")}
+					</h2>
+				</div>
+				<div className="space-y-4">
+					<p className="text-muted-foreground leading-relaxed">
+						{translations.help.rich("availableHelp", {
+							a: (chunks) => <a className="text-primary hover:underline" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>,
+						})}
+					</p>
+					<p className="text-muted-foreground leading-relaxed">
+						{translations.help.rich("accredRequirement", {
+							i: (chunks) => <i className="text-foreground">{chunks}</i>,
+						})}
+					</p>
+					<p className="text-muted-foreground leading-relaxed">
+						{translations.help.rich("supportIntro", {
+							a: (chunks) => <a className="text-primary hover:underline" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>,
+						})}
+					</p>
+					<ul className="space-y-3 mt-4">
+						<li className="text-muted-foreground leading-relaxed">
+							{translations.help("helpSwissPass")}
+						</li>
+						<li className="text-muted-foreground leading-relaxed">
+							{translations.help.rich("helpAccredRights", {
+								i: (chunks) => <i className="text-foreground">{chunks}</i>,
+							})}
+						</li>
+						<li className="text-muted-foreground leading-relaxed">
+							{translations.help("helpTicketshopIssues")}
+						</li>
+						<li className="text-muted-foreground leading-relaxed">
+							{translations.help.rich("helpTechnicalContrib", {
+								a: (chunks) => <a className="text-primary hover:underline" href={String(chunks).toLowerCase() === "GitHub" ? "https:/github.com/epfl-si/ticketshop" : "https:/github.com/epfl-si/ticketshop/issues"}>{chunks}</a>,
+							})}
+						</li>
+					</ul>
+				</div>
+			</section>
+			<h2 className="text-2xl font-semibold">{translations.faq("title")}</h2>
 			<section className="w-full px-2">
 				<Accordion type="single" collapsible className="mx-2">
 					{Object.keys(messages.info.faq.questions).map((question) => (
@@ -78,13 +92,13 @@ export default function Info() {
 									{
 										LinkFAQ: (chunks) => (
 											<a
-												href={String(chunks).replaceAll(" ", "").toLowerCase() == "servicedesk" ? "mailto:1234@epfl.ch" : `https://go.epfl.ch/${chunks}`}
+												href={String(chunks).replaceAll(" ", "").toLowerCase() === "servicedesk" ? "mailto:1234@epfl.ch" : `https://go.epfl.ch/${chunks}`}
 												className="text-primary hover:text-red-700 font-medium"
 												target="_blank"
 											>
 												{chunks}
 											</a>
-										)
+										),
 									},
 								)}
 							</AccordionContent>
@@ -92,11 +106,17 @@ export default function Info() {
 					))}
 				</Accordion>
 			</section>
-			<h2>{translations.tech("title")}</h2>
-			<p>
-				{translations.tech.rich("paragraph", { a: (chunks) => <a className="text-primary" href="https://nextjs.org/" target="_blank">{chunks}</a>})}
-			</p>
-			<section></section>
+
+			<section className="space-y-4">
+				<div>
+					<h2 className="text-2xl font-semibold">
+						{translations.tech("title")}
+					</h2>
+				</div>
+				<p className="text-muted-foreground leading-relaxed">
+					{translations.tech.rich("paragraph", { a: (chunks) => <a className="text-primary hover:underline" href="https://nextjs.org/" target="_blank">{chunks}</a> })}
+				</p>
+			</section>
 		</div>
 	);
 }
