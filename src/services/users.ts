@@ -43,7 +43,7 @@ export async function searchUsers(query: string): Promise<ApiUser[]> {
 
 	return result.map(user => ({
 		...user,
-		name: `${user.firstname} ${user.lastname}`,
+		name: (user.firstname && user.lastname) ? `${user.firstname} ${user.lastname}` : user.display,
 	}));
 }
 
