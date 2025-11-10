@@ -5,13 +5,7 @@ import { getUserData, updateSetting } from "../../../lib/database";
 import { searchUsers, getUserById } from "../../../services/users";
 import { ApiUser, EnrichedFund, EnrichedTravel } from "@/types";
 import { Input } from "@/components/ui/input";
-import {
-	Command,
-	CommandEmpty,
-	CommandGroup,
-	CommandItem,
-	CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
 import { Loader2, Search, User } from "lucide-react";
 import { FundsAndTravelsTable } from "@/components/table";
 import { useTranslations } from "next-intl";
@@ -108,28 +102,20 @@ export default function AdminPage() {
 			setFunds((prev) =>
 				prev.map((fund) =>
 					fund.setting?.id === settingId
-						? {
-							...fund,
-							setting: { ...fund.setting, shown: checked },
-						}
+						? { ...fund, setting: { ...fund.setting, shown: checked } }
 						: fund,
 				),
 			);
 			setTravels((prev) =>
 				prev.map((travel) =>
 					travel.setting?.id === settingId
-						? {
-							...travel,
-							setting: { ...travel.setting, shown: checked },
-						}
+						? { ...travel, setting: { ...travel.setting, shown: checked } }
 						: travel,
 				),
 			);
 
 			if (fund) {
-				const status = checked
-					? translations.status("shown")
-					: translations.status("hidden");
+				const status = checked ? translations.status("shown") : translations.status("hidden");
 				toast.success(
 					translations.actions("updateSuccess", {
 						type: translations.entities("fund"),
@@ -138,9 +124,7 @@ export default function AdminPage() {
 					}),
 				);
 			} else if (travel) {
-				const status = checked
-					? translations.status("shown")
-					: translations.status("hidden");
+				const status = checked ? translations.status("shown") : translations.status("hidden");
 				toast.success(
 					translations.actions("updateSuccess", {
 						type: translations.entities("travel"),
