@@ -41,6 +41,7 @@
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
+	--breakpoint-2xl: 97rem;
 }
 
 :root {
@@ -87,22 +88,8 @@
 	body {
 		@apply bg-background text-foreground;
 	}
-}
 
-h2 {
-	font-size: 30px;
-}
-
-a {
-	color: var(--muted-foreground);
-	font-weight: 500;
-}
-
-a:hover {
-	color: var(--primary);
-}
-
-ul {
-	list-style-type: disc;
-	margin-left: 32px;
+	ul {
+		@apply list-disc ml-8;
+	}
 }
