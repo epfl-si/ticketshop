@@ -30,8 +30,6 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN apk add --no-cache curl dcron
-
 RUN addgroup --system --gid 1001 nodejs \
 	&& adduser --system --uid 1001 nextjs
 
@@ -46,8 +44,6 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
-RUN echo "27 3 * * 6 curl -X POST http://localhost:3000/api/reload" > /etc/crontabs/root
-
 USER nextjs
 
 EXPOSE 3000
@@ -55,4 +51,4 @@ ENV PORT=3000
 
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["sh", "-c", "npx prisma migrate deploy && crond && node server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
