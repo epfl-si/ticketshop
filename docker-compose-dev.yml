@@ -18,6 +18,20 @@ services:
       timeout: 2s
       retries: 20
 
+  redis:
+    image: redis:7-alpine
+    hostname: redis_host
+    container_name: ticketshop-redis
+    restart: always
+    networks:
+      - prisma-network
+    command: redis-server --maxmemory 1gb --maxmemory-policy allkeys-lru --tcp-keepalive 60 --timeout 300 --tcp-backlog 511 --databases 1
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+
   server:
     container_name: ticketshop-app
     image: node:20
@@ -30,6 +44,8 @@ services:
     command: /bin/sh -c "cd /app && npm install --force && npx prisma generate && npx prisma migrate deploy && npm run dev"
     depends_on:
       postgres_db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     environment:
       - NODE_ENV=development
