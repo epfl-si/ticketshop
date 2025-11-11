@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getUserData, updateSetting } from "../../../lib/database";
-import { searchUsers, getUserById } from "../../../services/users";
+import { getUserById, searchUsers, getAllUsers } from "../../../services/users";
 import { ApiUser, EnrichedFund, EnrichedTravel } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
@@ -30,25 +30,69 @@ export default function AdminPage() {
 	let typingTimer: NodeJS.Timeout = setTimeout(() => { }, 0);
 	const [loading, setLoading] = useState({ search: false, data: false });
 	const [noData, setNoData] = useState(false);
-	const [users, setUsers] = useState<ApiUser[]>([]);
+	const [allUsers, setAllUsers] = useState<ApiUser[]>([]);
+	const [filteredUsers, setFilteredUsers] = useState<ApiUser[]>([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedUser, setSelectedUser] = useState<ApiUser | null>(null);
+	const [useCacheSearch, setUseCacheSearch] = useState(false);
+
+	useEffect(() => {
+		const loadUsers = async () => {
+			try {
+				const compressedUsers = await getAllUsers();
+
+				if (compressedUsers.length === 0) {
+					setUseCacheSearch(false);
+					return;
+				}
+
+				const users = compressedUsers.map((u: { i: string; e: string; f: string; l: string; d: string; n: string; m: string; }) => ({
+					id: u.i,
+					email: u.e,
+					firstname: u.f,
+					lastname: u.l,
+					display: u.d,
+					normalized: u.n,
+					name: u.m,
+				}));
+
+				setAllUsers(users);
+				setUseCacheSearch(true);
+			} catch (error) {
+				console.error("Error loading users:", error);
+				setUseCacheSearch(false);
+			}
+		};
+
+		loadUsers();
+	}, []);
 
 	useEffect(() => {
 		const userId = searchParams.get("u");
-		if (userId) {
+		if (userId && !selectedUser) {
 			fetchUserData(userId);
-			getUserById(userId).then(user => {
+
+			if (useCacheSearch && allUsers.length > 0) {
+				const user = allUsers.find(u => u.id === userId);
 				if (user) {
 					setSearchValue(user.name);
 					setSelectedUser(user);
 				} else {
 					setSearchValue(userId);
 				}
-			});
+			} else if (!useCacheSearch) {
+				getUserById(userId).then(user => {
+					if (user) {
+						setSearchValue(user.name);
+						setSelectedUser(user);
+					} else {
+						setSearchValue(userId);
+					}
+				});
+			}
 		}
-	}, [searchParams]);
+	}, [searchParams, useCacheSearch, allUsers]);
 
 	const fetchUserData = async (sciper: string) => {
 		setError(null);
@@ -87,9 +131,34 @@ export default function AdminPage() {
 		await fetchUserData(sciper);
 	}
 
+	function filterUsers(inputValue: string) {
+		const value = inputValue.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+		if (!value || value.length < 2) {
+			setFilteredUsers([]);
+			return;
+		}
+
+		const searchTerm = value.toLowerCase();
+		const filtered = allUsers.filter(user => {
+			const name = user.name?.toLowerCase() || "";
+			const id = user.id?.toLowerCase() || "";
+			const email = user.email?.toLowerCase() || "";
+			const display = user.display?.toLowerCase() || "";
+			const normalized = user.normalized?.toLowerCase() || "";
+
+			return name.includes(searchTerm) ||
+				id.includes(searchTerm) ||
+				email.includes(searchTerm) ||
+				display.includes(searchTerm) ||
+				normalized.includes(searchTerm);
+		}).slice(0, 10);
+
+		setFilteredUsers(filtered);
+	}
+
 	async function doneTyping(inputValue: string) {
 		const users = await searchUsers(inputValue);
-		setUsers(users);
+		setFilteredUsers(users);
 		setLoading((prev) => ({ ...prev, search: false }));
 	}
 
@@ -164,25 +233,31 @@ export default function AdminPage() {
 							onChange={(e) => {
 								const value = e.target.value;
 								setSearchValue(value);
-								if (value.length >= 3) {
-									clearTimeout(typingTimer);
-									setLoading((prev) => ({
-										...prev,
-										search: true,
-									}));
-									setIsOpen(true);
-									typingTimer = setTimeout(
-										() => doneTyping(value),
-										1000,
-									);
+
+								if (useCacheSearch) {
+									filterUsers(value);
+									setIsOpen(value.length >= 2 && filteredUsers.length > 0);
 								} else {
-									clearTimeout(typingTimer);
-									setLoading((prev) => ({
-										...prev,
-										search: false,
-									}));
-									setUsers([]);
-									setIsOpen(false);
+									if (value.length >= 3) {
+										clearTimeout(typingTimer);
+										setLoading((prev) => ({
+											...prev,
+											search: true,
+										}));
+										setIsOpen(true);
+										typingTimer = setTimeout(
+											() => doneTyping(value),
+											100,
+										);
+									} else {
+										clearTimeout(typingTimer);
+										setLoading((prev) => ({
+											...prev,
+											search: false,
+										}));
+										setFilteredUsers([]);
+										setIsOpen(false);
+									}
 								}
 							}}
 							className="pl-10 pr-10"
@@ -192,7 +267,7 @@ export default function AdminPage() {
 						)}
 					</div>
 
-					{isOpen && users.length > 0 && (
+					{isOpen && filteredUsers.length > 0 && (
 						<div className="max-w-md bg-background">
 							<Command className="bg-background">
 								<CommandList className="max-h-48 max-w-md w-full absolute bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
@@ -200,7 +275,7 @@ export default function AdminPage() {
 										{translations.page("noResults")}
 									</CommandEmpty>
 									<CommandGroup>
-										{users.map((user) => (
+										{filteredUsers.map((user) => (
 											<CommandItem
 												key={user.id}
 												onSelect={async () => {
@@ -209,7 +284,7 @@ export default function AdminPage() {
 													);
 													setIsOpen(false);
 													setSearchValue(
-														user.display,
+														user.name || user.display,
 													);
 												}}
 												className="cursor-pointer"
