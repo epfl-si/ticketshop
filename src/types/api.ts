@@ -5,6 +5,7 @@ export interface ApiUser {
 	firstname?: string;
 	lastname?: string;
 	email: string;
+	normalized?: string;
 }
 
 export interface ApiUnit {
