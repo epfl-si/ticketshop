@@ -1,9 +1,28 @@
 "use server";
 import { ApiUser } from "@/types";
 import { makeApiCall } from "../lib/api";
+import { getCache, setCache } from "../lib/redis";
+import { getUser } from "@/services/auth";
+import { hasPermission } from "@/services/policy";
+import { PERMISSIONS } from "@/constants/permissions";
 
-const searchCache = new Map<string, { data: ApiUser[]; timestamp: number }>();
-const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+export async function getAllUsers(): Promise<{ i: string; e: string; f: string; l: string; d: string; n: string; m: string; }[]> {
+	try {
+		const user = await getUser();
+		if (!user) return [];
+
+		const permission = await hasPermission(PERMISSIONS.FUNDS.LIST) || await hasPermission(PERMISSIONS.TRAVELS.LIST);
+		if (!permission) return [];
+
+		const rawUsers = await getCache("users:all");
+		if (!rawUsers) return [];
+
+		return JSON.parse(rawUsers);
+	} catch (error) {
+		console.error("Error getting users from cache:", error);
+		return [];
+	}
+}
 
 export async function searchUsers(query: string): Promise<ApiUser[]> {
 	const searchTerm = query.toLowerCase().trim();
@@ -12,39 +31,56 @@ export async function searchUsers(query: string): Promise<ApiUser[]> {
 		return [];
 	}
 
-	const now = Date.now();
-	const cached = searchCache.get(searchTerm);
+	try {
+		const data = await makeApiCall<{ persons: ApiUser[] }>("/v1/persons", "api", {
+			query: query,
+			pagesize: "10",
+			pageindex: "0",
+		});
 
-	if (cached && (now - cached.timestamp) < CACHE_DURATION) {
-		return cached.data;
+		const result = data.persons || [];
+
+		return result.map(user => ({
+			...user,
+			name: (user.firstname && user.lastname) ? `${user.firstname} ${user.lastname}` : user.display,
+		}));
+
+	} catch (error) {
+		console.error("Error searching users:", error);
+		return [];
 	}
+}
 
-	const data = await makeApiCall<{ persons: ApiUser[] }>("/v1/persons", "api", {
-		query: query,
-		pagesize: "10",
-		pageindex: "0",
-	});
+export async function reloadUsersCache(): Promise<{ success: boolean; count?: number; error?: string }> {
+	try {
+		const data = await makeApiCall<{ persons: ApiUser[] }>("/v1/persons?isaccredited=1", "api");
+		const users = data.persons || [];
 
-	const result = data.persons || [];
+		const enrichedUsers = users.map(user => {
+			const fullName = (user.firstname && user.lastname) ? `${user.firstname} ${user.lastname}` : user.display;
+			return {
+				i: user.id,
+				e: user.email || "",
+				f: user.firstname || "",
+				l: user.lastname || "",
+				d: user.display || "",
+				n: fullName.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase(),
+				m: fullName,
+			};
+		});
 
-	searchCache.set(searchTerm, {
-		data: result,
-		timestamp: now,
-	});
+		const jsonData = JSON.stringify(enrichedUsers);
+		await setCache("users:all", jsonData, 2592000); // 30 days TTL
 
-	if (searchCache.size > 50) {
-		const cutoff = now - CACHE_DURATION;
-		for (const [key, value] of searchCache.entries()) {
-			if (value.timestamp < cutoff) {
-				searchCache.delete(key);
-			}
-		}
+		return {
+			success: true,
+			count: enrichedUsers.length,
+		};
+
+	} catch (error) {
+		console.error("Error reloading cache:", error);
+		return { success: false, error: "Error reloading cache" };
 	}
-
-	return result.map(user => ({
-		...user,
-		name: (user.firstname && user.lastname) ? `${user.firstname} ${user.lastname}` : user.display,
-	}));
 }
 
 export async function getUserById(userId: string): Promise<ApiUser | null> {
