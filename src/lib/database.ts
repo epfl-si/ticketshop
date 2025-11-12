@@ -6,7 +6,10 @@ import { DbUser } from "@/types/database";
 import { UserData, EnrichedFund, EnrichedTravel } from "@/types/ui";
 import { hasPermission } from "@/services/policy";
 import { PERMISSIONS } from "@/constants/permissions";
-import { auth } from "@/services/auth";
+import { auth, getUser as getUserSession } from "@/services/auth";
+
+import { cookies } from "next/headers";
+import log from "@/services/log";
 
 const prisma = new PrismaClient();
 
@@ -15,12 +18,27 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		throw new Error("Unauthorized to update settings");
 	}
 
-	return await prisma.setting.update({
+	logDatabase({ action: "updateSetting.entry", itemId: settingId, value: shownValue, direction: "inband"})
+
+	const update = await prisma.setting.update({
 		where: { id: settingId },
 		data: {
 			shown: shownValue,
 		},
 	});
+
+	let itemId = "";
+
+	if (update.fundId) {
+		itemId = (await prisma.fund.findUnique({ where: { id: update.fundId } })).resourceId;
+	}
+	else if(update.travelId) {
+		itemId = (await prisma.travel.findUnique({ where: { id: update.travelId } })).resourceId;
+	}
+
+	logDatabase({ action: "updateSetting.result", itemId, value: update.shown, itemType: update.travelId ? "travel" : "fund", fundId: update.fundId, travelId: update.travelId, direction: "outband"})
+
+	return update;
 }
 
 export async function getUser(uniqueId: string): Promise<DbUser | null> {
@@ -241,10 +259,12 @@ export async function getUserFunds(uniqueId: string): Promise<EnrichedFund[]> {
 		if (fundIds.length === 0) return [];
 
 		const fundDetails = await getFundDetails(fundIds);
-		return fundDetails.map(fund => ({
+		const userFounds = fundDetails.map(fund => ({
 			...fund,
 			setting: fundSettings.find((s) => s.fund?.resourceId === fund.id),
 		}));
+		logDatabase({action: "getUserFunds"})
+		return userFounds;
 	} catch (error) {
 		console.error("Error getting user funds:", error);
 		return [];
@@ -276,4 +296,10 @@ export async function createUser(uniqueId: string) {
 			uniqueId,
 		},
 	});
+}
+
+async function logDatabase(param: object): Promise<void> {
+	const cookieStore = await cookies();
+	const requestId = cookieStore.get('requestId')?.value;
+	log.database({ ...param, requestId });
 }
