@@ -73,7 +73,7 @@ export default function Info() {
 						</li>
 						<li className="text-foreground/90 leading-relaxed">
 							{translations.help.rich("helpTechnicalContrib", {
-								a: (chunks) => <a className="text-primary hover:underline" href={String(chunks).toLowerCase() === "GitHub" ? "https:/github.com/epfl-si/ticketshop" : "https:/github.com/epfl-si/ticketshop/issues"}>{chunks}</a>,
+								a: (chunks) => <a className="text-primary hover:underline" href={String(chunks).toLowerCase() === "GitHub" ? "https://github.com/epfl-si/ticketshop" : "https://github.com/epfl-si/ticketshop/issues"}>{chunks}</a>,
 							})}
 						</li>
 					</ul>
