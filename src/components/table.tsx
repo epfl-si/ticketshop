@@ -29,8 +29,6 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	const [sortOrder, setSortOrder] = useState<SortOrder | null>(null);
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 	const [groupStates, setGroupStates] = useState<Record<string, boolean>>({});
-	const [allCheck, setAllCheck] = useState<boolean>(true);
-	const [partialCheck, setPartialCheck] = useState<boolean>(false);
 
 	const translations = {
 		fields: useTranslations("fields"),
@@ -170,10 +168,24 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		})
 		: filteredItems;
 
-	useEffect(() => {
+	function getNbCheck(){
 		const nbChecked: number = sortedItems.filter(items => items.setting?.shown).length;
-		console.log(`${nbChecked}/${sortedItems.length} are checked`);
-		setPartialCheck(nbChecked != sortedItems.length && nbChecked != 0);
+		return nbChecked;
+	}
+	function getAllCheck(){
+		const nbChecked: number = getNbCheck();
+		return nbChecked == sortedItems.length;
+	}
+	function getPartialCheck(){
+		const nbChecked: number = getNbCheck();
+		return nbChecked != sortedItems.length && nbChecked != 0;
+	}
+
+	const [allCheck, setAllCheck] = useState<boolean>(getAllCheck());
+	const [partialCheck, setPartialCheck] = useState<boolean>(getPartialCheck());
+
+	useEffect(() => {
+		setPartialCheck(getPartialCheck());
 	}, [sortedItems])
 
 
