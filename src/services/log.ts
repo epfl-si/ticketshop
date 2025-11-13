@@ -61,7 +61,7 @@ async function soap({
 
 async function database({
 	message, action, endpoint, status, method, requestId, itemId, itemType, value, fundId, travelId, direction
-}: { user: User, action: string, message?: string, endpoint?: string, status?: string, method?: string, direction?: string, requestId? : string, itemId: string, itemType: string, value: boolean, fundId: string, travelId: string }): Promise<void>{
+}: { action: string, message?: string, endpoint?: string, status?: string, method?: string, direction?: string, requestId? : string | undefined, itemId?: string, itemType?: string, value?: boolean, fundId?: string, travelId?: string }): Promise<void>{
 	const datetime = new Date();
 	logs(
 		{

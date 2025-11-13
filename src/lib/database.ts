@@ -27,13 +27,15 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		},
 	});
 
-	let itemId = "";
+	let itemId: string | undefined = "";
 
 	if (update.fundId) {
-		itemId = (await prisma.fund.findUnique({ where: { id: update.fundId } })).resourceId;
+		const item = await prisma.fund.findUnique({ where: { id: update.fundId } });
+		itemId = item?.resourceId;
 	}
-	else if(update.travelId) {
-		itemId = (await prisma.travel.findUnique({ where: { id: update.travelId } })).resourceId;
+	else if (update.travelId) {
+		const item = await prisma.travel.findUnique({ where: { id: update.travelId } })
+		itemId = item?.requestId;
 	}
 
 	logDatabase({ action: "updateSetting.result", itemId, value: update.shown, itemType: update.travelId ? "travel" : "fund", fundId: update.fundId, travelId: update.travelId, direction: "outband"})
@@ -300,6 +302,6 @@ export async function createUser(uniqueId: string) {
 
 async function logDatabase(param: object): Promise<void> {
 	const cookieStore = await cookies();
-	const requestId = cookieStore.get('requestId')?.value;
+	const requestId: string | undefined = cookieStore.get('requestId')?.value;
 	log.database({ ...param, requestId });
 }
