@@ -29,6 +29,8 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	const [sortOrder, setSortOrder] = useState<SortOrder | null>(null);
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 	const [groupStates, setGroupStates] = useState<Record<string, boolean>>({});
+	const [allCheck, setAllCheck] = useState<boolean>(true);
+	const [partialCheck, setPartialCheck] = useState<boolean>(false);
 
 	const translations = {
 		fields: useTranslations("fields"),
@@ -167,6 +169,12 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 			return sortOrder === "asc" ? comparison : -comparison;
 		})
 		: filteredItems;
+
+	useEffect(() => {
+		const nbChecked: number = sortedItems.filter(items => items.setting?.shown).length;
+		console.log(`${nbChecked}/${sortedItems.length} are checked`);
+		setPartialCheck(nbChecked != sortedItems.length && nbChecked != 0);
+	}, [sortedItems])
 
 
 	const renderFundRow = (fund: EnrichedFund & { itemType: "fund" }, grouped = false) => (
@@ -405,6 +413,13 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 								<SortableHeader field="display">
 									{translations.fields("display")}
 								</SortableHeader>
+							</TableHead>
+							<TableHead className="text-right">
+								<Switch
+									checked={allCheck}
+									onCheckedChange={(checked: boolean) => { for (const item of sortedItems) { onToggleChange?.(checked, item.setting?.id || "") }; setAllCheck(checked) }}
+									className={partialCheck ? "data-[state=checked]:bg-yellow-300 data-[state=unchecked]:bg-yellow-300" : "data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"}
+								/>
 							</TableHead>
 						</TableRow>
 					</TableHeader>
