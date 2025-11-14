@@ -85,9 +85,9 @@ export default function Info() {
 												href={
 													String(chunks).replaceAll(" ", "").toLowerCase() === "servicedesk" ?
 														"mailto:1234@epfl.ch"
-													: String(chunks).includes("www.") ?
-														chunks?.toString()
-														: `https://go.epfl.ch/${chunks}`}
+														: String(chunks).includes("www.") ?
+															chunks?.toString()
+															: `https://go.epfl.ch/${chunks}`}
 												className="text-primary hover:text-red-700 font-medium"
 												target="_blank"
 											>
