@@ -474,7 +474,21 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 							<TableHead className="text-right">
 								<Switch
 									checked={allCheck}
-									onCheckedChange={(checked: boolean) => { for (const item of sortedItems) { onToggleChange?.(checked, item.setting?.id || "") }; setAllCheck(checked) }}
+									onCheckedChange={(checked: boolean) => {
+										if (viewMode === "flat") {
+											for (const item of sortedItems) {
+												onToggleChange?.(checked, item.setting?.id || "")
+											};
+										}
+										else {
+											for (const [cf, groupFunds] of Object.entries(groupedByCF)) {
+												for (const cf of groupFunds) {
+													onToggleChange?.(checked, cf.setting?.id || "")
+												}
+											}
+										}
+										setAllCheck(checked);
+									}}
 									className={partialCheck ? "data-[state=checked]:bg-yellow-300 data-[state=unchecked]:bg-yellow-300" : "data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"}
 								/>
 							</TableHead>
