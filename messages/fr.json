@@ -114,26 +114,33 @@
 	"info": {
 		"about": {
 			"title": "À propos",
-			"description": "<strong>Ticketshop</strong> permet aux CFFs de contrôler les autorisations des personnes de l'EPFL qui doivent pourvoir commander des titres de transport sur des fonds de l'EPFL. En d'autres termes, Ticketshop propose une API destinée aux CFFs (appelée ArtifactServer) et permet :",
-			"additionalInfo": "En addition, l'application web permet de gérer la liste des fonds qui sera visible dans l'application (web ou mobile) des CFFs. Les personnes ayant accès à une liste de fonds conséquentes peuvent alors simplifier cette liste lorsqu'elles doivent obtenir un titre de transport depuis le portail des CFFs.",
-			"ul1": "<li>aux CFFs de valider les autorisations (i.e. droit <i>Accred</i> « railticket » d'une personne),</li><li>aux CFFs de récupérer la liste des fonds (et voyages dans certains cas) pour lesquels une personne à le droit <i>Accred</i> « railticket ».</li>"
+			"description": "<strong>Ticketshop EPFL</strong> permet aux CFFs de contrôler les autorisations des collaborateurs de l'EPFL qui doivent commander des titres de transport sur des fonds de l'EPFL.",
+			"cffUsageTitle": "En d'autres termes, Ticketshop EPFL permet aux CFFs de : ",
+			"additionalInfo": "Ticketshop EPFL permet de choisir les fonds sur lesquels il est autorisé d'acheter un billet de train sur la plateforme des CFFs.",
+			"cffUsage": "<li>Valider les autorisations d'achats de billets de train (droit Accred <i>railticket</i>),</li><li>Récupérer la liste des fonds et des demandes de déplacement.</li>"
 		},
 		"help": {
 			"title": "Aide",
 			"availableHelp": "Différentes pages d'aides sont disponibles, à commencer par la <a>KB0012580</a> (gérée par la VPT) et le <a>PDF</a> permettant de lier son compte SwissPass à son compte EPFL.",
-			"accredRequirement": "De manière générale, assurez vous d'avoir le droit <i>Accred</i> « railticket » sur au moins un fond. Sans cela, vous n'aurez pas accès au système.",
+			"accredRequirement": "Assurez vous d'avoir le droit <i>Accred</i> « railticket » sur au moins un fonds. Sans cela, vous n'aurez pas accès au système.",
 			"supportIntro": "Il y a plusieurs possibilités d'obtenir de l'aide, mais avant de déclancher une demande de support, assurez vous d'avoir pris connaissance de la <a>KB0012580</a> :",
 			"helpSwissPass": "Pour les questions liées à des problèmes de SwissPass ou sur le site sbb.ch, contacter la hotline des CFFs ;",
-			"helpAccredRights": "Pour des problèmes d{apostrophe}<i>Accred</i>, de droits d'accès, de fonds, faire un ticket au 1234 ;",
-			"helpTicketshopIssues": "Pour des problèmes d'utilisation du site ticketshop.epfl.ch ou pour des demandes d'évolutions, faire un ticket au 1234 (file SI_CFF) ;",
+			"helpSwissPassBuy": "Pour toute question sur les achats de billet de train sur la plateforme Webshop CFF",
+			"helpMobility": "<a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/mobilite-pendulaire/trains/</a> ou <a>mobilite@epfl.ch</a> (ouvre un ticket au groupe de support dédié à la Mobilité).",
+			"helpAccredRights": "Pour des problèmes d{apostrophe}<i>Accred</i>, de droits d'accès ou de fonds, créer un ticket au 1234 ;",
+			"helpTicketshopIssues": "Pour des problèmes d'utilisation du site ticketshop.epfl.ch (voir <a>KB0014657</a>) ;",
 			"helpTechnicalContrib": "Pour les questions techniques ou pour contribuer à l'application, rendez-vous sur le dépôt <a>GitHub</a>, et si nécessaire, ouvrez une <a>issue</a>."
 		},
 		"faq": {
 			"title": "FAQ",
 			"questions": {
+				"link": {
+					"title": "Comment lier mon compte SwissPass avec mon compte EPFL ?",
+					"description": "Voir guide <a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/voyages-academiques/trains/</a>"
+				},
 				"locked": {
 					"title": "Mon compte CFF est bloqué ? Que faire ?",
-					"description": "L'accès à l'application de commande de railticket en ligne peut être vérouillé après plusieurs échecs successifs. Ce problème n'est pas lié à l'identification Gaspar/Tequila, donc il n'y a pas besoin de changer votre mot de passe Gaspar. Veuillez contacter le <LinkFAQ>Service Desk</LinkFAQ>."
+					"description": "L'accès à l'application de commande de railticket en ligne peut être vérouillé après plusieurs échecs successifs. Ce problème n'est pas lié à l'identification Gaspar/Tequila, donc il n'y a pas besoin de changer votre mot de passe Gaspar. Veuillez contacter le <a>Service Desk</a>."
 				},
 				"right": {
 					"title": "Je suis accréditeur pour l'unité XYZ, mais je ne peux pas donner le droit railticket ?",
@@ -143,13 +150,9 @@
 					"title": "Pourquoi lorsque je cache ou affiche des fonds depuis ticketshop, les changements ne sont pas effectués sur CFF ?",
 					"description": "La synchronisation entre ticketshop et CFF peut demander plusieurs heures. Après ce délais, les changements devraient s'effectuer sur CFF."
 				},
-				"link": {
-					"title": "Comment lier mon compte SwissPass avec mon compte EPFL ?",
-					"description": "Se référer au document PDF présent dans la <LinkFAQ>KB0012580</LinkFAQ>."
-				},
 				"change": {
 					"title": "Comment passer de mon compte personnel à mon compte EPFL sur les applications des CFFs ?",
-					"description": "Identifier l'icone \"usine\" pour le compte business (EPFL) et l'icone \"personne\" pour le compte personnel. Dans l'appplication mobile, c'est au moment du paiement du titre de transport qu'il est possible de changer. Voir la <LinkFAQ>KB0012580</LinkFAQ>."
+					"description": "Identifier l'icone \"usine\" pour le compte business (EPFL) et l'icone \"personne\" pour le compte personnel. Dans l'appplication mobile, c'est au moment du paiement du titre de transport qu'il est possible de changer. Voir la <a>KB0012580</a>."
 				}
 			}
 		},
