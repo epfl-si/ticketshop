@@ -3,15 +3,34 @@ import { auth } from "./services/auth";
 import { hasPermission } from "./services/policy";
 import { PROTECTED_ROUTES } from "./constants/permissions";
 
+import log from "@/services/log";
+
 export default async function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
-	if (pathname === "/") return NextResponse.next();
+	const search = req.nextUrl.search;
+	const endpoint = pathname + search;
 
-	if (!Object.values(PROTECTED_ROUTES).map(route => String(route.PATH)).includes(pathname)) {
-		return NextResponse.rewrite(new URL("/not-found", req.url));
+	let requestId: string = self.crypto.randomUUID();
+	let session: any = {};
+
+	try {
+		session = await auth();
+	}
+	catch {
+		session = {}
 	}
 
-	const session = await auth();
+	log.web({ user: session?.user, ip: req.headers.get('x-forwarded-for'), endpoint, requestId });
+
+	if (pathname === "/") {
+		log.web({ ip: req.headers.get('x-forwarded-for'), endpoint, requestId });
+		return NextResponse.next();
+	}
+
+	if (!Object.values(PROTECTED_ROUTES).map(route => String(route.PATH)).includes(pathname)) {
+		log.web({ ip: req.headers.get('x-forwarded-for'), endpoint, requestId });
+		return NextResponse.rewrite(new URL("/not-found", req.url));
+	}
 
 	if (!session?.user) {
 		const authUrl = new URL("/api/auth", req.url);
@@ -31,9 +50,17 @@ export default async function middleware(req: NextRequest) {
 			}
 		}
 
-		return NextResponse.next();
+		const response: NextResponse = NextResponse.next();
+
+		response.cookies.set('requestId', requestId, {
+			path: '/',
+			maxAge: 60,
+		})
+
+		return response;
 	} catch (error) {
 		console.error("Erreur middleware:", error);
+		log.web({ ip: req.headers.get('x-forwarded-for'), endpoint, requestId, message: `Erreur middleware: ${error}` });
 		return new NextResponse(null, { status: 500 });
 	}
 }

@@ -1,5 +1,8 @@
 "use server";
 
+import { cookies } from "next/headers";
+import log from "@/services/log";
+
 export async function makeApiCall<T = unknown>(endpoint: string, apiType: "api" | "sap", params?: Record<string, string>): Promise<T> {
 	let baseUrl: string;
 	let username: string;
@@ -14,6 +17,9 @@ export async function makeApiCall<T = unknown>(endpoint: string, apiType: "api" 
 		username = process.env.DFS_USERNAME!;
 		password = process.env.DFS_PASSWORD!;
 	}
+
+	const cookieStore = await cookies();
+	const requestId = cookieStore.get('requestId')?.value;
 
 	if (!baseUrl || !username || !password) {
 		throw new Error(`${apiType.toUpperCase()} API credentials not configured`);
@@ -30,6 +36,8 @@ export async function makeApiCall<T = unknown>(endpoint: string, apiType: "api" 
 	headers.set("Authorization", "Basic " + btoa(username + ":" + password));
 
 	const response = await fetch(url.toString(), { method: "GET", headers });
+
+	log.api({ action: "test", method: "GET", url: url.href, message: `API call to ${baseUrl}`, status: response.status, requestId });
 
 	if (!response.ok) throw new Error(`API request failed: ${response.status}`);
 
