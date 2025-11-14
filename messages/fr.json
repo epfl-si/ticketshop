@@ -59,7 +59,9 @@
 		"requestId": "N° de demande",
 		"unit": "Unité",
 		"cf": "CF",
-		"noCF": "Aucun CF"
+		"noCF": "Aucun CF",
+		"toggleAllOpen": "Tout ouvrir",
+		"toggleAllClose": "Tout fermer"
 	},
 	"pages": {
 		"home": {
