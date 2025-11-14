@@ -29,6 +29,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 	const [sortOrder, setSortOrder] = useState<SortOrder | null>(null);
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 	const [groupStates, setGroupStates] = useState<Record<string, boolean>>({});
+	const [allGroupOpen, setAllGroupOpen] = useState<boolean>(false);
 
 	const translations = {
 		fields: useTranslations("fields"),
@@ -86,6 +87,32 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 			}
 			return newSet;
 		});
+		const allGroupsActualOpen = Array.from(expandedGroups);
+		const allGroups = Object.entries(groupedByCF).map(cf => cf[0]);
+		console.log("yooooooooooo")
+		console.log(allGroups)
+		console.log(allGroupsActualOpen)
+		console.log("yooooooooooo")
+		console.log(allGroups.length)
+		console.log(allGroupsActualOpen.length)
+		console.log(allGroups.length + 1)
+
+		if (allGroupsActualOpen.length - 1 !== 0) {
+			console.log("setAllGroupOpen(true);")
+			setAllGroupOpen(true);
+		}
+		// if (allGroupsActualOpen.length - 1 !== 0) {
+		// 	console.log("setAllGroupOpen(true);")
+		// 	setAllGroupOpen(true);
+		// }
+	};
+
+	const toggleAllGroup = () => {
+		let groupToToggle = allGroupOpen ? expandedGroups : Object.entries(groupedByCF).map(cf => cf[0]).filter( (el) => { return !Array.from(expandedGroups).includes( el ); } );
+		for (const cf of groupToToggle) {
+			toggleGroup(cf)
+		}
+		setAllGroupOpen(!allGroupOpen);
 	};
 
 	const toggleAllInGroup = (cf: string, checked: boolean) => {
@@ -404,6 +431,24 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 									<SortableHeader field="type">
 										{translations.fields("type")}
 									</SortableHeader>
+								</TableHead>
+							)}
+							{viewMode !== "flat" && (
+								<TableHead>
+									<Button
+										variant="ghost"
+										size="sm"
+										onClick={() => toggleAllGroup()}
+										className="flex cursor-pointer items-center gap-2 p-0 h-auto hover:bg-transparent"
+									>
+										<ChevronRight
+											className={cn(
+												"h-4 w-4 transition-transform",
+												allGroupOpen && "rotate-90",
+											)}
+										/>
+										<span className="font-semibold">{translations.fields(allGroupOpen ? "toggleAllClose" : "toggleAllOpen")}</span>
+									</Button>
 								</TableHead>
 							)}
 							<TableHead>
