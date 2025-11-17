@@ -7,6 +7,7 @@
 		"home": "Accueil",
 		"admin": "Admin",
 		"settings": "Paramètres",
+		"logs": "Logs",
 		"profileAlt": "Photo de profil",
 		"signin": "Connexion",
 		"signout": "Déconnexion",
@@ -84,6 +85,30 @@
 			"noDataDescription": "Cet utilisateur n'a aucun fonds ou voyage à afficher.",
 			"loadingError": "Erreur de chargement",
 			"errorMessage": "Impossible de charger les données de cet utilisateur. Vérifiez votre connexion et réessayez."
+		},
+		"logs": {
+			"title": "Journaux d'événements",
+			"subtitle": "Consulter les événements système et les activités utilisateurs",
+			"filterUserId": "ID utilisateur",
+			"filterUserIdPlaceholder": "Filtrer par ID utilisateur...",
+			"filterEventType": "Type d'événement",
+			"filterEventTypePlaceholder": "Sélectionner un type d'événement",
+			"applyFilter": "Appliquer le filtre",
+			"timestamp": "Horodatage",
+			"event": "Événement",
+			"user": "Utilisateur",
+			"details": "Détails",
+			"system": "Système",
+			"noLogs": "Aucun journal trouvé",
+			"noLogsDescription": "Il n'y a aucun journal correspondant à vos filtres",
+			"showingLogs": "Affichage de {count} journaux",
+			"eventTypes": {
+				"all": "Tous les événements",
+				"fundDisabled": "Fonds désactivé",
+				"fundEnabled": "Fonds activé",
+				"travelDisabled": "Voyage désactivé",
+				"travelEnabled": "Voyage activé"
+			}
 		}
 	},
 	"errors": {

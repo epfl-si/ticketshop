@@ -7,6 +7,7 @@
 		"home": "Home",
 		"admin": "Admin",
 		"settings": "Settings",
+		"logs": "Logs",
 		"profileAlt": "Profile picture",
 		"signin": "Sign In",
 		"signout": "Sign Out",
@@ -84,6 +85,30 @@
 			"noDataDescription": "This user has no funds or travels to display.",
 			"loadingError": "Loading error",
 			"errorMessage": "Unable to load this user's data. Check your connection and try again."
+		},
+		"logs": {
+			"title": "Event Logs",
+			"subtitle": "View system events and user activities",
+			"filterUserId": "User ID",
+			"filterUserIdPlaceholder": "Filter by user ID...",
+			"filterEventType": "Event Type",
+			"filterEventTypePlaceholder": "Select event type",
+			"applyFilter": "Apply Filter",
+			"timestamp": "Timestamp",
+			"event": "Event",
+			"user": "User",
+			"details": "Details",
+			"system": "System",
+			"noLogs": "No logs found",
+			"noLogsDescription": "There are no logs matching your filters",
+			"showingLogs": "Showing {count} logs",
+			"eventTypes": {
+				"all": "All Events",
+				"fundDisabled": "Fund Disabled",
+				"fundEnabled": "Fund Enabled",
+				"travelDisabled": "Travel Disabled",
+				"travelEnabled": "Travel Enabled"
+			}
 		}
 	},
 	"errors": {
