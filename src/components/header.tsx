@@ -4,7 +4,7 @@ import { User } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserRoundCog, Settings } from "lucide-react";
+import { UserRoundCog, Settings, FileText } from "lucide-react";
 import { LanguageSelector } from "./language-selector";
 import { PERMISSIONS } from "@/constants/permissions";
 import { cn } from "@/lib/utils";
@@ -57,6 +57,18 @@ export const Header: React.FC<{ user: User | undefined }> = ({ user }) => {
 							<UserRoundCog className="h-4 w-4" />
 							<span className="hidden sm:inline font-semibold">
 								{translations.navigation("admin")}
+							</span>
+						</Link>
+					)}
+
+					{user && user?.permissions.includes(PERMISSIONS.LOGS.READ) && (
+						<Link
+							href="/logs"
+							className={cn("flex items-center gap-2 px-3 py-2 rounded-md transition-colors", pathname === "/logs" ? "text-primary!" : "text-muted-foreground! hover:text-foreground!")}
+						>
+							<FileText className="h-4 w-4" />
+							<span className="hidden sm:inline font-semibold">
+								{translations.navigation("logs")}
 							</span>
 						</Link>
 					)}
