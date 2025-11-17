@@ -104,3 +104,18 @@ export async function getUserById(userId: string): Promise<ApiUser | null> {
 		return null;
 	}
 }
+
+export async function getUsersByIds(userIds: string[]): Promise<Record<string, ApiUser>> {
+	const uniqueIds = [...new Set(userIds.filter(Boolean))];
+	const result: Record<string, ApiUser> = {};
+
+	const promises = uniqueIds.map(async (userId) => {
+		const user = await getUserById(userId);
+		if (user) {
+			result[userId] = user;
+		}
+	});
+
+	await Promise.all(promises);
+	return result;
+}
