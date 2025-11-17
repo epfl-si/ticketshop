@@ -25,9 +25,34 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		data: {
 			shown: shownValue,
 		},
+		include: {
+			fund: true,
+			travel: true,
+		},
 	});
 
 	logDatabase({ action: "updateSetting.result", itemId: settingId, value: update.shown, itemType: update.travelId ? "travel" : "fund" });
+
+	const user = await auth();
+	const itemType = update.travelId ? "travel" : "fund";
+	const event = shownValue
+		? (itemType === "fund" ? "fund.enabled" : "travel.enabled")
+		: (itemType === "fund" ? "fund.disabled" : "travel.disabled");
+
+	const itemName = update.fund?.resourceId || update.travel?.name || "Unknown";
+
+	await log.event({
+		event,
+		userId: user?.user?.userId,
+		details: `${itemType} "${itemName}" ${shownValue ? "enabled" : "disabled"}`,
+		metadata: {
+			settingId,
+			itemType,
+			itemId: update.fundId || update.travelId,
+			itemName,
+			username: user?.user?.username,
+		},
+	});
 
 	return update;
 }
