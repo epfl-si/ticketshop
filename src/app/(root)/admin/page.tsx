@@ -270,7 +270,7 @@ export default function AdminPage() {
 					{isOpen && filteredUsers.length > 0 && (
 						<div className="max-w-md bg-background">
 							<Command className="bg-background">
-								<CommandList className="max-h-48 max-w-md w-full absolute bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
+								<CommandList className="max-h-48 max-w-md z-50 w-full absolute bg-background border border-t-0 mt-0.5 border-border rounded-md shadow-md">
 									<CommandEmpty>
 										{translations.page("noResults")}
 									</CommandEmpty>
