@@ -1,70 +1,73 @@
-import { User } from "next-auth";
+import { PrismaClient } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+import type { WebLogParams, ApiLogParams, SoapLogParams, DatabaseLogParams, EventLogParams, BaseLogParams } from "@/types/log";
 
-async function web({ user, endpoint, ip, requestId, message, method }: { user?: User, endpoint?: string, ip?: string | null, requestId?: string, message?: string, method?: string }): Promise<void> {
-	logs({
-		type: "web",
-		user: user ?
-			{ id: user?.userId, name: user?.name, groups: user?.groups } : undefined,
-		ip,
-		endpoint,
-		requestId,
-		message,
-		method,
-	});
-}
+const prisma = new PrismaClient();
 
-async function api({ message, action, url, status, method, requestId }: { action: string, message: string, url: string, status?: number, method: string, ip?: string, requestId?: string }): Promise<void> {
-	logs({
-		type: "api",
-		message,
-		action,
-		url,
-		status,
-		method,
-		requestId,
-	});
-}
-
-async function soap({ message, action, endpoint, status, method, requestId, direction, soap }: { action: string, message?: string, endpoint: string, status?: number, method: string, ip?: string | null, direction?: string, requestId?: string, soap?: string }): Promise<void> {
-	logs({
-		type: "soap",
-		message,
-		action,
-		endpoint,
-		status,
-		method,
-		direction,
-		soap,
-		requestId,
-	});
-}
-
-async function database({ message, action, endpoint, status, method, requestId, itemId, itemType, value, fundId, travelId, direction }: { action: string, message?: string, endpoint?: string, status?: string, method?: string, direction?: string, requestId?: string | undefined, itemId?: string, itemType?: string, value?: boolean, fundId?: string, travelId?: string }): Promise<void> {
-	logs({
-		type: "database",
-		message,
-		action,
-		endpoint,
-		status,
-		method,
-		itemId,
-		itemType,
-		requestId,
-		value,
-		fundId,
-		travelId,
-		direction,
-	});
-}
-
-function logs(params: object) {
-	const paramWithoutUndefined = Object.fromEntries(
-		Object.entries(params).filter(([, value]) => value !== null),
+async function logToConsole(params: Record<string, unknown>): Promise<void> {
+	const filtered = Object.fromEntries(
+		Object.entries(params).filter(([, value]) => value !== null && value !== undefined),
 	);
 
-	console.info(JSON.stringify(paramWithoutUndefined));
+	if (filtered.user && typeof filtered.user === "object") {
+		const user = filtered.user as Record<string, unknown>;
+		filtered.user = {
+			name: user.name,
+			groups: user.groups,
+			userId: user.userId,
+		};
+	}
+
+	console.info(JSON.stringify(filtered));
 }
 
-const log = { web, api, soap, database };
+async function persistToDatabase(params: EventLogParams): Promise<void> {
+	try {
+		const userIdValue = params.userId || params.user?.userId;
+		let dbUserId: string | null = null;
 
-export default log;
+		if (userIdValue) {
+			const dbUser = await prisma.user.findUnique({
+				where: { uniqueId: userIdValue },
+				select: { id: true },
+			});
+			dbUserId = dbUser?.id || null;
+		}
+
+		await prisma.log.create({
+			data: {
+				event: params.event,
+				userId: dbUserId,
+				details: params.details || params.message || null,
+				metadata: (params.metadata as Prisma.InputJsonValue) ?? null,
+			},
+		});
+	} catch (error) {
+		console.error("Failed to persist event to database:", error);
+	}
+}
+
+async function log(params: BaseLogParams & Record<string, unknown>): Promise<void> {
+	await logToConsole(params);
+
+	if (params.persist && params.type === "event") {
+		await persistToDatabase(params as unknown as EventLogParams);
+	}
+}
+
+const web = (params: WebLogParams) => log({ type: "web", ...params });
+const api = (params: ApiLogParams) => log({ type: "api", ...params });
+const soap = (params: SoapLogParams) => log({ type: "soap", ...params });
+const database = (params: DatabaseLogParams) => log({ type: "database", ...params });
+
+const event = (params: EventLogParams) =>
+	log({
+		type: "event",
+		...params,
+		persist: true,
+		username: params.user?.username,
+	});
+
+const logger = { web, api, soap, database, event };
+
+export default logger;
