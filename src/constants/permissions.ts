@@ -11,6 +11,9 @@ export const PERMISSIONS = {
 		UPDATE: "travels:update",
 		ALL: "travels:all",
 	},
+	LOGS: {
+		READ: "logs:read",
+	},
 };
 
 export const PROTECTED_ROUTES = {
@@ -23,5 +26,10 @@ export const PROTECTED_ROUTES = {
 		PATH: "/settings",
 		PERMISSIONS: [PERMISSIONS.FUNDS.LIST, PERMISSIONS.TRAVELS.LIST],
 		REWRITE: "/denied",
+	},
+	LOGS: {
+		PATH: "/logs",
+		PERMISSIONS: [PERMISSIONS.LOGS.READ],
+		REWRITE: "/not-found",
 	},
 } as const;
