@@ -6,7 +6,7 @@ import { DbUser } from "@/types/database";
 import { UserData, EnrichedFund, EnrichedTravel } from "@/types/ui";
 import { hasPermission } from "@/services/policy";
 import { PERMISSIONS } from "@/constants/permissions";
-import { auth, getUser as getUserSession } from "@/services/auth";
+import { auth } from "@/services/auth";
 
 import { cookies } from "next/headers";
 import log from "@/services/log";
@@ -18,7 +18,7 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		throw new Error("Unauthorized to update settings");
 	}
 
-	logDatabase({ action: "updateSetting.entry", itemId: settingId, value: shownValue, direction: "inband"})
+	logDatabase({ action: "updateSetting.entry", itemId: settingId, value: shownValue });
 
 	const update = await prisma.setting.update({
 		where: { id: settingId },
@@ -27,18 +27,7 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		},
 	});
 
-	let itemId: string | undefined = "";
-
-	if (update.fundId) {
-		const item = await prisma.fund.findUnique({ where: { id: update.fundId } });
-		itemId = item?.resourceId;
-	}
-	else if (update.travelId) {
-		const item = await prisma.travel.findUnique({ where: { id: update.travelId } })
-		itemId = item?.requestId;
-	}
-
-	logDatabase({ action: "updateSetting.result", itemId, value: update.shown, itemType: update.travelId ? "travel" : "fund", fundId: update.fundId, travelId: update.travelId, direction: "outband"})
+	logDatabase({ action: "updateSetting.result", itemId: settingId, value: update.shown, itemType: update.travelId ? "travel" : "fund" });
 
 	return update;
 }
@@ -61,12 +50,15 @@ export async function getUser(uniqueId: string): Promise<DbUser | null> {
 }
 
 export async function syncUserData(uniqueId: string): Promise<{ message: string }> {
+	logDatabase({ action: "syncUserData.entry", uniqueId });
+
 	let dbUser = await prisma.user.findUnique({
 		where: { uniqueId },
 		include: { travels: true, settings: true },
 	});
 
 	if (!dbUser) {
+		logDatabase({ action: "syncUserData.createUser", uniqueId });
 		dbUser = await prisma.user.create({
 			data: {
 				uniqueId,
@@ -136,9 +128,11 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 			await prisma.setting.deleteMany({
 				where: { userId: dbUser.id, fundId: { not: null } },
 			});
+			logDatabase({ action: "syncUserData.noFunds", uniqueId });
 		}
 	} catch (error) {
 		console.error("Error syncing funds:", error);
+		logDatabase({ action: "syncUserData.fundSyncError", uniqueId, error: error instanceof Error ? error.message : "unknown error" });
 	}
 
 	try {
@@ -184,28 +178,37 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 		}
 	} catch (error) {
 		console.error("Error syncing travels:", error);
+		logDatabase({ action: "syncUserData.travelSyncError", uniqueId, error: error instanceof Error ? error.message : "unknown error" });
 	}
 
+	logDatabase({ action: "syncUserData.success", uniqueId });
 	return { message: `User ${uniqueId} data synchronized` };
 }
 
 export async function getUserData(uniqueId: string): Promise<UserData> {
+	logDatabase({ action: "getUserData.entry", uniqueId });
+
 	try {
 		if (!(await hasPermission(PERMISSIONS.FUNDS.LIST) && await hasPermission(PERMISSIONS.TRAVELS.LIST))) {
+			logDatabase({ action: "getUserData.unauthorized", uniqueId, reason: "missing permissions" });
 			throw new Error("Unauthorized to read user data");
 		}
 
 		if (!(await hasPermission(PERMISSIONS.FUNDS.ALL) && await hasPermission(PERMISSIONS.TRAVELS.ALL))) {
 			const session = await auth();
 			if (session?.user?.userId !== uniqueId) {
+				logDatabase({ action: "getUserData.unauthorized", uniqueId, reason: "accessing other user data" });
 				throw new Error("Unauthorized to read other users' data");
 			}
 		}
 
+		logDatabase({ action: "getUserData.syncStart", uniqueId });
 		await syncUserData(uniqueId);
+		logDatabase({ action: "getUserData.syncComplete", uniqueId });
 
 		const dbUser = await getUser(uniqueId);
 		if (!dbUser) {
+			logDatabase({ action: "getUserData.userNotFound", uniqueId });
 			return {
 				user: null,
 				funds: [],
@@ -219,6 +222,7 @@ export async function getUserData(uniqueId: string): Promise<UserData> {
 		let enrichedFunds: EnrichedFund[] = [];
 
 		if (fundIds.length > 0) {
+			logDatabase({ action: "getUserData.fetchFunds", uniqueId, count: fundIds.length });
 			const fundDetails = await getFundDetails(fundIds);
 			enrichedFunds = fundDetails.map(fund => ({
 				...fund,
@@ -226,6 +230,7 @@ export async function getUserData(uniqueId: string): Promise<UserData> {
 			}));
 		}
 
+		logDatabase({ action: "getUserData.fetchTravels", uniqueId });
 		const travelDetails = await getUserTravels(uniqueId);
 		const enrichedTravels: EnrichedTravel[] = travelDetails.map(travel => ({
 			...travel,
@@ -235,6 +240,8 @@ export async function getUserData(uniqueId: string): Promise<UserData> {
 			),
 		}));
 
+		logDatabase({ action: "getUserData.success", uniqueId, fundsCount: enrichedFunds.length, travelsCount: enrichedTravels.length });
+
 		return {
 			user: dbUser,
 			funds: enrichedFunds,
@@ -242,6 +249,7 @@ export async function getUserData(uniqueId: string): Promise<UserData> {
 		};
 	} catch (error) {
 		console.error("Error getting user data:", error);
+		logDatabase({ action: "getUserData.error", uniqueId, error: error instanceof Error ? error.message : "unknown error" });
 		return {
 			user: null,
 			funds: [],
@@ -265,7 +273,7 @@ export async function getUserFunds(uniqueId: string): Promise<EnrichedFund[]> {
 			...fund,
 			setting: fundSettings.find((s) => s.fund?.resourceId === fund.id),
 		}));
-		logDatabase({action: "getUserFunds"})
+		logDatabase({ action: "getUserFunds" });
 		return userFounds;
 	} catch (error) {
 		console.error("Error getting user funds:", error);
@@ -300,8 +308,8 @@ export async function createUser(uniqueId: string) {
 	});
 }
 
-async function logDatabase(param: object): Promise<void> {
+async function logDatabase(param: { action: string } & Record<string, unknown>): Promise<void> {
 	const cookieStore = await cookies();
-	const requestId: string | undefined = cookieStore.get('requestId')?.value;
+	const requestId: string | undefined = cookieStore.get("requestId")?.value;
 	log.database({ ...param, requestId });
 }
