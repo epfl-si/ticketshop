@@ -22,6 +22,7 @@ model User {
 
   travels  Travel[]
   settings Setting[]
+  logs     Log[]
 
   @@index([uniqueId])
   @@map("users")
@@ -69,4 +70,20 @@ model Setting {
   @@unique([userId, fundId])
   @@index([userId])
   @@map("settings")
+}
+
+model Log {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  event     String
+  userId    String?  @db.Uuid
+  details   String?
+  metadata  Json?
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([event])
+  @@map("logs")
 }
