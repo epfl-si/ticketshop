@@ -19,7 +19,7 @@ export async function makeApiCall<T = unknown>(endpoint: string, apiType: "api" 
 	}
 
 	const cookieStore = await cookies();
-	const requestId = cookieStore.get('requestId')?.value;
+	const requestId = cookieStore.get("requestId")?.value;
 
 	if (!baseUrl || !username || !password) {
 		throw new Error(`${apiType.toUpperCase()} API credentials not configured`);
