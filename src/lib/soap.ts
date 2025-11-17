@@ -1,31 +1,35 @@
-import xpath from "xpath";
-import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser'
-
+import { XMLParser } from "fast-xml-parser";
 import { ArtifactRequest, ArtifactIDResponse, ArtifactResponse, SoapError } from "@/types/artifact";
 
-function parseParsedXML(data:any) {
+type NestedRecord = {
+	[key: string]: NestedRecord | unknown;
+};
+
+function parseParsedXML(data: Record<string, unknown>): Record<string, unknown> {
 	data = Object.keys(data)
-		.reduce((obj: any, key: string) => {
-			let value = data[key]
+		.reduce((obj: Record<string, unknown>, key: string) => {
+			let value = data[key];
 			if (data[key] instanceof Object) {
-				value = parseParsedXML(data[key])
+				value = parseParsedXML(data[key] as Record<string, unknown>);
 			}
 			obj[key.replace("SOAP-ENV:", "").replace("ns3:", "").toLowerCase()] = value;
 			return obj;
-		}, {})
+		}, {});
 	return data;
 }
 
 export function parseArtifactRequest(xmlData: string): ArtifactRequest {
 	const parser = new XMLParser();
-	let xmlDoc = parseParsedXML(parser.parse(xmlData));
+	const xmlDoc = parseParsedXML(parser.parse(xmlData)) as NestedRecord;
 
-	const email = xmlDoc?.envelope?.body?.getartifact?.artifactid?.email;
-	const artifactID = String(xmlDoc?.envelope?.body?.getartifact?.artifactid?.id);
+	const envelope = xmlDoc?.envelope as NestedRecord;
+	const body = envelope?.body as NestedRecord;
+	const getartifact = body?.getartifact as NestedRecord;
+	const artifactid = getartifact?.artifactid as NestedRecord;
 
 	return {
-		email: email || undefined,
-		artifactID: artifactID || undefined,
+		email: (artifactid?.email as string) || undefined,
+		artifactID: String(artifactid?.id) || undefined,
 	};
 }
 
