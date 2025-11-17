@@ -85,34 +85,25 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 			} else {
 				newSet.add(cf);
 			}
+
+			const totalGroups = Object.keys(groupedByCF).length;
+			const newExpandedCount = newSet.size;
+			setAllGroupOpen(newExpandedCount === totalGroups);
+
 			return newSet;
 		});
-		const allGroupsActualOpen = Array.from(expandedGroups);
-		const allGroups = Object.entries(groupedByCF).map(cf => cf[0]);
-		console.log("yooooooooooo")
-		console.log(allGroups)
-		console.log(allGroupsActualOpen)
-		console.log("yooooooooooo")
-		console.log(allGroups.length)
-		console.log(allGroupsActualOpen.length)
-		console.log(allGroups.length + 1)
-
-		if (allGroupsActualOpen.length - 1 !== 0) {
-			console.log("setAllGroupOpen(true);")
-			setAllGroupOpen(true);
-		}
-		// if (allGroupsActualOpen.length - 1 !== 0) {
-		// 	console.log("setAllGroupOpen(true);")
-		// 	setAllGroupOpen(true);
-		// }
 	};
 
 	const toggleAllGroup = () => {
-		let groupToToggle = allGroupOpen ? expandedGroups : Object.entries(groupedByCF).map(cf => cf[0]).filter( (el) => { return !Array.from(expandedGroups).includes( el ); } );
-		for (const cf of groupToToggle) {
-			toggleGroup(cf)
+		const allCFs = Object.keys(groupedByCF);
+
+		if (allGroupOpen) {
+			setExpandedGroups(new Set());
+			setAllGroupOpen(false);
+		} else {
+			setExpandedGroups(new Set(allCFs));
+			setAllGroupOpen(true);
 		}
-		setAllGroupOpen(!allGroupOpen);
 	};
 
 	const toggleAllInGroup = (cf: string, checked: boolean) => {
@@ -195,17 +186,17 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		})
 		: filteredItems;
 
-	function getNbCheck(){
+	function getNbCheck() {
 		const nbChecked: number = sortedItems.filter(items => items.setting?.shown).length;
 		return nbChecked;
 	}
-	function getAllCheck(){
+	function getAllCheck() {
 		const nbChecked: number = getNbCheck();
-		return nbChecked == sortedItems.length;
+		return nbChecked === sortedItems.length;
 	}
-	function getPartialCheck(){
+	function getPartialCheck() {
 		const nbChecked: number = getNbCheck();
-		return nbChecked != sortedItems.length && nbChecked != 0;
+		return nbChecked !== sortedItems.length && nbChecked !== 0;
 	}
 
 	const [allCheck, setAllCheck] = useState<boolean>(getAllCheck());
@@ -213,7 +204,7 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 
 	useEffect(() => {
 		setPartialCheck(getPartialCheck());
-	}, [sortedItems])
+	}, [sortedItems]);
 
 
 	const renderFundRow = (fund: EnrichedFund & { itemType: "fund" }, grouped = false) => (
@@ -257,6 +248,8 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 					onCheckedChange={(checked) => onToggleChange?.(checked, fund.setting?.id || "")}
 					className="data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"
 				/>
+			</TableCell>
+			<TableCell>
 			</TableCell>
 		</TableRow>
 	);
@@ -421,69 +414,68 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 						{translations.entities("travels")} ({travels.length})
 					</Button> */}
 				</div>
+				{viewMode === "grouped" && (
+					<div className="flex border-l pl-4">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => toggleAllGroup()}
+							className="flex cursor-pointer gap-1 items-center shadow-none"
+						>
+							<ChevronRight
+								className={cn(
+									"h-4 w-4 transition-transform",
+									allGroupOpen && "rotate-90",
+								)}
+							/>
+							{translations.fields(allGroupOpen ? "toggleAllClose" : "toggleAllOpen")}
+						</Button>
+					</div>
+				)}
 			</div>
 			<div className="rounded-lg border">
 				<Table>
 					<TableHeader>
 						<TableRow>
 							{viewMode === "flat" && (
-								<TableHead className="w-32">
+								<TableHead className="w-[120px]">
 									<SortableHeader field="type">
 										{translations.fields("type")}
 									</SortableHeader>
 								</TableHead>
 							)}
-							{viewMode !== "flat" && (
-								<TableHead>
-									<Button
-										variant="ghost"
-										size="sm"
-										onClick={() => toggleAllGroup()}
-										className="flex cursor-pointer items-center gap-2 p-0 h-auto hover:bg-transparent"
-									>
-										<ChevronRight
-											className={cn(
-												"h-4 w-4 transition-transform",
-												allGroupOpen && "rotate-90",
-											)}
-										/>
-										<span className="font-semibold">{translations.fields(allGroupOpen ? "toggleAllClose" : "toggleAllOpen")}</span>
-									</Button>
-								</TableHead>
-							)}
-							<TableHead>
+							<TableHead className="w-[180px]">
 								<SortableHeader field="id">
 									{translations.fields("id")}
 								</SortableHeader>
 							</TableHead>
-							<TableHead>
+							<TableHead className="w-[400px]">
 								<SortableHeader field="name">
 									{translations.fields("name")}
 								</SortableHeader>
 							</TableHead>
-							<TableHead>
+							<TableHead className="w-[460px]">
 								<SortableHeader field="details">
 									{translations.fields("details")}
 								</SortableHeader>
 							</TableHead>
-							<TableHead className="flex justify-center">
+							<TableHead className="w-[100px] text-center">
 								<SortableHeader field="display">
 									{translations.fields("display")}
 								</SortableHeader>
 							</TableHead>
-							<TableHead className="text-right">
+							<TableHead className="w-20 text-center">
 								<Switch
 									checked={allCheck}
 									onCheckedChange={(checked: boolean) => {
 										if (viewMode === "flat") {
 											for (const item of sortedItems) {
-												onToggleChange?.(checked, item.setting?.id || "")
-											};
-										}
-										else {
-											for (const [cf, groupFunds] of Object.entries(groupedByCF)) {
-												for (const cf of groupFunds) {
-													onToggleChange?.(checked, cf.setting?.id || "")
+												onToggleChange?.(checked, item.setting?.id || "");
+											}
+										} else {
+											for (const groupFunds of Object.values(groupedByCF)) {
+												for (const fund of groupFunds) {
+													onToggleChange?.(checked, fund.setting?.id || "");
 												}
 											}
 										}
