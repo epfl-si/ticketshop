@@ -457,9 +457,6 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 								</SortableHeader>
 							</TableHead>
 							<TableHead className="w-20 text-center">
-								{allCheck ? <p>✓</p> : <p>✗</p>}
-								<p>({nbChecked})</p>
-								<p>({sortedItems.length})</p>
 								<Switch
 									checked={allCheck}
 									onCheckedChange={(checked: boolean) => {
