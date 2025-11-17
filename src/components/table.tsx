@@ -186,25 +186,17 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 		})
 		: filteredItems;
 
-	function getNbCheck() {
-		const nbChecked: number = sortedItems.filter(items => items.setting?.shown).length;
-		return nbChecked;
-	}
-	function getAllCheck() {
-		const nbChecked: number = getNbCheck();
-		return nbChecked === sortedItems.length;
-	}
-	function getPartialCheck() {
-		const nbChecked: number = getNbCheck();
-		return nbChecked !== sortedItems.length && nbChecked !== 0;
-	}
-
-	const [allCheck, setAllCheck] = useState<boolean>(getAllCheck());
-	const [partialCheck, setPartialCheck] = useState<boolean>(getPartialCheck());
-
-	useEffect(() => {
-		setPartialCheck(getPartialCheck());
+	const nbChecked = useMemo(() => {
+		return sortedItems.filter(items => items.setting?.shown).length;
 	}, [sortedItems]);
+
+	const allCheck = useMemo(() => {
+		return nbChecked === sortedItems.length && sortedItems.length > 0;
+	}, [nbChecked, sortedItems.length]);
+
+	const partialCheck = useMemo(() => {
+		return nbChecked !== sortedItems.length && nbChecked !== 0;
+	}, [nbChecked, sortedItems.length]);
 
 
 	const renderFundRow = (fund: EnrichedFund & { itemType: "fund" }, grouped = false) => (
@@ -465,6 +457,9 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 								</SortableHeader>
 							</TableHead>
 							<TableHead className="w-20 text-center">
+								{allCheck ? <p>✓</p> : <p>✗</p>}
+								<p>({nbChecked})</p>
+								<p>({sortedItems.length})</p>
 								<Switch
 									checked={allCheck}
 									onCheckedChange={(checked: boolean) => {
@@ -479,7 +474,6 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 												}
 											}
 										}
-										setAllCheck(checked);
 									}}
 									className={partialCheck ? "data-[state=checked]:bg-yellow-300 data-[state=unchecked]:bg-yellow-300" : "data-[state=checked]:bg-green-400 data-[state=unchecked]:bg-red-400"}
 								/>
