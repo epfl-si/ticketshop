@@ -43,6 +43,7 @@ export interface SoapLogParams extends Omit<BaseLogParams, "type"> {
 	method: string;
 	direction?: string;
 	soap?: string;
+	ip?: string;
 }
 
 export interface DatabaseLogParams extends Omit<BaseLogParams, "type"> {
