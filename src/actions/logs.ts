@@ -1,9 +1,7 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
 import type { GetLogsParams } from "@/types/log";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function getLogs(params: GetLogsParams = {}) {
 	const { limit = 100, offset = 0, event: eventFilter, userId } = params;

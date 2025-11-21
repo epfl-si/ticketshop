@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import type { WebLogParams, ApiLogParams, SoapLogParams, DatabaseLogParams, EventLogParams, BaseLogParams } from "@/types/log";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 async function logToConsole(params: Record<string, unknown>): Promise<void> {
 	const filtered = Object.fromEntries(

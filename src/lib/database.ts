@@ -1,5 +1,4 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
 import { getUserFundAuthorizations, getFundDetails } from "../services/funds";
 import { getUserTravels } from "../services/travels";
 import { DbUser } from "@/types/database";
@@ -10,8 +9,8 @@ import { auth } from "@/services/auth";
 
 import { cookies } from "next/headers";
 import log from "@/services/log";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
+import { Setting, Travel } from "@prisma/client";
 
 export async function updateSetting(shownValue: boolean, settingId: string) {
 	if (!(await hasPermission(PERMISSIONS.FUNDS.UPDATE) && await hasPermission(PERMISSIONS.TRAVELS.UPDATE))) {
@@ -96,7 +95,7 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 		const fundAuthorizations = await getUserFundAuthorizations(uniqueId);
 
 		if (fundAuthorizations.length > 0) {
-			const currentSettings = await prisma.setting.findMany({
+			const currentSettings: Setting[] = await prisma.setting.findMany({
 				where: { userId: dbUser.id, fundId: { not: null } },
 				include: { fund: true },
 			});
@@ -164,7 +163,7 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 		const travels = await getUserTravels(uniqueId);
 
 		if (travels.length > 0) {
-			const currentTravels = await prisma.travel.findMany({
+			const currentTravels: Travel[] = await prisma.travel.findMany({
 				where: { userId: dbUser.id },
 			});
 
