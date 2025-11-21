@@ -1,13 +1,12 @@
 import { parseArtifactRequest, generateArtifactIDResponse, generateArtifactResponse, generateSoapFault, createXmlResponse } from "@/lib/soap";
 import { processArtifactIDRequest, processArtifactRequest } from "@/services/artifact";
 import { ArtifactIDResponse, ArtifactResponse } from "@/types/artifact";
-import { v4 as uuidv4 } from "uuid";
 
 import log from "@/services/log";
 import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
-	const requestId = uuidv4();
+	const requestId = crypto.randomUUID();
 	try {
 		const xmlData = await req.text();
 		const request = parseArtifactRequest(xmlData);

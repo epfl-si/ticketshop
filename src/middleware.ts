@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./services/auth";
 import { hasPermission } from "./services/policy";
 import { PROTECTED_ROUTES } from "./constants/permissions";
-import { v4 as uuidv4 } from "uuid";
 
 import log from "@/services/log";
 import { Session } from "next-auth";
@@ -13,7 +12,7 @@ export default async function middleware(req: NextRequest) {
 	const endpoint = pathname + search;
 	const ip = req.headers.get("x-forwarded-for") || null;
 
-	const requestId: string = uuidv4();
+	const requestId: string = crypto.randomUUID();
 	let session: Session | null = null;
 
 	session = await auth();
