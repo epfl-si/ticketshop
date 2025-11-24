@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "./services/auth";
 import { hasPermission } from "./services/policy";
 import { PROTECTED_ROUTES } from "./constants/permissions";
-
-import log from "@/services/log";
 import { Session } from "next-auth";
+import { generateUUID } from "./lib/uuid";
+import log from "./services/log";
 
 export default async function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
@@ -12,24 +11,37 @@ export default async function middleware(req: NextRequest) {
 	const endpoint = pathname + search;
 	const ip = req.headers.get("x-forwarded-for") || null;
 
-	const requestId: string = crypto.randomUUID();
+	const requestId: string = generateUUID();
 	let session: Session | null = null;
 
+	const { auth } = await import("./services/auth");
 	session = await auth();
 
+	const logWeb = (message?: string) => {
+		log.web({
+			user: session?.user,
+			ip,
+			endpoint,
+			requestId,
+			method: req.method,
+			edge: true,
+			...(message && { message }),
+		});
+	};
+
 	if (pathname === "/") {
-		log.web({ user: session?.user, ip, endpoint, requestId, method: req.method });
+		logWeb();
 		return NextResponse.next();
 	}
 
 	if (!Object.values(PROTECTED_ROUTES).map(route => String(route.PATH)).includes(pathname)) {
-		log.web({ user: session?.user, ip, endpoint, requestId, method: req.method });
+		logWeb();
 		return NextResponse.rewrite(new URL("/not-found", req.url));
 	}
 
 	if (!session?.user) {
 		const authUrl = new URL("/api/auth", req.url);
-		log.web({ user: session?.user, ip, endpoint, requestId, method: req.method });
+		logWeb();
 		authUrl.searchParams.set("callbackUrl", req.url);
 		return NextResponse.redirect(authUrl);
 	}
@@ -40,7 +52,7 @@ export default async function middleware(req: NextRequest) {
 				for (const permission of route.PERMISSIONS) {
 					const hasPerm = await hasPermission(permission);
 					if (!hasPerm) {
-						log.web({ user: session?.user, ip, endpoint, requestId, method: req.method });
+						logWeb();
 						return NextResponse.rewrite(new URL(route.REWRITE || "/not-found", req.url));
 					}
 				}
@@ -54,12 +66,12 @@ export default async function middleware(req: NextRequest) {
 			maxAge: 60,
 		});
 
-		log.web({ user: session?.user, ip, endpoint, requestId, method: req.method });
+		logWeb();
 
 		return response;
 	} catch (error) {
 		console.error("Erreur middleware:", error);
-		log.web({ ip, endpoint, requestId, message: `middleware error: ${error}` });
+		logWeb(`middleware error: ${error}`);
 		return new NextResponse(null, { status: 500 });
 	}
 }
