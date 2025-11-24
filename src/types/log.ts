@@ -21,6 +21,7 @@ export interface BaseLogParams {
 	message?: string;
 	requestId?: string;
 	persist?: boolean;
+	edge?: boolean;
 }
 
 export interface WebLogParams extends Omit<BaseLogParams, "type"> {
