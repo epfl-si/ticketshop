@@ -25,10 +25,11 @@ export function parseArtifactRequest(xmlData: string): ArtifactRequest {
 	const envelope = xmlDoc?.envelope as NestedRecord;
 	const body = envelope?.body as NestedRecord;
 	const getartifact = body?.getartifact as NestedRecord;
+	const getartifactid = body?.getartifactid as NestedRecord;
 	const artifactid = getartifact?.artifactid as NestedRecord;
 
 	return {
-		email: (artifactid?.email as string) || undefined,
+		email: (getartifactid?.email as string) || undefined,
 		artifactID: String(artifactid?.id) || undefined,
 	};
 }
