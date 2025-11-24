@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { MapPin, DollarSign, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
+import { MapPin, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 import { EnrichedFund, EnrichedTravel } from "@/types";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -204,7 +204,6 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 			{!grouped && (
 				<TableCell>
 					<Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-						<DollarSign className="mr-1 h-3 w-3" />
 						{translations.entities("fund")}
 					</Badge>
 				</TableCell>
@@ -393,7 +392,6 @@ export function FundsAndTravelsTable({ funds, travels, onToggleChange }: FundsAn
 						className="cursor-pointer shadow-none"
 						onClick={() => setFilterMode("funds")}
 					>
-						<DollarSign className="h-3 w-3" />
 						{translations.entities("funds")} ({funds.length})
 					</Button>
 					{/* <Button
