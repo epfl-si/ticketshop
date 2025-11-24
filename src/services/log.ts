@@ -1,6 +1,4 @@
-import type { Prisma } from "@prisma/client";
 import type { WebLogParams, ApiLogParams, SoapLogParams, DatabaseLogParams, EventLogParams, BaseLogParams } from "@/types/log";
-import { prisma } from "@/lib/prisma";
 
 async function logToConsole(params: Record<string, unknown>): Promise<void> {
 	const filtered = Object.fromEntries(
@@ -19,36 +17,11 @@ async function logToConsole(params: Record<string, unknown>): Promise<void> {
 	console.info(JSON.stringify(filtered));
 }
 
-async function persistToDatabase(params: EventLogParams): Promise<void> {
-	try {
-		const userIdValue = params.userId || params.user?.userId;
-		let dbUserId: string | null = null;
-
-		if (userIdValue) {
-			const dbUser = await prisma.user.findUnique({
-				where: { uniqueId: userIdValue },
-				select: { id: true },
-			});
-			dbUserId = dbUser?.id || null;
-		}
-
-		await prisma.log.create({
-			data: {
-				event: params.event,
-				userId: dbUserId,
-				details: params.details || params.message || null,
-				metadata: (params.metadata as Prisma.InputJsonValue) ?? null,
-			},
-		});
-	} catch (error) {
-		console.error("Failed to persist event to database:", error);
-	}
-}
-
 async function log(params: BaseLogParams & Record<string, unknown>): Promise<void> {
 	await logToConsole(params);
 
-	if (params.persist && params.type === "event") {
+	if (params.persist && params.type === "event" && !params.edge) {
+		const { persistToDatabase } = await import("@/lib/log");
 		await persistToDatabase(params as unknown as EventLogParams);
 	}
 }
