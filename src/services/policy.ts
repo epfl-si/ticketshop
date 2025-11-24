@@ -1,5 +1,4 @@
 import { PERMISSIONS } from "@/constants/permissions";
-import { getUserGroups } from "./auth";
 
 export const GROUP_PERMISSIONS: Record<string, string[]> = {
 	"ticketshop-admin_AppGrpU": Object.values(PERMISSIONS).flatMap((category) => Object.values(category)),
@@ -7,6 +6,7 @@ export const GROUP_PERMISSIONS: Record<string, string[]> = {
 };
 
 export async function hasPermission(permission: string): Promise<boolean> {
+	const { getUserGroups } = await import("./auth");
 	const userGroups = await getUserGroups();
 	if (!userGroups) return false;
 
