@@ -148,14 +148,14 @@
 		},
 		"help": {
 			"title": "Aide",
-			"availableHelp": "Différentes pages d'aides sont disponibles, à commencer par la <a>KB0012580</a> (gérée par la VPT) et le <a>PDF</a> permettant de lier son compte SwissPass à son compte EPFL.",
-			"accredRequirement": "Assurez vous d'avoir le droit <i>Accred</i> « railticket » sur au moins un fonds. Sans cela, vous n'aurez pas accès au système.",
+			"accredRequirement": "Assurez-vous d'avoir le droit <i>Accred</i> « railticket » sur au moins un fonds. Sans cela, vous n'aurez pas accès au système.",
 			"supportIntro": "Il y a plusieurs possibilités d'obtenir de l'aide, mais avant de déclancher une demande de support, assurez vous d'avoir pris connaissance de la <a>KB0012580</a> :",
-			"helpSwissPass": "Pour les questions liées à des problèmes de SwissPass ou sur le site sbb.ch, contacter la hotline des CFFs ;",
+			"helpSwissPass": "Problèmes de SwissPass, questions sur les produits ou sur le site sbb.ch : contacter la hotline des CFF ;",
 			"helpSwissPassBuy": "Pour toute question sur les achats de billet de train sur la plateforme Webshop CFF",
-			"helpMobility": "<a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/mobilite-pendulaire/trains/</a> ou <a>mobilite@epfl.ch</a> (ouvre un ticket au groupe de support dédié à la Mobilité).",
-			"helpAccredRights": "Pour des problèmes d{apostrophe}<i>Accred</i>, de droits d'accès ou de fonds, créer un ticket au 1234 ;",
-			"helpTicketshopIssues": "Pour des problèmes d'utilisation du site ticketshop.epfl.ch (voir <a>KB0014657</a>) ;",
+			"helpLink": " Pour lier votre SwissPass au compte EPFL : <a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/mobilite-pendulaire/trains/</a>",
+			"helpMobility": "Questions sur les voyages : <a>mobilite@epfl.ch</a> (ouvre un ticket au groupe de support dédié à la Mobilité) ;",
+			"helpAccredRights": "Pour des problèmes d{apostrophe}<i>Accred</i>, de droits d'accès ou de fonds : créer un ticket au 1234 ;",
+			"helpTicketshopIssues": "Utilisation du site ticketshop.epfl.ch (voir <a>KB0014657</a>) ;",
 			"helpTechnicalContrib": "Pour les questions techniques ou pour contribuer à l'application, rendez-vous sur le dépôt <a>GitHub</a>, et si nécessaire, ouvrez une <a>issue</a>."
 		},
 		"faq": {
@@ -179,7 +179,7 @@
 				},
 				"change": {
 					"title": "Comment passer de mon compte personnel à mon compte EPFL sur les applications des CFFs ?",
-					"description": "Identifier l'icone \"usine\" pour le compte business (EPFL) et l'icone \"personne\" pour le compte personnel. Dans l'appplication mobile, c'est au moment du paiement du titre de transport qu'il est possible de changer. Voir la <a>KB0012580</a>."
+					"description": "Identifier l'icone \"usine\" pour le compte business (EPFL) et l'icone \"personne\" pour le compte personnel. Dans l'appplication mobile, c'est au moment du paiement du titre de transport qu'il est possible de changer. Voir la <a>KB0014657</a>."
 				}
 			}
 		},

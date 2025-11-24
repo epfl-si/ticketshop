@@ -34,22 +34,22 @@ export default function Info() {
 			</section>
 			<section className="space-y-4">
 				<p className="text-foreground/90 leading-relaxed">
-					{translations.help.rich("availableHelp", {
-						a: (chunks) => <a className="text-primary hover:underline" href="https://go.epfl.ch/KB0012580" target="_blank">{chunks}</a>,
-					})}
-				</p>
-				<p className="text-foreground/90 leading-relaxed">
 					{translations.help.rich("accredRequirement", {
 						i: (chunks) => <i className="text-foreground">{chunks}</i>,
 					})}
 				</p>
+				<p className="text-foreground/90 leading-relaxed font-bold">
+					{translations.help("helpSwissPassBuy")}
+				</p>
 				<ul className="space-y-3 mt-4">
-					<li className="text-foreground/90 leading-relaxed font-bold">
-						{translations.help("helpSwissPassBuy")}
+					<li className="text-foreground/90 leading-relaxed">
+						{translations.help.rich("helpLink", {
+							a: (chunks) => <a className="text-primary hover:underline" href={chunks?.toString()} target="_blank">{chunks}</a>,
+						})}
 					</li>
 					<li className="text-foreground/90 leading-relaxed">
 						{translations.help.rich("helpMobility", {
-							a: (chunks) => <a className="text-primary hover:underline" href={chunks?.toString().includes("@") ? `mailto:${chunks}` : chunks?.toString()} target="_blank">{chunks}</a>,
+							a: (chunks) => <a className="text-primary hover:underline" href={`mailto:${chunks}`} target="_blank">{chunks}</a>,
 						})}
 					</li>
 					<li className="text-foreground/90 leading-relaxed">

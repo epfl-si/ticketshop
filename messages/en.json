@@ -141,45 +141,45 @@
 	"info": {
 		"about": {
 			"title": "About",
-			"description": "<strong>EPFL Ticketshop</strong> allows the SBB to check the authorizations of EPFL collaborators who need to order travel tickets using EPFL funds.",
-			"cffUsageTitle": "In other words, EPFL Ticketshop allows the SBB to:",
-			"additionalInfo": "EPFL Ticketshop makes it possible to choose the funds on which one is authorized to purchase a train ticket on the SBB platform.",
-			"cffUsage": "<li>Validate the authorization to purchase train tickets (Accred right <i>railticket</i>),</li><li>Retrieve the list of funds and travel requests.</li>"
+			"description": "<strong>Ticketshop EPFL</strong> allows CFFs to control the authorizations of EPFL collaborators who need to order train tickets on EPFL funds.",
+			"cffUsageTitle": "In other words, Ticketshop EPFL allows CFFs to:",
+			"additionalInfo": "Ticketshop EPFL allows choosing the funds on which train tickets may be purchased on the CFF platform.",
+			"cffUsage": "<li>Validate train ticket purchase permissions (Accred right <i>railticket</i>),</li><li>Retrieve the list of funds and travel requests.</li>"
 		},
 		"help": {
 			"title": "Help",
-			"availableHelp": "Several help pages are available, starting with <a>KB0012580</a> (managed by VPT) and the <a>PDF</a> that explains how to link your SwissPass account to your EPFL account.",
-			"accredRequirement": "Make sure you have the <i>Accred</i> « railticket » right on at least one fund. Without this, you will not have access to the system.",
-			"supportIntro": "There are several ways to obtain help, but before opening a support request, make sure you have read <a>KB0012580</a>:",
-			"helpSwissPass": "For questions related to SwissPass issues or the sbb.ch website, contact the SBB hotline;",
-			"helpSwissPassBuy": "For any questions regarding the purchase of train tickets on the SBB Webshop platform",
-			"helpMobility": "<a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/mobilite-pendulaire/trains/</a> or <a>mobilite@epfl.ch</a> (opens a ticket with the support group dedicated to Mobility).",
-			"helpAccredRights": "For issues with <i>Accred</i>, access rights, or funds, open a ticket via 1234;",
-			"helpTicketshopIssues": "For issues while using the ticketshop.epfl.ch website (see <a>KB0014657</a>);",
-			"helpTechnicalContrib": "For technical questions or to contribute to the application, visit the <a>GitHub</a> repository and, if necessary, open an <a>issue</a>."
+			"accredRequirement": "Make sure you have the <i>Accred</i> “railticket” right on at least one fund. Without it, you will not have access to the system.",
+			"supportIntro": "There are several ways to get help, but before submitting a support request, make sure you have read <a>KB0012580</a>:",
+			"helpSwissPass": "SwissPass problems, product questions, or issues on sbb.ch: contact the CFF hotline;",
+			"helpSwissPassBuy": "For any questions regarding train ticket purchases on the CFF Webshop platform",
+			"helpLink": " To link your SwissPass to your EPFL account: <a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/mobilite-pendulaire/trains/</a>",
+			"helpMobility": "Travel-related questions: <a>mobilite@epfl.ch</a> (opens a ticket with the Mobility support group);",
+			"helpAccredRights": "For issues with <i>Accred</i>, access rights, or funds: create a ticket via 1234;",
+			"helpTicketshopIssues": "For issues using ticketshop.epfl.ch (see <a>KB0014657</a>);",
+			"helpTechnicalContrib": "For technical questions or to contribute to the application, visit the <a>GitHub</a> repository and open an <a>issue</a> if needed."
 		},
 		"faq": {
 			"title": "FAQ",
 			"questions": {
 				"link": {
-					"title": "How to link my SwissPass account with my EPFL account ?",
-					"description": "Read guide <a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/voyages-academiques/trains/</a>"
+					"title": "How do I link my SwissPass with my EPFL account?",
+					"description": "See guide <a>https://www.epfl.ch/campus/mobility/fr/mobilite-et-voyages/voyages-academiques/trains/</a>"
 				},
 				"locked": {
-					"title": "My CFF account is locked? What can I do?",
-					"description": "Your CFF account will be locked after several failed logins. This is not a Tequila/Gaspar problem, no need to change this password. Please contact <a>the Service Desk</a>."
+					"title": "My CFF account is locked. What should I do?",
+					"description": "Access to the online railticket ordering application may be locked after several failed attempts. This problem is not related to Gaspar/Tequila authentication, so there is no need to change your Gaspar password. Please contact the <a>Service Desk</a>."
 				},
 				"right": {
-					"title": "I am accreditor for unit XYZ but I cannot give the right railticket?",
-					"description": "The right railticket is managed only by people with the respadmin role."
+					"title": "I am an accreditor for unit XYZ, but I cannot grant the railticket right?",
+					"description": "The railticket right is managed only by people with the respadmin role."
 				},
 				"sync": {
-					"title": "Why changes doesn't apply in CFF when I hide / show funds in ticketshop ?",
-					"description": "Synchronization between ticketshop and CFF might take many hours. After this delay, changes will be affected."
+					"title": "Why aren't my hide/show changes in Ticketshop immediately reflected on CFF?",
+					"description": "Synchronization between Ticketshop and CFF may take several hours. After this, the changes should appear on CFF."
 				},
 				"change": {
-					"title": "How to switch from personal account to EPFL account in CFF apps ?",
-					"description": "Identify \"factory\" icon for business account, and person icon for personal account. In mobile app, it's possible to change during the payment step. Read <a>KB0012580</a>."
+					"title": "How can I switch between my personal account and my EPFL account in CFF applications?",
+					"description": "Look for the “factory” icon for the business (EPFL) account and the “person” icon for the personal account. In the mobile app, switching is possible at the time of ticket payment. See <a>KB0014657</a>."
 				}
 			}
 		},
