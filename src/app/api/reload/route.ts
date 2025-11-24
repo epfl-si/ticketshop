@@ -13,7 +13,6 @@ export async function POST() {
 
 	return NextResponse.json({
 		success: true,
-		count: result.count,
 		message: "Users cache reloaded",
 	});
 }
