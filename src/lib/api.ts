@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-import log from "@/services/log";
 
 export async function makeApiCall<T = unknown>(endpoint: string, apiType: "api" | "sap", params?: Record<string, string>): Promise<T> {
 	let baseUrl: string;
@@ -37,6 +36,7 @@ export async function makeApiCall<T = unknown>(endpoint: string, apiType: "api" 
 
 	const response = await fetch(url.toString(), { method: "GET", headers });
 
+	const { default: log } = await import("@/services/log");
 	log.api({ action: "test", method: "GET", url: url.href, message: `API call to ${baseUrl}`, status: response.status, requestId });
 
 	if (!response.ok) throw new Error(`API request failed: ${response.status}`);
