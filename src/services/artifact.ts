@@ -47,22 +47,11 @@ export async function getUserArtifactData(uniqueId: string): Promise<{ funds: Ap
 	}
 }
 
-export async function logArtifactRequest(log: ArtifactLog): Promise<void> {
-	console.info(`${new Date().toISOString()} | user: ${log.user} | type: ${log.requestType} | success: ${log.success}`);
-}
-
 export async function processArtifactIDRequest(email: string, payload: string): Promise<ArtifactProcessingResult> {
 	try {
 		const persons = await getPersonByEmail(email);
 
-		if (persons && persons?.length === 0) {
-			logArtifactRequest({
-				user: 0,
-				requestType: "getArtifactID",
-				success: false,
-				payload,
-			});
-
+		if (persons.length === 0) {
 			return {
 				success: false,
 				error: {
@@ -81,14 +70,7 @@ export async function processArtifactIDRequest(email: string, payload: string): 
 			};
 		}
 		const person = persons[0];
-		const artifactID = person?.id;
-
-		logArtifactRequest({
-			user: parseInt(artifactID),
-			requestType: "getArtifactID",
-			success: true,
-			payload,
-		});
+		const artifactID = person.id;
 
 		return {
 			success: true,
@@ -110,13 +92,6 @@ export async function processArtifactIDRequest(email: string, payload: string): 
 export async function processArtifactRequest(artifactID: string, payload: string): Promise<ArtifactProcessingResult> {
 	try {
 		if (artifactID.startsWith("G")) {
-			logArtifactRequest({
-				user: parseInt(artifactID) || 0,
-				requestType: "getArtifact",
-				success: false,
-				payload,
-			});
-
 			return {
 				success: false,
 				error: {
@@ -127,15 +102,7 @@ export async function processArtifactRequest(artifactID: string, payload: string
 		}
 
 		const person = await getPersonBySciper(artifactID);
-
-		if (person === undefined) {
-			logArtifactRequest({
-				user: parseInt(artifactID) || 0,
-				requestType: "getArtifact",
-				success: false,
-				payload,
-			});
-
+		if (!person) {
 			return {
 				success: false,
 				error: {
@@ -157,13 +124,6 @@ export async function processArtifactRequest(artifactID: string, payload: string
 		const { funds, travels } = await getUserArtifactData(artifactID);
 
 		if (funds.length === 0 && travels.length === 0) {
-			logArtifactRequest({
-				user: parseInt(artifactID),
-				requestType: "getArtifact",
-				success: false,
-				payload,
-			});
-
 			return {
 				success: false,
 				error: {
@@ -198,26 +158,12 @@ export async function processArtifactRequest(artifactID: string, payload: string
 			},
 		};
 
-		logArtifactRequest({
-			user: parseInt(artifactID),
-			requestType: "getArtifact",
-			success: true,
-			payload,
-		});
-
 		return {
 			success: true,
 			data: artifactResponse,
 		};
 	} catch (error) {
 		console.error("Error processing artifact request:", error);
-		logArtifactRequest({
-			user: parseInt(artifactID) || 0,
-			requestType: "getArtifact",
-			success: false,
-			payload,
-		});
-
 		return {
 			success: false,
 			error: {
