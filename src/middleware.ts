@@ -33,6 +33,14 @@ export default async function middleware(req: NextRequest) {
 		logWeb();
 		return NextResponse.next();
 	}
+	if (pathname === "/home") {
+		logWeb();
+		return NextResponse.rewrite(new URL("/", req.url));
+	}
+	if (pathname === "/cgi-bin/cff") {
+		logWeb();
+		return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
+	}
 
 	if (!Object.values(PROTECTED_ROUTES).map(route => String(route.PATH)).includes(pathname)) {
 		logWeb();
