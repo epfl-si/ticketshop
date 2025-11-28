@@ -42,7 +42,11 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
 	}
 
-	if (!Object.values(PROTECTED_ROUTES).map(route => String(route.PATH)).includes(pathname)) {
+	const isProtectedRoute = Object.values(PROTECTED_ROUTES).some(route =>
+		pathname === route.PATH || pathname.startsWith(route.PATH + "/"),
+	);
+
+	if (!isProtectedRoute) {
 		logWeb();
 		return NextResponse.rewrite(new URL("/not-found", req.url));
 	}
