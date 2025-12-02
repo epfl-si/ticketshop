@@ -91,12 +91,17 @@
 			"subtitle": "View system events and user activities",
 			"filterUserId": "User ID",
 			"filterUserIdPlaceholder": "Filter by user ID...",
+			"filterTargetId": "Target user ID",
+			"filterTargetIdPlaceholder": "Filter by user ID...",
 			"filterEventType": "Event Type",
 			"filterEventTypePlaceholder": "Select event type",
 			"applyFilter": "Apply Filter",
 			"timestamp": "Timestamp",
 			"event": "Event",
 			"user": "User",
+			"target": "Target",
+			"unknow": "Unknow",
+			"targetUser": "Target user",
 			"details": "Details",
 			"system": "System",
 			"noLogs": "No logs found",
@@ -108,7 +113,9 @@
 				"fundEnabled": "Fund Enabled",
 				"travelDisabled": "Travel Disabled",
 				"travelEnabled": "Travel Enabled"
-			}
+			},
+			"fund": "Fund",
+			"travel": "Travel"
 		}
 	},
 	"errors": {
