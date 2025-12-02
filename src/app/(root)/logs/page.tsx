@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ApiUser } from "@/types";
 import { useTranslations } from "next-intl";
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 interface Log {
 	id: string;
@@ -34,6 +34,7 @@ export default function LogsPage() {
 	const [filter, setFilter] = useState({
 		event: "all",
 		userId: "",
+		targetId: "",
 	});
 
 	useEffect(() => {
@@ -48,12 +49,15 @@ export default function LogsPage() {
 				offset: 0,
 				event: filter.event && filter.event !== "all" ? (filter.event as EventType) : undefined,
 				userId: filter.userId || undefined,
+				targetId: filter.targetId,
 			});
 			setLogs(fetchedLogs);
 
 			const uniqueIds = fetchedLogs
-				.map((log: Log) => log.user?.uniqueId)
+				.flatMap((log: Log) => ([log.user?.uniqueId, (log.metadata as Prisma.JsonObject).target]))
 				.filter((id): id is string => id !== null && id !== undefined);
+
+			console.log(uniqueIds);
 
 			if (uniqueIds.length > 0) {
 				const userDetails = await getUsersByIds(uniqueIds);
@@ -89,6 +93,33 @@ export default function LogsPage() {
 		}
 	};
 
+	const twoRowTd = (general: string, details: string | undefined) => {
+		return (
+			<div>
+				<div className="font-medium">{general}</div>
+				<div className="text-xs text-muted-foreground">{details}</div>
+			</div>
+		)
+	}
+
+	const userTdContent = (user: string | undefined, userDetails: ApiUser | null, type: string) => {
+		return (
+			<>
+				{userDetails ?
+						twoRowTd(userDetails.name || `${userDetails?.firstname} ${userDetails?.lastname}`, user)
+					: user ? (
+						<div>
+							<div className="font-medium">{user}</div>
+						</div>
+					) : (
+						<span className="text-muted-foreground">
+							{translations.page(type === "target" ? "unknow" : "system")}
+						</span>
+					)}
+			</>
+		)
+	}
+
 	return (
 		<div className="container mx-auto p-6 space-y-6">
 			<div className="space-y-2">
@@ -110,6 +141,18 @@ export default function LogsPage() {
 						placeholder={translations.page("filterUserIdPlaceholder")}
 						value={filter.userId}
 						onChange={(e) => setFilter({ ...filter, userId: e.target.value })}
+						onKeyDown={handleKeyPress}
+					/>
+				</div>
+				<div className="flex-1">
+					<label className="text-sm font-medium mb-2 block">
+						{translations.page("filterTargetId")}
+					</label>
+					<Input
+						type="text"
+						placeholder={translations.page("filterTargetIdPlaceholder")}
+						value={filter.targetId}
+						onChange={(e) => setFilter({ ...filter, targetId: e.target.value })}
 						onKeyDown={handleKeyPress}
 					/>
 				</div>
@@ -174,6 +217,12 @@ export default function LogsPage() {
 										{translations.page("event")}
 									</th>
 									<th className="px-4 py-3 text-left text-sm font-medium">
+										{translations.page("target")}
+									</th>
+									<th className="px-4 py-3 text-left text-sm font-medium">
+										{translations.page("targetUser")}
+									</th>
+									<th className="px-4 py-3 text-left text-sm font-medium">
 										{translations.page("user")}
 									</th>
 									<th className="px-4 py-3 text-left text-sm font-medium">
@@ -185,10 +234,18 @@ export default function LogsPage() {
 								{logs.map((log) => {
 									const uniqueId = log.user?.uniqueId;
 									const userDetails = uniqueId ? users[uniqueId] : null;
+									const userComponent = userTdContent(uniqueId, userDetails, "user");
+
+									const targetId = (log.metadata as Prisma.JsonObject)?.target as string;
+									const targetDetails = targetId ? users[targetId] : null;
+									const targetComponent = userTdContent(targetId, targetDetails, "target");
+
+									const itemType = (log.metadata as Prisma.JsonObject)?.itemType as string;
+									const itemName = (log.metadata as Prisma.JsonObject)?.itemName as string;
 									return (
 										<tr key={log.id} className="hover:bg-muted/30">
 											<td className="px-4 py-3 text-sm">
-												{new Date(log.createdAt).toLocaleString()}
+												{new Date(log.createdAt).toLocaleString("fr-ch")}
 											</td>
 											<td className="px-4 py-3">
 												<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
@@ -196,20 +253,13 @@ export default function LogsPage() {
 												</span>
 											</td>
 											<td className="px-4 py-3 text-sm">
-												{userDetails ? (
-													<div>
-														<div className="font-medium">{userDetails.name || `${userDetails.firstname} ${userDetails.lastname}`}</div>
-														<div className="text-xs text-muted-foreground">{uniqueId}</div>
-													</div>
-												) : uniqueId ? (
-													<div>
-														<div className="font-medium">{uniqueId}</div>
-													</div>
-												) : (
-													<span className="text-muted-foreground">
-														{translations.page("system")}
-													</span>
-												)}
+												{twoRowTd(translations.page(itemType), itemName)}
+											</td>
+											<td className="px-4 py-3 text-sm">
+												{targetComponent}
+											</td>
+											<td className="px-4 py-3 text-sm">
+												{userComponent}
 											</td>
 											<td className="px-4 py-3 text-sm">
 												<div>{log.details}</div>

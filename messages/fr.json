@@ -91,12 +91,17 @@
 			"subtitle": "Consulter les événements système et les activités utilisateurs",
 			"filterUserId": "ID utilisateur",
 			"filterUserIdPlaceholder": "Filtrer par ID utilisateur...",
+			"filterTargetId": "ID utilisateur cible",
+			"filterTargetIdPlaceholder": "Filtrer par ID utilisateur...",
 			"filterEventType": "Type d'événement",
 			"filterEventTypePlaceholder": "Sélectionner un type d'événement",
 			"applyFilter": "Appliquer le filtre",
 			"timestamp": "Horodatage",
 			"event": "Événement",
 			"user": "Utilisateur",
+			"target": "Cible",
+			"unknow": "Inconnu",
+			"targetUser": "Utilisateur Cible",
 			"details": "Détails",
 			"system": "Système",
 			"noLogs": "Aucun journal trouvé",
@@ -108,7 +113,9 @@
 				"fundEnabled": "Fonds activé",
 				"travelDisabled": "Voyage désactivé",
 				"travelEnabled": "Voyage activé"
-			}
+			},
+			"fund": "Fonds",
+			"travel": "Voyages"
 		}
 	},
 	"errors": {

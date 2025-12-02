@@ -10,6 +10,7 @@ import { auth } from "@/services/auth";
 import { cookies } from "next/headers";
 import log from "@/services/log";
 import { prisma } from "@/lib/prisma";
+import { User } from "@prisma/client";
 
 export async function updateSetting(shownValue: boolean, settingId: string) {
 	if (!(await hasPermission(PERMISSIONS.FUNDS.UPDATE) && await hasPermission(PERMISSIONS.TRAVELS.UPDATE))) {
@@ -28,6 +29,17 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 			travel: true,
 		},
 	});
+
+    const targetUser = await prisma.user.findFirst({
+		where: {
+			settings: {
+				some: { id: settingId }
+			}
+		},
+		include: {
+			settings: true
+		}
+	})
 
 	logDatabase({ action: "updateSetting.result", itemId: settingId, value: update.shown, itemType: update.travelId ? "travel" : "fund" });
 
@@ -49,6 +61,7 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 			itemId: update.fundId || update.travelId,
 			itemName,
 			username: user?.user?.username,
+			target: (targetUser as User).uniqueId,
 		},
 	});
 

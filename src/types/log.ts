@@ -71,4 +71,5 @@ export interface GetLogsParams {
 	offset?: number;
 	event?: EventType;
 	userId?: string;
+	targetId?: string;
 }
