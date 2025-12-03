@@ -96,6 +96,7 @@
 			"filterEventType": "Type d'événement",
 			"filterEventTypePlaceholder": "Sélectionner un type d'événement",
 			"applyFilter": "Appliquer le filtre",
+			"httpCode": "code HTTP",
 			"timestamp": "Horodatage",
 			"event": "Événement",
 			"user": "Utilisateur",
@@ -109,13 +110,18 @@
 			"showingLogs": "Affichage de {count} journaux",
 			"eventTypes": {
 				"all": "Tous les événements",
-				"fundDisabled": "Fonds désactivé",
-				"fundEnabled": "Fonds activé",
-				"travelDisabled": "Voyage désactivé",
-				"travelEnabled": "Voyage activé"
+				"fundDisabled": "désactivé le fonds",
+				"fundEnabled": "activé le fonds",
+				"travelDisabled": "désactivé le voyage",
+				"travelEnabled": "activé le voyage",
+				"showFunds": "getArtifact",
+				"showSciper": "getArtifactID"
 			},
 			"fund": "Fonds",
-			"travel": "Voyages"
+			"travel": "Voyages",
+			"showSciperLogMessage": "<badge>getArtifactID</badge> a été appelé pour {targetEmail} : {sciper} retourné.",
+			"showFundLogMessage": "<badge>getArtifact</badge> a été appelé pour {targetName} (#{targetSciper}) :  {itemCount} fonds retourné(s).",
+			"fundLogMessage": "L'utilisateur {userName} (#{userSciper}) a <badge></badge> avec l'id <code></code> pour l'utilisateur {targetName} (#{targetSciper})."
 		}
 	},
 	"errors": {

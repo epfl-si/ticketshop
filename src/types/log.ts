@@ -10,6 +10,8 @@ export type EventType =
 	| "travel.enabled"
 	| "travel.created"
 	| "setting.updated"
+	| "artifactserver.getArtifactID"
+	| "artifactserver.getArtifact"
 	| "cache.reloaded";
 
 export type LogType = "web" | "api" | "soap" | "database" | "event";

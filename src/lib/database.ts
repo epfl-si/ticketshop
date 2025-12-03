@@ -19,16 +19,33 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 
 	logDatabase({ action: "updateSetting.entry", itemId: settingId, value: shownValue });
 
-	const update = await prisma.setting.update({
-		where: { id: settingId },
-		data: {
-			shown: shownValue,
-		},
-		include: {
-			fund: true,
-			travel: true,
-		},
-	});
+	let success = true;
+	let update;
+
+	try {
+		update = await prisma.setting.update({
+			where: { id: settingId },
+			data: {
+				shown: shownValue,
+			},
+			include: {
+				fund: true,
+				travel: true,
+			},
+		});
+	}
+	catch (error) {
+		success = false;
+	}
+
+	const user = await auth();
+	const value = success ? update?.shown : shownValue;
+	const itemId = update ? update?.travelId : settingId;
+	const itemType = itemId ? "travel" : "fund";
+	const event = shownValue
+		? (itemType === "fund" ? "fund.enabled" : "travel.enabled")
+		: (itemType === "fund" ? "fund.disabled" : "travel.disabled");
+	const itemName = update?.fund?.resourceId || update?.travel?.name || "Unknown";
 
     const targetUser = await prisma.user.findFirst({
 		where: {
@@ -41,15 +58,7 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		}
 	})
 
-	logDatabase({ action: "updateSetting.result", itemId: settingId, value: update.shown, itemType: update.travelId ? "travel" : "fund" });
-
-	const user = await auth();
-	const itemType = update.travelId ? "travel" : "fund";
-	const event = shownValue
-		? (itemType === "fund" ? "fund.enabled" : "travel.enabled")
-		: (itemType === "fund" ? "fund.disabled" : "travel.disabled");
-
-	const itemName = update.fund?.resourceId || update.travel?.name || "Unknown";
+	logDatabase({ action: "updateSetting.result", itemId: settingId, value, itemType });
 
 	await log.event({
 		event,
@@ -58,11 +67,12 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		metadata: {
 			settingId,
 			itemType,
-			itemId: update.fundId || update.travelId,
+			itemId: update?.fundId || update?.travelId,
 			itemName,
 			username: user?.user?.username,
 			target: (targetUser as User).uniqueId,
-		},
+			code: 200,
+		}
 	});
 
 	return update;
