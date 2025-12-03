@@ -72,8 +72,8 @@ export default function LogsPage() {
 		{ value: "all", label: translations.page("eventTypes.all") },
 		{ value: "fund.disabled", label: translations.page("eventTypes.fundDisabled") },
 		{ value: "fund.enabled", label: translations.page("eventTypes.fundEnabled") },
-		{ value: "travel.disabled", label: translations.page("eventTypes.travelDisabled") },
-		{ value: "travel.enabled", label: translations.page("eventTypes.travelEnabled") },
+		// { value: "travel.disabled", label: translations.page("eventTypes.travelDisabled") },
+		// { value: "travel.enabled", label: translations.page("eventTypes.travelEnabled") },
 		{ value: "artifactserver.getArtifact", label: translations.page("eventTypes.showFunds") },
 		{ value: "artifactserver.getArtifactID", label: translations.page("eventTypes.showSciper") },
 	];
@@ -88,7 +88,7 @@ export default function LogsPage() {
 	};
 
 	const getArtifactBadgeColor = (code: number) => {
-		if (String(code).startsWith("2")) return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+		if (String(code).startsWith("2")) return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
 		if (String(code).startsWith("4")) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
 		if (String(code).startsWith("5")) return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
 		return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
@@ -203,13 +203,17 @@ export default function LogsPage() {
 									const uniqueId = log.user?.uniqueId;
 									const userDetails = uniqueId ? users[uniqueId] : null;
 
-									const targetId = (log.metadata as Prisma.JsonObject)?.target as string;
-									const targetResult = (log.metadata as Prisma.JsonObject)?.result as string;
+									const metadata = log.metadata as Prisma.JsonObject;
+									const error = metadata?.error as Prisma.JsonObject;
+
+									const targetId = metadata?.target as string;
+									const targetResult = metadata?.result as string;
 									const targetDetails = targetId ? users[targetId] : null;
 
-									const itemName = (log.metadata as Prisma.JsonObject)?.itemName as string;
+									const itemName = metadata?.itemName as string;
 
-									const itemCount = (log.metadata as Prisma.JsonObject)?.itemCount as number;
+									const itemCount = metadata?.itemCount as number;
+									const eventName = eventTypes.find((et) => et.value === log.event)?.label || log.event;
 									return (
 										<tr key={log.id} className="hover:bg-muted/30">
 											<td className="px-4 py-3 text-sm">
@@ -256,10 +260,11 @@ export default function LogsPage() {
 																</span>
 																{" "}de l'utilisateur {targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`} (#{targetId}), {itemCount} éléments ont été trouvés. */}
 																{translations.page.rich("showFundLogMessage", {
-																	badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor((log.metadata as Prisma.JsonObject)?.status as number)}`}>{chunks}</span>,
+																	badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
 																	targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
 																	targetSciper: targetId,
-																	itemCount: !(log.metadata as Prisma.JsonObject)?.error ? itemCount : (log.metadata as Prisma.JsonObject)?.error as string,
+																	itemCount,
+																	errorMessage: (error?.errorMessage || "undefined") as string,
 																})}
 															</div>
 															:
@@ -271,7 +276,7 @@ export default function LogsPage() {
 																	</span>
 																	{" "}de l'utilisateur avec l'adresse email {targetId}, {targetResult} a bien été trouvé. */}
 																	{translations.page.rich("showSciperLogMessage", {
-																		badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor((log.metadata as Prisma.JsonObject)?.status as number)}`}>{chunks}</span>,
+																		badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
 																		targetEmail: targetId,
 																		sciper: targetResult,
 																	})}
@@ -279,6 +284,15 @@ export default function LogsPage() {
 																:
 																<>{log.event}</>
 												}
+												{/* {
+													metadata?.soap && (
+														<p>{
+															JSON.stringify(
+																metadata?.soap as string
+															)}
+														</p>
+													)
+												} */}
 											</td>
 										</tr>
 									);

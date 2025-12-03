@@ -120,7 +120,7 @@
 			"fund": "Fonds",
 			"travel": "Voyages",
 			"showSciperLogMessage": "<badge>getArtifactID</badge> a été appelé pour {targetEmail} : {sciper} retourné.",
-			"showFundLogMessage": "<badge>getArtifact</badge> a été appelé pour {targetName} (#{targetSciper}) :  {itemCount} fonds retourné(s).",
+			"showFundLogMessage": "<badge>getArtifact</badge> a été appelé pour {targetName} (#{targetSciper}) : {errorMessage, select, undefined {{itemCount} fonds retourné(s)} other {{errorMessage}}}.",
 			"fundLogMessage": "L'utilisateur {userName} (#{userSciper}) a <badge></badge> avec l'id <code></code> pour l'utilisateur {targetName} (#{targetSciper})."
 		}
 	},

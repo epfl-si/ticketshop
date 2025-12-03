@@ -76,7 +76,10 @@ export async function POST(req: Request) {
 					status,
 					request,
 					itemCount,
-					error: result?.error?.errorMessage
+					error: {
+						errorMessage: result?.error?.errorMessage || "",
+						errorCode: result?.error?.errorCode || "",
+					},
 				},
 			});
 

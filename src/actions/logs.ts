@@ -36,6 +36,11 @@ export async function getLogs(params: GetLogsParams = {}) {
 				path: ["target"],
 				equals: dbUser.uniqueId,
 			};
+		} else if (targetId) {
+			where.metadata = {
+				path: ["target"],
+				equals: targetId,
+			};
 		} else {
 			return { logs: [], total: 0 };
 		}
