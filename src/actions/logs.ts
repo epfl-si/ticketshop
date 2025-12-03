@@ -33,7 +33,7 @@ export async function getLogs(params: GetLogsParams = {}) {
 			// 	target: dbUser.uniqueId
 			// };
 			where.metadata = {
-				path: ['target'],
+				path: ["target"],
 				equals: dbUser.uniqueId,
 			};
 		} else {

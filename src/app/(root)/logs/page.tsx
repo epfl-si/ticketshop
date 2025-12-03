@@ -100,33 +100,6 @@ export default function LogsPage() {
 		}
 	};
 
-	const twoRowTd = (general: string, details: string | undefined) => {
-		return (
-			<div>
-				<div className="font-medium">{general}</div>
-				<div className="text-xs text-muted-foreground">{details}</div>
-			</div>
-		)
-	}
-
-	const userTdContent = (user: string | undefined, userDetails: ApiUser | null, type: string) => {
-		return (
-			<>
-				{userDetails ?
-						twoRowTd(userDetails.name || `${userDetails?.firstname} ${userDetails?.lastname}`, user)
-					: user ? (
-						<div>
-							<div className="font-medium">{user}</div>
-						</div>
-					) : (
-						<span className="text-muted-foreground">
-							{translations.page(type === "target" ? "unknow" : "system")}
-						</span>
-					)}
-			</>
-		)
-	}
-
 	return (
 		<div className="container mx-auto p-6 space-y-6">
 			<div className="space-y-2">
@@ -229,20 +202,14 @@ export default function LogsPage() {
 								{logs.map((log) => {
 									const uniqueId = log.user?.uniqueId;
 									const userDetails = uniqueId ? users[uniqueId] : null;
-									const userComponent = userTdContent(uniqueId, userDetails, "user");
 
 									const targetId = (log.metadata as Prisma.JsonObject)?.target as string;
 									const targetResult = (log.metadata as Prisma.JsonObject)?.result as string;
 									const targetDetails = targetId ? users[targetId] : null;
-									const targetComponent = userTdContent(targetId, targetDetails, "target");
 
-									const itemType = (log.metadata as Prisma.JsonObject)?.itemType as string;
 									const itemName = (log.metadata as Prisma.JsonObject)?.itemName as string;
 
-									const httpcode = (log.metadata as Prisma.JsonObject)?.code as number || 123;
 									const itemCount = (log.metadata as Prisma.JsonObject)?.itemCount as number;
-									if (log.event.includes("artifact"))
-										console.log(log)
 									return (
 										<tr key={log.id} className="hover:bg-muted/30">
 											<td className="px-4 py-3 text-sm">
@@ -277,7 +244,7 @@ export default function LogsPage() {
 																userSciper: uniqueId || "",
 																targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
 																targetSciper: targetId,
-																code: () => <code>{itemName}</code>
+																code: () => <code>{itemName}</code>,
 															})}
 														</div>
 														:
@@ -292,7 +259,7 @@ export default function LogsPage() {
 																	badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor((log.metadata as Prisma.JsonObject)?.status as number)}`}>{chunks}</span>,
 																	targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
 																	targetSciper: targetId,
-																	itemCount: !(log.metadata as Prisma.JsonObject)?.error ? itemCount : (log.metadata as Prisma.JsonObject)?.error
+																	itemCount: !(log.metadata as Prisma.JsonObject)?.error ? itemCount : (log.metadata as Prisma.JsonObject)?.error as string,
 																})}
 															</div>
 															:
@@ -306,7 +273,7 @@ export default function LogsPage() {
 																	{translations.page.rich("showSciperLogMessage", {
 																		badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor((log.metadata as Prisma.JsonObject)?.status as number)}`}>{chunks}</span>,
 																		targetEmail: targetId,
-																		sciper: targetResult
+																		sciper: targetResult,
 																	})}
 																</div>
 																:

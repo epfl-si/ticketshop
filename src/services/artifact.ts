@@ -2,7 +2,7 @@
 
 import { makeApiCall } from "@/lib/api";
 import { getUserFunds, getUserTravelsEnriched } from "@/lib/database";
-import { ArtifactProcessingResult, PersonData, ArtifactResponse, ArtifactLog } from "@/types/artifact";
+import { ArtifactProcessingResult, PersonData, ArtifactResponse } from "@/types/artifact";
 import { ApiFund, ApiTravel } from "@/types/api";
 
 export async function getPersonByEmail(email: string): Promise<PersonData[] | null> {
@@ -47,7 +47,7 @@ export async function getUserArtifactData(uniqueId: string): Promise<{ funds: Ap
 	}
 }
 
-export async function processArtifactIDRequest(email: string, payload: string): Promise<ArtifactProcessingResult> {
+export async function processArtifactIDRequest(email: string): Promise<ArtifactProcessingResult> {
 	try {
 		const persons = await getPersonByEmail(email);
 
@@ -89,7 +89,7 @@ export async function processArtifactIDRequest(email: string, payload: string): 
 	}
 }
 
-export async function processArtifactRequest(artifactID: string, payload: string): Promise<ArtifactProcessingResult> {
+export async function processArtifactRequest(artifactID: string): Promise<ArtifactProcessingResult> {
 	try {
 		if (artifactID.startsWith("G")) {
 			return {

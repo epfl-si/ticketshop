@@ -98,19 +98,6 @@ export async function POST(req: Request) {
 			return createXmlResponse(errorXML, 500);
 		}
 
-		// XML SOAP response telling the CFF if a parameter is missing.
-		if (!request.email || !request.artifactID) {
-			const result = {
-				error: {
-					errorCode: 21 as number,
-					errorMessage: "Missing parameter" as string,
-				},
-			};
-			const errorXML = generateSoapFault(result.error);
-			log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: errorXML, direction: "outband", status: 500, ip: req.headers.get("x-forwarded-for"), requestId });
-			return createXmlResponse(errorXML, 500);
-		}
-
 		const errorXML = generateSoapFault({
 			errorCode: 1,
 			errorMessage: "Invalid request format",
