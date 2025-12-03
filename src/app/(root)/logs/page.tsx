@@ -102,33 +102,6 @@ export default function LogsPage() {
 		}
 	};
 
-	const twoRowTd = (general: string, details: string | undefined) => {
-		return (
-			<div>
-				<div className="font-medium">{general}</div>
-				<div className="text-xs text-muted-foreground">{details}</div>
-			</div>
-		)
-	}
-
-	const userTdContent = (user: string | undefined, userDetails: ApiUser | null, type: string) => {
-		return (
-			<>
-				{userDetails ?
-						twoRowTd(userDetails.name || `${userDetails?.firstname} ${userDetails?.lastname}`, user)
-					: user ? (
-						<div>
-							<div className="font-medium">{user}</div>
-						</div>
-					) : (
-						<span className="text-muted-foreground">
-							{translations.page(type === "target" ? "unknow" : "system")}
-						</span>
-					)}
-			</>
-		)
-	}
-
 	return (
 		<div className="container mx-auto p-6 space-y-6">
 			<div className="space-y-2">
