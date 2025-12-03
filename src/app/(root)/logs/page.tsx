@@ -57,8 +57,6 @@ export default function LogsPage() {
 				.flatMap((log: Log) => ([log.user?.uniqueId, (log.metadata as Prisma.JsonObject).target]))
 				.filter((id): id is string => id !== null && id !== undefined);
 
-			console.log(uniqueIds);
-
 			if (uniqueIds.length > 0) {
 				const userDetails = await getUsersByIds(uniqueIds);
 				setUsers(userDetails);
@@ -76,6 +74,8 @@ export default function LogsPage() {
 		{ value: "fund.enabled", label: translations.page("eventTypes.fundEnabled") },
 		{ value: "travel.disabled", label: translations.page("eventTypes.travelDisabled") },
 		{ value: "travel.enabled", label: translations.page("eventTypes.travelEnabled") },
+		{ value: "artifactserver.getArtifact", label: translations.page("eventTypes.showFunds") },
+		{ value: "artifactserver.getArtifactID", label: translations.page("eventTypes.showSciper") },
 	];
 
 	const getEventBadgeColor = (event: string) => {
@@ -84,6 +84,13 @@ export default function LogsPage() {
 		if (event.includes("denied")) return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
 		if (event.includes("enabled")) return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
 		if (event.includes("disabled")) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+		return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+	};
+
+	const getArtifactBadgeColor = (code: number) => {
+		if (String(code).startsWith("2")) return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+		if (String(code).startsWith("4")) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+		if (String(code).startsWith("5")) return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
 		return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
 	};
 
@@ -214,18 +221,6 @@ export default function LogsPage() {
 										{translations.page("timestamp")}
 									</th>
 									<th className="px-4 py-3 text-left text-sm font-medium">
-										{translations.page("event")}
-									</th>
-									<th className="px-4 py-3 text-left text-sm font-medium">
-										{translations.page("target")}
-									</th>
-									<th className="px-4 py-3 text-left text-sm font-medium">
-										{translations.page("targetUser")}
-									</th>
-									<th className="px-4 py-3 text-left text-sm font-medium">
-										{translations.page("user")}
-									</th>
-									<th className="px-4 py-3 text-left text-sm font-medium">
 										{translations.page("details")}
 									</th>
 								</tr>
@@ -237,17 +232,23 @@ export default function LogsPage() {
 									const userComponent = userTdContent(uniqueId, userDetails, "user");
 
 									const targetId = (log.metadata as Prisma.JsonObject)?.target as string;
+									const targetResult = (log.metadata as Prisma.JsonObject)?.result as string;
 									const targetDetails = targetId ? users[targetId] : null;
 									const targetComponent = userTdContent(targetId, targetDetails, "target");
 
 									const itemType = (log.metadata as Prisma.JsonObject)?.itemType as string;
 									const itemName = (log.metadata as Prisma.JsonObject)?.itemName as string;
+
+									const httpcode = (log.metadata as Prisma.JsonObject)?.code as number || 123;
+									const itemCount = (log.metadata as Prisma.JsonObject)?.itemCount as number;
+									if (log.event.includes("artifact"))
+										console.log(log)
 									return (
 										<tr key={log.id} className="hover:bg-muted/30">
 											<td className="px-4 py-3 text-sm">
 												{new Date(log.createdAt).toLocaleString("fr-ch")}
 											</td>
-											<td className="px-4 py-3">
+											{/* <td className="px-4 py-3">
 												<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
 													{eventTypes.find((et) => et.value === log.event)?.label || log.event}
 												</span>
@@ -260,9 +261,57 @@ export default function LogsPage() {
 											</td>
 											<td className="px-4 py-3 text-sm">
 												{userComponent}
-											</td>
+											</td> */}
 											<td className="px-4 py-3 text-sm">
-												<div>{log.details}</div>
+												{
+													log.event.includes("fund") || log.event.includes("travel") ?
+														<div>
+															{/* L'utilisateur {userDetails?.name || `${userDetails?.firstname} ${userDetails?.lastname}`} (#{uniqueId}) a{" "}
+															<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
+																{eventTypes.find((et) => et.value === log.event)?.label || log.event}
+															</span>
+															{" "}avec l'id <code>{itemName}</code> pour l'utilisateur {targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`} (#{targetId}). */}
+															{translations.page.rich("fundLogMessage", {
+																badge: () => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>{eventTypes.find((et) => et.value === log.event)?.label || log.event}</span>,
+																userName: userDetails?.name || `${userDetails?.firstname} ${userDetails?.lastname}`,
+																userSciper: uniqueId || "",
+																targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
+																targetSciper: targetId,
+																code: () => <code>{itemName}</code>
+															})}
+														</div>
+														:
+														log.event === "artifactserver.getArtifact" ?
+															<div>
+																{/* L'artifact server a demandé{" "}
+																<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
+																	l'affichage des fonds
+																</span>
+																{" "}de l'utilisateur {targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`} (#{targetId}), {itemCount} éléments ont été trouvés. */}
+																{translations.page.rich("showFundLogMessage", {
+																	badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor((log.metadata as Prisma.JsonObject)?.status as number)}`}>{chunks}</span>,
+																	targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
+																	targetSciper: targetId,
+																	itemCount: !(log.metadata as Prisma.JsonObject)?.error ? itemCount : (log.metadata as Prisma.JsonObject)?.error
+																})}
+															</div>
+															:
+															log.event === "artifactserver.getArtifactID" ?
+																<div>
+																	{/* L'artifact server a demandé{" "}
+																	<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
+																		l'affichage du sciper
+																	</span>
+																	{" "}de l'utilisateur avec l'adresse email {targetId}, {targetResult} a bien été trouvé. */}
+																	{translations.page.rich("showSciperLogMessage", {
+																		badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor((log.metadata as Prisma.JsonObject)?.status as number)}`}>{chunks}</span>,
+																		targetEmail: targetId,
+																		sciper: targetResult
+																	})}
+																</div>
+																:
+																<>{log.event}</>
+												}
 											</td>
 										</tr>
 									);

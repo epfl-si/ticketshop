@@ -96,6 +96,7 @@
 			"filterEventType": "Event Type",
 			"filterEventTypePlaceholder": "Select event type",
 			"applyFilter": "Apply Filter",
+			"httpCode": "HTTP code",
 			"timestamp": "Timestamp",
 			"event": "Event",
 			"user": "User",
@@ -112,7 +113,9 @@
 				"fundDisabled": "Fund Disabled",
 				"fundEnabled": "Fund Enabled",
 				"travelDisabled": "Travel Disabled",
-				"travelEnabled": "Travel Enabled"
+				"travelEnabled": "Travel Enabled",
+				"showFunds": "getArtifact",
+				"showSciper": "getArtifactID"
 			},
 			"fund": "Fund",
 			"travel": "Travel"
