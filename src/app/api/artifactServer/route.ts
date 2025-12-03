@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
 		// XML SOAP response telling the CFF if the EPFL user has the railticket (accred) right.
 		if (request.email) {
-			const result = await processArtifactIDRequest(request.email, xmlData);
+			const result = await processArtifactIDRequest(request.email);
 			let status = 501;
 			let soap = "";
 
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 				status = 500;
 				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status: status, ip: req.headers.get("x-forwarded-for"), requestId });
 			}
-			const event = "artifactserver.getArtifactID"
+			const event = "artifactserver.getArtifactID";
 			await log.event({
 				event,
 				details: `Display ${request.artifactID}'s funds`,
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
 					target: request.email,
 					result: result.data?.artifactID,
 					status,
-					request
+					request,
 				},
 			});
 			return createXmlResponse(soap, status);
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
 		// XML SOAP response with EPFL user's fund(s) to the CFF HTTP request.
 		if (request.artifactID) {
 			await syncUserData(request.artifactID);
-			const result = await processArtifactRequest(request.artifactID, xmlData);
+			const result = await processArtifactRequest(request.artifactID);
 			let status = 501;
 			let soap = "";
 			let itemCount = -1;
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
 				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
 			}
 
-			const event = "artifactserver.getArtifact"
+			const event = "artifactserver.getArtifact";
 			await log.event({
 				event,
 				details: `Display ${request.artifactID}'s funds`,
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 					status,
 					request,
 					itemCount,
-					error: result?.error?.errorMessage
+					error: result?.error?.errorMessage || "",
 				},
 			});
 

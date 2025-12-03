@@ -34,7 +34,7 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 			},
 		});
 	}
-	catch (error) {
+	catch{
 		success = false;
 	}
 
@@ -47,16 +47,16 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		: (itemType === "fund" ? "fund.disabled" : "travel.disabled");
 	const itemName = update?.fund?.resourceId || update?.travel?.name || "Unknown";
 
-    const targetUser = await prisma.user.findFirst({
+	const targetUser = await prisma.user.findFirst({
 		where: {
 			settings: {
-				some: { id: settingId }
-			}
+				some: { id: settingId },
+			},
 		},
 		include: {
-			settings: true
-		}
-	})
+			settings: true,
+		},
+	});
 
 	logDatabase({ action: "updateSetting.result", itemId: settingId, value, itemType });
 
@@ -72,7 +72,7 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 			username: user?.user?.username,
 			target: (targetUser as User).uniqueId,
 			code: 200,
-		}
+		},
 	});
 
 	return update;
