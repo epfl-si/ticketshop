@@ -10,6 +10,7 @@ import { auth } from "@/services/auth";
 import { cookies } from "next/headers";
 import log from "@/services/log";
 import { prisma } from "@/lib/prisma";
+import { User } from "@prisma/client";
 
 export async function updateSetting(shownValue: boolean, settingId: string) {
 	if (!(await hasPermission(PERMISSIONS.FUNDS.UPDATE) && await hasPermission(PERMISSIONS.TRAVELS.UPDATE))) {
@@ -18,26 +19,46 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 
 	logDatabase({ action: "updateSetting.entry", itemId: settingId, value: shownValue });
 
-	const update = await prisma.setting.update({
-		where: { id: settingId },
-		data: {
-			shown: shownValue,
-		},
-		include: {
-			fund: true,
-			travel: true,
-		},
-	});
+	let success = true;
+	let update;
 
-	logDatabase({ action: "updateSetting.result", itemId: settingId, value: update.shown, itemType: update.travelId ? "travel" : "fund" });
+	try {
+		update = await prisma.setting.update({
+			where: { id: settingId },
+			data: {
+				shown: shownValue,
+			},
+			include: {
+				fund: true,
+				travel: true,
+			},
+		});
+	}
+	catch{
+		success = false;
+	}
 
 	const user = await auth();
-	const itemType = update.travelId ? "travel" : "fund";
+	const value = success ? update?.shown : shownValue;
+	const itemId = update ? update?.travelId : settingId;
+	const itemType = itemId ? "travel" : "fund";
 	const event = shownValue
 		? (itemType === "fund" ? "fund.enabled" : "travel.enabled")
 		: (itemType === "fund" ? "fund.disabled" : "travel.disabled");
+	const itemName = update?.fund?.resourceId || update?.travel?.name || "Unknown";
 
-	const itemName = update.fund?.resourceId || update.travel?.name || "Unknown";
+	const targetUser = await prisma.user.findFirst({
+		where: {
+			settings: {
+				some: { id: settingId },
+			},
+		},
+		include: {
+			settings: true,
+		},
+	});
+
+	logDatabase({ action: "updateSetting.result", itemId: settingId, value, itemType });
 
 	await log.event({
 		event,
@@ -46,9 +67,11 @@ export async function updateSetting(shownValue: boolean, settingId: string) {
 		metadata: {
 			settingId,
 			itemType,
-			itemId: update.fundId || update.travelId,
+			itemId: update?.fundId || update?.travelId,
 			itemName,
 			username: user?.user?.username,
+			target: (targetUser as User).uniqueId,
+			code: 200,
 		},
 	});
 
