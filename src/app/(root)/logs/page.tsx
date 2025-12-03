@@ -59,8 +59,6 @@ export default function LogsPage() {
 				.filter((id): id is string => id !== null && id !== undefined),
 			)];
 
-			console.log(uniqueIds);
-
 			if (uniqueIds.length > 0) {
 				const userDetails = await getUsersByIds(uniqueIds);
 				setUsers(userDetails);
