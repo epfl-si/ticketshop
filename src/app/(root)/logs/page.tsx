@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ApiUser } from "@/types";
 import { useTranslations } from "next-intl";
 import { Prisma } from "@prisma/client";
+import { TrLogs } from "@/components/tr-logs";
 
-interface Log {
+export interface Log {
 	id: string;
 	createdAt: Date;
 	event: string;
@@ -200,101 +201,8 @@ export default function LogsPage() {
 							</thead>
 							<tbody className="divide-y">
 								{logs.map((log) => {
-									const uniqueId = log.user?.uniqueId;
-									const userDetails = uniqueId ? users[uniqueId] : null;
-
-									const metadata = log.metadata as Prisma.JsonObject;
-									const error = metadata?.error as Prisma.JsonObject;
-
-									const targetId = metadata?.target as string;
-									const targetResult = metadata?.result as string;
-									const targetDetails = targetId ? users[targetId] : null;
-
-									const itemName = metadata?.itemName as string;
-
-									const itemCount = metadata?.itemCount as number;
-									const eventName = eventTypes.find((et) => et.value === log.event)?.label || log.event;
 									return (
-										<tr key={log.id} className="hover:bg-muted/30">
-											<td className="px-4 py-3 text-sm">
-												{new Date(log.createdAt).toLocaleString("fr-ch")}
-											</td>
-											{/* <td className="px-4 py-3">
-												<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
-													{eventTypes.find((et) => et.value === log.event)?.label || log.event}
-												</span>
-											</td>
-											<td className="px-4 py-3 text-sm">
-												{twoRowTd(translations.page(itemType), itemName)}
-											</td>
-											<td className="px-4 py-3 text-sm">
-												{targetComponent}
-											</td>
-											<td className="px-4 py-3 text-sm">
-												{userComponent}
-											</td> */}
-											<td className="px-4 py-3 text-sm">
-												{
-													log.event.includes("fund") || log.event.includes("travel") ?
-														<div>
-															{/* L'utilisateur {userDetails?.name || `${userDetails?.firstname} ${userDetails?.lastname}`} (#{uniqueId}) a{" "}
-															<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
-																{eventTypes.find((et) => et.value === log.event)?.label || log.event}
-															</span>
-															{" "}avec l'id <code>{itemName}</code> pour l'utilisateur {targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`} (#{targetId}). */}
-															{translations.page.rich("fundLogMessage", {
-																badge: () => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>{eventTypes.find((et) => et.value === log.event)?.label || log.event}</span>,
-																userName: userDetails?.name || `${userDetails?.firstname} ${userDetails?.lastname}`,
-																userSciper: uniqueId || "",
-																targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
-																targetSciper: targetId,
-																code: () => <code>{itemName}</code>,
-															})}
-														</div>
-														:
-														log.event === "artifactserver.getArtifact" ?
-															<div>
-																{/* L'artifact server a demandé{" "}
-																<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
-																	l'affichage des fonds
-																</span>
-																{" "}de l'utilisateur {targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`} (#{targetId}), {itemCount} éléments ont été trouvés. */}
-																{translations.page.rich("showFundLogMessage", {
-																	badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
-																	targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
-																	targetSciper: targetId,
-																	itemCount,
-																	errorMessage: (error?.errorMessage || "undefined") as string,
-																})}
-															</div>
-															:
-															log.event === "artifactserver.getArtifactID" ?
-																<div>
-																	{/* L'artifact server a demandé{" "}
-																	<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
-																		l'affichage du sciper
-																	</span>
-																	{" "}de l'utilisateur avec l'adresse email {targetId}, {targetResult} a bien été trouvé. */}
-																	{translations.page.rich("showSciperLogMessage", {
-																		badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
-																		targetEmail: targetId,
-																		sciper: targetResult,
-																	})}
-																</div>
-																:
-																<>{log.event}</>
-												}
-												{/* {
-													metadata?.soap && (
-														<p>{
-															JSON.stringify(
-																metadata?.soap as string
-															)}
-														</p>
-													)
-												} */}
-											</td>
-										</tr>
+										<TrLogs key={log.id} log={log} users={users} getEventBadgeColor={getEventBadgeColor} getArtifactBadgeColor={getArtifactBadgeColor} />
 									);
 								})}
 							</tbody>

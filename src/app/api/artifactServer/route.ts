@@ -41,7 +41,13 @@ export async function POST(req: Request) {
 					target: request.email,
 					result: result.data?.artifactID,
 					status,
-					request
+					request,
+					error: {
+						errorMessage: result?.error?.errorMessage || "",
+						errorCode: result?.error?.errorCode || "",
+					},
+					soapRequest: xmlData,
+					soapResponse: soap,
 				},
 			});
 			return createXmlResponse(soap, status);
@@ -80,6 +86,8 @@ export async function POST(req: Request) {
 						errorMessage: result?.error?.errorMessage || "",
 						errorCode: result?.error?.errorCode || "",
 					},
+					soapRequest: xmlData,
+					soapResponse: soap,
 				},
 			});
 

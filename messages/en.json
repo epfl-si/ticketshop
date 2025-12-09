@@ -118,7 +118,10 @@
 				"showSciper": "getArtifactID"
 			},
 			"fund": "Fund",
-			"travel": "Travel"
+			"travel": "Travel",
+			"showSciperLogMessage": "<badge>getArtifactID</badge> was called for <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} returned} other {{errorMessage}}}.",
+			"showFundLogMessage": "<badge>getArtifact</badge> was called for <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} {itemCount, plural, =1 {fund} other {funds}} returned} other {{errorMessage}}}.",
+			"fundLogMessage": "The user <bold>{userName} (#{userSciper})</bold> <badge>{state, select, enabled {enabled fund} disabled {disable fund} other {unknown action}}</badge> with id <code></code> for the user <bold>{targetName} (#{targetSciper})</bold>."
 		}
 	},
 	"errors": {
@@ -151,8 +154,8 @@
 	"info": {
 		"about": {
 			"title": "About",
-			"description": "<strong>Ticketshop EPFL</strong> allows CFFs to control the authorizations of EPFL collaborators who need to order train tickets on EPFL funds.",
-			"cffUsageTitle": "In other words, Ticketshop EPFL allows CFFs to:",
+			"description": "<strong>Ticketshop EPFL</strong> allows CFF to control the authorizations of EPFL collaborators who need to order train tickets on EPFL funds.",
+			"cffUsageTitle": "In other words, Ticketshop EPFL allows CFF to:",
 			"additionalInfo": "Ticketshop EPFL allows choosing the funds on which train tickets may be purchased on the CFF platform.",
 			"cffUsage": "<li>Validate train ticket purchase permissions (Accred right <i>railticket</i>),</li><li>Retrieve the list of funds and travel requests.</li>"
 		},

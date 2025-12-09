@@ -110,8 +110,8 @@
 			"showingLogs": "Affichage de {count} journaux",
 			"eventTypes": {
 				"all": "Tous les événements",
-				"fundDisabled": "désactivé le fonds",
-				"fundEnabled": "activé le fonds",
+				"fundDisabled": "fonds désactivé",
+				"fundEnabled": "fonds activé",
 				"travelDisabled": "désactivé le voyage",
 				"travelEnabled": "activé le voyage",
 				"showFunds": "getArtifact",
@@ -119,9 +119,9 @@
 			},
 			"fund": "Fonds",
 			"travel": "Voyages",
-			"showSciperLogMessage": "<badge>getArtifactID</badge> a été appelé pour {targetEmail} : {sciper} retourné.",
-			"showFundLogMessage": "<badge>getArtifact</badge> a été appelé pour {targetName} (#{targetSciper}) : {errorMessage, select, undefined {{itemCount} fonds retourné(s)} other {{errorMessage}}}.",
-			"fundLogMessage": "L'utilisateur {userName} (#{userSciper}) a <badge></badge> avec l'id <code></code> pour l'utilisateur {targetName} (#{targetSciper})."
+			"showSciperLogMessage": "<badge>getArtifactID</badge> a été appelé pour <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} retourné} other {{errorMessage}}}.",
+			"showFundLogMessage": "<badge>getArtifact</badge> a été appelé pour <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} fonds {itemCount, plural, =1 {retourné} other {retournés}}} other {{errorMessage}}}.",
+			"fundLogMessage": "L'utilisateur <bold>{userName} (#{userSciper})</bold> a <badge>{state, select, enabled {activé le fonds} disabled {désactivé le fonds} other {action inconnue}}</badge> avec l'id <code></code> pour l'utilisateur <bold>{targetName} (#{targetSciper})</bold>."
 		}
 	},
 	"errors": {
@@ -154,9 +154,9 @@
 	"info": {
 		"about": {
 			"title": "À propos",
-			"description": "<strong>Ticketshop EPFL</strong> permet aux CFFs de contrôler les autorisations des collaborateurs de l'EPFL qui doivent commander des titres de transport sur des fonds de l'EPFL.",
-			"cffUsageTitle": "En d'autres termes, Ticketshop EPFL permet aux CFFs de : ",
-			"additionalInfo": "Ticketshop EPFL permet de choisir les fonds sur lesquels il est autorisé d'acheter un billet de train sur la plateforme des CFFs.",
+			"description": "<strong>Ticketshop EPFL</strong> permet aux CFF de contrôler les autorisations des collaborateurs de l'EPFL qui doivent commander des titres de transport sur des fonds de l'EPFL.",
+			"cffUsageTitle": "En d'autres termes, Ticketshop EPFL permet aux CFF de : ",
+			"additionalInfo": "Ticketshop EPFL permet de choisir les fonds sur lesquels il est autorisé d'acheter un billet de train sur la plateforme des CFF.",
 			"cffUsage": "<li>Valider les autorisations d'achats de billets de train (droit Accred <i>railticket</i>),</li><li>Récupérer la liste des fonds et des demandes de déplacement.</li>"
 		},
 		"help": {
@@ -191,7 +191,7 @@
 					"description": "La synchronisation entre ticketshop et CFF peut demander plusieurs heures. Après ce délais, les changements devraient s'effectuer sur CFF."
 				},
 				"change": {
-					"title": "Comment passer de mon compte personnel à mon compte EPFL sur les applications des CFFs ?",
+					"title": "Comment passer de mon compte personnel à mon compte EPFL sur les applications des CFF ?",
 					"description": "Identifier l'icone \"usine\" pour le compte business (EPFL) et l'icone \"personne\" pour le compte personnel. Dans l'appplication mobile, c'est au moment du paiement du titre de transport qu'il est possible de changer. Voir la <a>KB0014657</a>."
 				}
 			}
