@@ -30,7 +30,7 @@ export function parseArtifactRequest(xmlData: string): ArtifactRequest {
 
 	return {
 		email: (getartifactid?.email as string) || undefined,
-		artifactID: String(artifactid?.id) || undefined,
+		artifactID: (artifactid?.id as string) || undefined,
 	};
 }
 
