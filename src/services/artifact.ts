@@ -71,7 +71,15 @@ export async function processArtifactIDRequest(email: string, payload: string): 
 				},
 			};
 		}
-
+		else if (persons === null || !persons) {
+			return {
+				success: false,
+				error: {
+					errorCode: 1,
+					errorMessage: "Internal server error",
+				},
+			};
+		}
 		const person = persons[0];
 		const artifactID = person?.id;
 
@@ -86,6 +94,7 @@ export async function processArtifactIDRequest(email: string, payload: string): 
 			success: true,
 			data: { artifactID },
 		};
+
 	} catch (error) {
 		console.error("Error processing artifact ID request:", error);
 		return {
