@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ApiUser } from "@/types";
 import { useTranslations } from "next-intl";
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import { TableRowLogs } from "@/components/table-row-logs";
 
-interface Log {
+export interface Log {
 	id: string;
 	createdAt: Date;
 	event: string;
@@ -34,6 +35,7 @@ export default function LogsPage() {
 	const [filter, setFilter] = useState({
 		event: "all",
 		userId: "",
+		targetId: "",
 	});
 
 	useEffect(() => {
@@ -48,12 +50,14 @@ export default function LogsPage() {
 				offset: 0,
 				event: filter.event && filter.event !== "all" ? (filter.event as EventType) : undefined,
 				userId: filter.userId || undefined,
+				targetId: filter.targetId,
 			});
 			setLogs(fetchedLogs);
 
-			const uniqueIds = fetchedLogs
-				.map((log: Log) => log.user?.uniqueId)
-				.filter((id): id is string => id !== null && id !== undefined);
+			const uniqueIds = [...new Set(fetchedLogs
+				.flatMap((log: Log) => ([String(log.user?.uniqueId), String((log.metadata as Prisma.JsonObject).target)]))
+				.filter((id): id is string => id !== null && id !== undefined),
+			)];
 
 			if (uniqueIds.length > 0) {
 				const userDetails = await getUsersByIds(uniqueIds);
@@ -70,8 +74,10 @@ export default function LogsPage() {
 		{ value: "all", label: translations.page("eventTypes.all") },
 		{ value: "fund.disabled", label: translations.page("eventTypes.fundDisabled") },
 		{ value: "fund.enabled", label: translations.page("eventTypes.fundEnabled") },
-		{ value: "travel.disabled", label: translations.page("eventTypes.travelDisabled") },
-		{ value: "travel.enabled", label: translations.page("eventTypes.travelEnabled") },
+		// { value: "travel.disabled", label: translations.page("eventTypes.travelDisabled") },
+		// { value: "travel.enabled", label: translations.page("eventTypes.travelEnabled") },
+		{ value: "artifactserver.getArtifact", label: translations.page("eventTypes.getArtifact") },
+		{ value: "artifactserver.getArtifactID", label: translations.page("eventTypes.getArtifactID") },
 	];
 
 	const getEventBadgeColor = (event: string) => {
@@ -80,6 +86,13 @@ export default function LogsPage() {
 		if (event.includes("denied")) return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
 		if (event.includes("enabled")) return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
 		if (event.includes("disabled")) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+		return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+	};
+
+	const getArtifactBadgeColor = (code: number) => {
+		if (String(code).startsWith("2")) return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+		if (String(code).startsWith("4")) return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+		if (String(code).startsWith("5")) return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
 		return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
 	};
 
@@ -110,6 +123,18 @@ export default function LogsPage() {
 						placeholder={translations.page("filterUserIdPlaceholder")}
 						value={filter.userId}
 						onChange={(e) => setFilter({ ...filter, userId: e.target.value })}
+						onKeyDown={handleKeyPress}
+					/>
+				</div>
+				<div className="flex-1">
+					<label className="text-sm font-medium mb-2 block">
+						{translations.page("filterTargetId")}
+					</label>
+					<Input
+						type="text"
+						placeholder={translations.page("filterTargetIdPlaceholder")}
+						value={filter.targetId}
+						onChange={(e) => setFilter({ ...filter, targetId: e.target.value })}
 						onKeyDown={handleKeyPress}
 					/>
 				</div>
@@ -171,50 +196,14 @@ export default function LogsPage() {
 										{translations.page("timestamp")}
 									</th>
 									<th className="px-4 py-3 text-left text-sm font-medium">
-										{translations.page("event")}
-									</th>
-									<th className="px-4 py-3 text-left text-sm font-medium">
-										{translations.page("user")}
-									</th>
-									<th className="px-4 py-3 text-left text-sm font-medium">
 										{translations.page("details")}
 									</th>
 								</tr>
 							</thead>
 							<tbody className="divide-y">
 								{logs.map((log) => {
-									const uniqueId = log.user?.uniqueId;
-									const userDetails = uniqueId ? users[uniqueId] : null;
 									return (
-										<tr key={log.id} className="hover:bg-muted/30">
-											<td className="px-4 py-3 text-sm">
-												{new Date(log.createdAt).toLocaleString()}
-											</td>
-											<td className="px-4 py-3">
-												<span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>
-													{eventTypes.find((et) => et.value === log.event)?.label || log.event}
-												</span>
-											</td>
-											<td className="px-4 py-3 text-sm">
-												{userDetails ? (
-													<div>
-														<div className="font-medium">{userDetails.name || `${userDetails.firstname} ${userDetails.lastname}`}</div>
-														<div className="text-xs text-muted-foreground">{uniqueId}</div>
-													</div>
-												) : uniqueId ? (
-													<div>
-														<div className="font-medium">{uniqueId}</div>
-													</div>
-												) : (
-													<span className="text-muted-foreground">
-														{translations.page("system")}
-													</span>
-												)}
-											</td>
-											<td className="px-4 py-3 text-sm">
-												<div>{log.details}</div>
-											</td>
-										</tr>
+										<TableRowLogs key={log.id} log={log} users={users} getEventBadgeColor={getEventBadgeColor} getArtifactBadgeColor={getArtifactBadgeColor} />
 									);
 								})}
 							</tbody>

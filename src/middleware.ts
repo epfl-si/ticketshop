@@ -83,7 +83,7 @@ export default async function middleware(req: NextRequest) {
 		return response;
 	} catch (error) {
 		console.error("Erreur middleware:", error);
-		log.web({ message: `Middleware error: ${(error as Error).message}`, user: session?.user, ip, endpoint, requestId, method: req.method, edge: true });
+		logWeb(`Middleware error: ${(error as Error).message}`);
 		return new NextResponse(null, { status: 500 });
 	}
 }
