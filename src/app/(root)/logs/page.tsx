@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ApiUser } from "@/types";
 import { useTranslations } from "next-intl";
 import { Prisma } from "@prisma/client";
-import { TrLogs } from "@/components/tr-logs";
+import { TableRowLogs } from "@/components/table-row-logs";
 
 export interface Log {
 	id: string;
@@ -54,9 +54,11 @@ export default function LogsPage() {
 			});
 			setLogs(fetchedLogs);
 
-			const uniqueIds = fetchedLogs
-				.flatMap((log: Log) => ([log.user?.uniqueId, (log.metadata as Prisma.JsonObject).target]))
-				.filter((id): id is string => id !== null && id !== undefined);
+			const uniqueIds = [...new Set(fetchedLogs
+				.filter((log: Log) => log.event === "artifactserver.getArtifact")
+				.flatMap((log: Log) => ([String(log.user?.uniqueId), String((log.metadata as Prisma.JsonObject).target)]))
+				.filter((id): id is string => id !== null && id !== undefined),
+			)];
 
 			if (uniqueIds.length > 0) {
 				const userDetails = await getUsersByIds(uniqueIds);
@@ -75,8 +77,8 @@ export default function LogsPage() {
 		{ value: "fund.enabled", label: translations.page("eventTypes.fundEnabled") },
 		// { value: "travel.disabled", label: translations.page("eventTypes.travelDisabled") },
 		// { value: "travel.enabled", label: translations.page("eventTypes.travelEnabled") },
-		{ value: "artifactserver.getArtifact", label: translations.page("eventTypes.showFunds") },
-		{ value: "artifactserver.getArtifactID", label: translations.page("eventTypes.showSciper") },
+		{ value: "artifactserver.getArtifact", label: translations.page("eventTypes.getArtifact") },
+		{ value: "artifactserver.getArtifactID", label: translations.page("eventTypes.getArtifactID") },
 	];
 
 	const getEventBadgeColor = (event: string) => {
@@ -202,7 +204,7 @@ export default function LogsPage() {
 							<tbody className="divide-y">
 								{logs.map((log) => {
 									return (
-										<TrLogs key={log.id} log={log} users={users} getEventBadgeColor={getEventBadgeColor} getArtifactBadgeColor={getArtifactBadgeColor} />
+										<TableRowLogs key={log.id} log={log} users={users} getEventBadgeColor={getEventBadgeColor} getArtifactBadgeColor={getArtifactBadgeColor} />
 									);
 								})}
 							</tbody>

@@ -29,9 +29,6 @@ export async function getLogs(params: GetLogsParams = {}) {
 			select: { uniqueId: true },
 		});
 		if (dbUser) {
-			// where.metadata = {
-			// 	target: dbUser.uniqueId
-			// };
 			where.metadata = {
 				path: ["target"],
 				equals: dbUser.uniqueId,

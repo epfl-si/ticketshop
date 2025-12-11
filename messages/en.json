@@ -114,13 +114,13 @@
 				"fundEnabled": "Fund Enabled",
 				"travelDisabled": "Travel Disabled",
 				"travelEnabled": "Travel Enabled",
-				"showFunds": "getArtifact",
-				"showSciper": "getArtifactID"
+				"getArtifact": "getArtifact",
+				"getArtifactID": "getArtifactID"
 			},
 			"fund": "Fund",
 			"travel": "Travel",
-			"showSciperLogMessage": "<badge>getArtifactID</badge> was called for <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} returned} other {{errorMessage}}}.",
-			"showFundLogMessage": "<badge>getArtifact</badge> was called for <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} {itemCount, plural, =1 {fund} other {funds}} returned} other {{errorMessage}}}.",
+			"getArtifactIDLogMessage": "<badge>getArtifactID</badge> was called for <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} returned} other {{errorMessage}}}.",
+			"getArtifactLogMessage": "<badge>getArtifact</badge> was called for <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} {itemCount, plural, =1 {fund} other {funds}} returned} other {{errorMessage}}}.",
 			"fundLogMessage": "The user <bold>{userName} (#{userSciper})</bold> <badge>{state, select, enabled {enabled fund} disabled {disable fund} other {unknown action}}</badge> with id <code></code> for the user <bold>{targetName} (#{targetSciper})</bold>."
 		}
 	},

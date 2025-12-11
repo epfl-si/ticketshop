@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
 		// XML SOAP response telling the CFF if the EPFL user has the railticket (accred) right.
 		if (request.email) {
-			const result = await processArtifactIDRequest(request.email, xmlData);
+			const result = await processArtifactIDRequest(request.email);
 			let status = 501;
 			let soap = "";
 
@@ -29,11 +29,12 @@ export async function POST(req: Request) {
 				status = 200;
 				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: soap, direction: "outband", status: status, ip: req.headers.get("x-forwarded-for"), requestId });
 			} else if (result.error) {
+				// User doesn't find or internal server error when calling api
 				soap = generateSoapFault(result.error);
 				status = 500;
 				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status: status, ip: req.headers.get("x-forwarded-for"), requestId });
 			}
-			const event = "artifactserver.getArtifactID"
+			const event = "artifactserver.getArtifactID";
 			await log.event({
 				event,
 				details: `Display ${request.artifactID}'s funds`,
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
 		if (request.artifactID) {
 			const artifactID = String(request.artifactID);
 			await syncUserData(artifactID);
-			const result = await processArtifactRequest(artifactID, xmlData);
+			const result = await processArtifactRequest(artifactID);
 			let status = 501;
 			let soap = "";
 			let itemCount = -1;
@@ -68,12 +69,13 @@ export async function POST(req: Request) {
 				itemCount = (result.data as ArtifactResponse).rechnungsstellen.kostenzuordnungen.length;
 				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
 			} else if (result.error) {
+				// User doesn't have funds
 				soap = generateSoapFault(result.error);
 				status = 500;
 				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
 			}
 
-			const event = "artifactserver.getArtifact"
+			const event = "artifactserver.getArtifact";
 			await log.event({
 				event,
 				details: `Display ${request.artifactID}'s funds`,
@@ -90,8 +92,6 @@ export async function POST(req: Request) {
 					soapResponse: soap,
 				},
 			});
-
-			//request.artifactID
 
 			return createXmlResponse(soap, status);
 		}

@@ -14,14 +14,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
-interface TrLogsProps {
+interface TableRowLogsProps {
 	log: LogType;
 	users: Record<string, ApiUser>;
 	getEventBadgeColor: (event: string) => string;
 	getArtifactBadgeColor: (code: number) => string;
 }
 
-export function TrLogs({ log, users, getEventBadgeColor, getArtifactBadgeColor }: TrLogsProps) {
+export function TableRowLogs({ log, users, getEventBadgeColor, getArtifactBadgeColor }: TableRowLogsProps) {
 
 	const translations = {
 		page: useTranslations("pages.logs"),
@@ -64,7 +64,7 @@ export function TrLogs({ log, users, getEventBadgeColor, getArtifactBadgeColor }
 						:
 						log.event === "artifactserver.getArtifact" ?
 							<div>
-								{translations.page.rich("showFundLogMessage", {
+								{translations.page.rich("getArtifactLogMessage", {
 									badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
 									targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
 									targetSciper: targetId,
@@ -76,7 +76,7 @@ export function TrLogs({ log, users, getEventBadgeColor, getArtifactBadgeColor }
 							:
 							log.event === "artifactserver.getArtifactID" ?
 								<div>
-									{translations.page.rich("showSciperLogMessage", {
+									{translations.page.rich("getArtifactIDLogMessage", {
 										badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
 										targetEmail: targetId,
 										sciper: targetResult,

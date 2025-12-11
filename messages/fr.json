@@ -114,13 +114,13 @@
 				"fundEnabled": "fonds activé",
 				"travelDisabled": "désactivé le voyage",
 				"travelEnabled": "activé le voyage",
-				"showFunds": "getArtifact",
-				"showSciper": "getArtifactID"
+				"getArtifact": "getArtifact",
+				"getArtifactID": "getArtifactID"
 			},
 			"fund": "Fonds",
 			"travel": "Voyages",
-			"showSciperLogMessage": "<badge>getArtifactID</badge> a été appelé pour <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} retourné} other {{errorMessage}}}.",
-			"showFundLogMessage": "<badge>getArtifact</badge> a été appelé pour <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} fonds {itemCount, plural, =1 {retourné} other {retournés}}} other {{errorMessage}}}.",
+			"getArtifactIDLogMessage": "<badge>getArtifactID</badge> a été appelé pour <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} retourné} other {{errorMessage}}}.",
+			"getArtifactLogMessage": "<badge>getArtifact</badge> a été appelé pour <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} fonds {itemCount, plural, =1 {retourné} other {retournés}}} other {{errorMessage}}}.",
 			"fundLogMessage": "L'utilisateur <bold>{userName} (#{userSciper})</bold> a <badge>{state, select, enabled {activé le fonds} disabled {désactivé le fonds} other {action inconnue}}</badge> avec l'id <code></code> pour l'utilisateur <bold>{targetName} (#{targetSciper})</bold>."
 		}
 	},

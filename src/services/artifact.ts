@@ -51,7 +51,7 @@ export async function processArtifactIDRequest(email: string): Promise<ArtifactP
 	try {
 		const persons = await getPersonByEmail(email);
 
-		if (persons.length === 0) {
+		if (persons?.length === 0) {
 			return {
 				success: false,
 				error: {
@@ -102,7 +102,7 @@ export async function processArtifactRequest(artifactID: string): Promise<Artifa
 		}
 
 		const person = await getPersonBySciper(artifactID);
-		if (!person) {
+		if (person === undefined) {
 			return {
 				success: false,
 				error: {
