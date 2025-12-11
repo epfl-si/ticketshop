@@ -37,7 +37,7 @@ export async function makeApiCall<T = unknown>(endpoint: string, apiType: "api" 
 	const response = await fetch(url.toString(), { method: "GET", headers });
 
 	const { default: log } = await import("@/services/log");
-	log.api({ action: "test", method: "GET", url: url.href, message: `API call to ${baseUrl}`, status: response.status, requestId });
+	log.api({ action: "makeApiCall", method: "GET", url: url.href, message: `API call to ${baseUrl}`, status: response.status, requestId });
 
 	if (!response.ok && response.status === 404) return { error: response.status, message: "resource not found" } as T;
 	if (!response.ok) throw new Error(`API request failed: ${response.status}`);

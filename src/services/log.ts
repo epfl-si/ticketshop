@@ -14,7 +14,7 @@ async function logToConsole(params: Record<string, unknown>): Promise<void> {
 		};
 	}
 
-	console.info(JSON.stringify(filtered));
+	console.info(JSON.stringify({ timestamp: new Date().toLocaleString("fr-ch", { timeZone: "Europe/Zurich" }), ...filtered }));
 }
 
 async function log(params: BaseLogParams & Record<string, unknown>): Promise<void> {
