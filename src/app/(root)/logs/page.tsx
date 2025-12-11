@@ -55,7 +55,6 @@ export default function LogsPage() {
 			setLogs(fetchedLogs);
 
 			const uniqueIds = [...new Set(fetchedLogs
-				.filter((log: Log) => log.event === "artifactserver.getArtifact")
 				.flatMap((log: Log) => ([String(log.user?.uniqueId), String((log.metadata as Prisma.JsonObject).target)]))
 				.filter((id): id is string => id !== null && id !== undefined),
 			)];
