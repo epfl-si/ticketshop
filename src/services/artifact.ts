@@ -5,7 +5,7 @@ import { getUserFunds, getUserTravelsEnriched } from "@/lib/database";
 import { ArtifactProcessingResult, PersonData, ArtifactResponse, ArtifactLog } from "@/types/artifact";
 import { ApiFund, ApiTravel } from "@/types/api";
 
-export async function getPersonByEmail(email: string): Promise<PersonData[]> {
+export async function getPersonByEmail(email: string): Promise<PersonData[] | null> {
 	try {
 		const data = await makeApiCall<{ persons: PersonData[] }>("/v1/persons", "api", {
 			query: email,
@@ -13,14 +13,14 @@ export async function getPersonByEmail(email: string): Promise<PersonData[]> {
 		return data.persons || [];
 	} catch (error) {
 		console.error("Error fetching person by email:", error);
-		return [];
+		return null;
 	}
 }
 
 export async function getPersonBySciper(sciper: string): Promise<PersonData | null> {
 	try {
 		const data = await makeApiCall<PersonData>(`/v1/persons/${sciper}`, "api");
-		return data;
+		return data || undefined;
 	} catch (error) {
 		console.error("Error fetching person by sciper:", error);
 		return null;
@@ -55,7 +55,7 @@ export async function processArtifactIDRequest(email: string, payload: string): 
 	try {
 		const persons = await getPersonByEmail(email);
 
-		if (persons.length === 0) {
+		if (persons && persons?.length === 0) {
 			logArtifactRequest({
 				user: 0,
 				requestType: "getArtifactID",
@@ -73,7 +73,7 @@ export async function processArtifactIDRequest(email: string, payload: string): 
 		}
 
 		const person = persons[0];
-		const artifactID = person.id;
+		const artifactID = person?.id;
 
 		logArtifactRequest({
 			user: parseInt(artifactID),
@@ -118,7 +118,8 @@ export async function processArtifactRequest(artifactID: string, payload: string
 		}
 
 		const person = await getPersonBySciper(artifactID);
-		if (!person) {
+
+		if (person === undefined) {
 			logArtifactRequest({
 				user: parseInt(artifactID) || 0,
 				requestType: "getArtifact",
@@ -131,6 +132,15 @@ export async function processArtifactRequest(artifactID: string, payload: string
 				error: {
 					errorCode: 2,
 					errorMessage: "User not found",
+				},
+			};
+		}
+		else if (person === null) {
+			return {
+				success: false,
+				error: {
+					errorCode: 1,
+					errorMessage: "Internal server error",
 				},
 			};
 		}
