@@ -3,9 +3,12 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 RUN apk add --no-cache \
-	build-base \
-	python3 \
-	&& rm -rf /var/cache/apk/*
+    build-base \
+    python3 \
+    py3-setuptools \
+    py3-pip \
+    py3-wheel \
+    && rm -rf /var/cache/apk/*
 COPY package.json package-lock.json ./
 RUN npm ci --force
 
