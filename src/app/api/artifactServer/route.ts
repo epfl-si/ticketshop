@@ -31,13 +31,13 @@ export async function POST(req: Request) {
 			} else if (result.error) {
 				// User doesn't find or internal server error when calling api
 				soap = generateSoapFault(result.error);
-				status = result.error.errorCode == 2 ? 200 : 500;
+				status = result.error.errorCode === 2 ? 200 : 500;
 				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
 			}
 			const event = "artifactserver.getArtifactID";
 			await log.event({
 				event,
-				details: `Display ${request.artifactID}'s funds`,
+				details: `Display ${request.email}'s ID`,
 				metadata: {
 					target: request.email,
 					result: result.data?.artifactID,
@@ -96,7 +96,7 @@ export async function POST(req: Request) {
 			return createXmlResponse(soap, status);
 		}
 
-		let status = 200;
+		const status = 200;
 		// XML SOAP response telling the CFF if a parameter is missing.
 		if (!request.email || !request.artifactID) {
 			const result = {
@@ -118,7 +118,7 @@ export async function POST(req: Request) {
 		log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: errorXML, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
 		return createXmlResponse(errorXML, status);
 	} catch (error) {
-		let status = 500;
+		const status = 500;
 		console.error("Error processing artifact request:", error);
 		const errorXML = generateSoapFault({
 			errorCode: 1,
