@@ -117,30 +117,41 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 		const fundAuthorizations = await getUserFundAuthorizations(uniqueId);
 
 		if (fundAuthorizations.length > 0) {
+			const fundAuthorizationsIds = fundAuthorizations.map(auth => auth.resourceId);
+
+			let funds = await prisma.fund.findMany({
+				where: { resourceId: { in: fundAuthorizationsIds } },
+			});
+
+			const fundsIds = funds.map(fund => fund.resourceId);
+
+			const fundsToCreateIds = fundAuthorizationsIds.filter(fund => !fundsIds.includes(fund));
+			const fundsToCreate = fundAuthorizations.filter(fund => fundsToCreateIds.includes(fund.resourceId));
+
+			await prisma.fund.createMany({
+				data: fundsToCreate.map((fund) => (
+					{
+						resourceId: fund.resourceId,
+						cf: fund.fund || "",
+					}
+				)),
+				skipDuplicates: true,
+			});
+
+			funds = await prisma.fund.findMany({
+				where: { resourceId: { in: fundAuthorizationsIds } },
+			});
+
+			const fundsToUpdateIds = fundAuthorizationsIds.filter(fund => fundsIds.includes(fund));
+			const fundsToUpdate = funds.filter(fund => fundsToUpdateIds.includes(fund.resourceId));
+
 			const currentSettings = await prisma.setting.findMany({
 				where: { userId: dbUser.id, fundId: { not: null } },
 				include: { fund: true },
 			});
 
-			for (const auth of fundAuthorizations) {
-				const resourceId = auth.resourceId;
-
-				let fund = await prisma.fund.findUnique({
-					where: { resourceId },
-				});
-
-				if (!fund) {
-					fund = await prisma.fund.create({
-						data: {
-							resourceId,
-							cf: auth.fund || "",
-						},
-					});
-				}
-
-				const settingExists = currentSettings.find((s) => s.fund?.resourceId === resourceId);
-
-				if (!settingExists) {
+			await prisma.$transaction(async (prisma) => {
+				for (const fund of fundsToUpdate) {
 					await prisma.setting.upsert({
 						where: {
 							userId_fundId: {
@@ -157,19 +168,17 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 							fundId: fund.id,
 						},
 					});
-				}
-			}
+				};
+			});
 
 			const validResourceIds = fundAuthorizations.map(auth => auth.resourceId);
 			const settingsToRemove = currentSettings.filter((s) =>
 				s.fund && !validResourceIds.includes(s.fund.resourceId),
 			);
 
-			for (const setting of settingsToRemove) {
-				await prisma.setting.delete({
-					where: { id: setting.id },
-				});
-			}
+			await prisma.setting.deleteMany({
+				where: { id: { in: settingsToRemove.map(setting => setting.id) } },
+			});
 		} else {
 			await prisma.setting.deleteMany({
 				where: { userId: dbUser.id, fundId: { not: null } },

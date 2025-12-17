@@ -41,6 +41,8 @@ export function TableRowLogs({ log, users, getEventBadgeColor, getArtifactBadgeC
 
 	const itemCount = metadata?.itemCount as number;
 
+	const logHorodatage = new Date(log.createdAt).toLocaleString("fr-ch");
+
 	const logMessage = log.event.includes("fund") || log.event.includes("travel") ?
 		<div>
 			{translations.page.rich("fundLogMessage", {
@@ -83,7 +85,7 @@ export function TableRowLogs({ log, users, getEventBadgeColor, getArtifactBadgeC
 	return (
 		<tr key={log.id} className="hover:bg-muted/30">
 			<td className="px-4 py-3 text-sm">
-				{new Date(log.createdAt).toLocaleString("fr-ch")}
+				{logHorodatage}
 			</td>
 			<td className="px-4 py-3 text-sm flex justify-between">
 				{
@@ -102,7 +104,7 @@ export function TableRowLogs({ log, users, getEventBadgeColor, getArtifactBadgeC
 									<DialogHeader className="">
 										<DialogTitle className="flex font-normal! text-sm">
 											<span className="mr-4">
-												{new Date(log.createdAt).toLocaleString("fr-ch")}
+												{logHorodatage}
 											</span>
 											<span>
 												{logMessage}
