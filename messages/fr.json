@@ -121,7 +121,7 @@
 			"travel": "Voyages",
 			"getArtifactIDLogMessage": "<badge>getArtifactID</badge> a été appelé pour <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} retourné} other {{errorMessage}}}.",
 			"getArtifactLogMessage": "<badge>getArtifact</badge> a été appelé pour <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} fonds {itemCount, plural, =1 {retourné} other {retournés}}} other {{errorMessage}}}.",
-			"fundLogMessage": "L'utilisateur <bold>{userName} (#{userSciper})</bold> a <badge>{state, select, enabled {activé le fonds} disabled {désactivé le fonds} other {action inconnue}}</badge> avec l'id <code></code> pour l'utilisateur <bold>{targetName} (#{targetSciper})</bold>."
+			"fundLogMessage": "<badge>{state, select, enabled {activé le fonds} disabled {désactivé le fonds} other {action inconnue}}</badge> L'utilisateur <bold>{userName} (#{userSciper})</bold> a {state, select, enabled {activé le fonds} disabled {désactivé le fonds} other {action inconnue}} avec l'id <code></code> pour l'utilisateur <bold>{targetName} (#{targetSciper})</bold>."
 		}
 	},
 	"errors": {
