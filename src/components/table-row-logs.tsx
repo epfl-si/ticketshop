@@ -13,7 +13,6 @@ import { themes } from "prism-react-renderer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-
 interface TableRowLogsProps {
 	log: LogType;
 	users: Record<string, ApiUser>;
@@ -41,6 +40,46 @@ export function TableRowLogs({ log, users, getEventBadgeColor, getArtifactBadgeC
 	const itemName = metadata?.itemName as string;
 
 	const itemCount = metadata?.itemCount as number;
+
+	const logMessage = log.event.includes("fund") || log.event.includes("travel") ?
+		<div>
+			{translations.page.rich("fundLogMessage", {
+				badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>{chunks}</span>,
+				userName: userDetails?.name || `${userDetails?.firstname} ${userDetails?.lastname}`,
+				userSciper: uniqueId || "",
+				targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
+				targetSciper: targetId,
+				code: () => <code className={getEventBadgeColor(itemName)}>{itemName}</code>,
+				bold: (chunks) => <b className="font-bold">{chunks}</b>,
+				state: log.event.replace("fund.", ""),
+			})}
+		</div>
+		:
+		log.event === "artifactserver.getArtifact" ?
+			<div>
+				{translations.page.rich("getArtifactLogMessage", {
+					badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
+					targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
+					targetSciper: targetId,
+					itemCount,
+					errorMessage: (error?.errorMessage || "undefined") as string,
+					bold: (chunks) => <b className="font-bold">{chunks}</b>,
+				})}
+			</div>
+			:
+			log.event === "artifactserver.getArtifactID" ?
+				<div>
+					{translations.page.rich("getArtifactIDLogMessage", {
+						badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
+						targetEmail: targetId,
+						sciper: targetResult,
+						errorMessage: (error?.errorMessage || "undefined") as string,
+						bold: (chunks) => <b className="font-bold">{chunks}</b>,
+					})}
+				</div>
+				:
+				<>{log.event}</>;
+
 	return (
 		<tr key={log.id} className="hover:bg-muted/30">
 			<td className="px-4 py-3 text-sm">
@@ -48,44 +87,7 @@ export function TableRowLogs({ log, users, getEventBadgeColor, getArtifactBadgeC
 			</td>
 			<td className="px-4 py-3 text-sm flex justify-between">
 				{
-					log.event.includes("fund") || log.event.includes("travel") ?
-						<div>
-							{translations.page.rich("fundLogMessage", {
-								badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getEventBadgeColor(log.event)}`}>{chunks}</span>,
-								userName: userDetails?.name || `${userDetails?.firstname} ${userDetails?.lastname}`,
-								userSciper: uniqueId || "",
-								targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
-								targetSciper: targetId,
-								code: () => <code className={getEventBadgeColor(itemName)}>{itemName}</code>,
-								bold: (chunks) => <b className="font-bold">{chunks}</b>,
-								state: log.event.replace("fund.", ""),
-							})}
-						</div>
-						:
-						log.event === "artifactserver.getArtifact" ?
-							<div>
-								{translations.page.rich("getArtifactLogMessage", {
-									badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
-									targetName: targetDetails?.name || `${targetDetails?.firstname} ${targetDetails?.lastname}`,
-									targetSciper: targetId,
-									itemCount,
-									errorMessage: (error?.errorMessage || "undefined") as string,
-									bold: (chunks) => <b className="font-bold">{chunks}</b>,
-								})}
-							</div>
-							:
-							log.event === "artifactserver.getArtifactID" ?
-								<div>
-									{translations.page.rich("getArtifactIDLogMessage", {
-										badge: (chunks) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium ${getArtifactBadgeColor(metadata?.status as number)}`}>{chunks}</span>,
-										targetEmail: targetId,
-										sciper: targetResult,
-										errorMessage: (error?.errorMessage || "undefined") as string,
-										bold: (chunks) => <b className="font-bold">{chunks}</b>,
-									})}
-								</div>
-								:
-								<>{log.event}</>
+					logMessage
 				}
 				{
 					metadata?.soapRequest && (
@@ -96,13 +98,18 @@ export function TableRowLogs({ log, users, getEventBadgeColor, getArtifactBadgeC
 										<CodeXml className="h-5 w-5" />
 									</button>
 								</DialogTrigger>
-								<DialogContent className="">
-									<DialogHeader>
-										<DialogTitle>
-											aa
+								<DialogContent className="DialogContent max-w-11/12! min-h-11/12! flex flex-col">
+									<DialogHeader className="">
+										<DialogTitle className="flex font-normal! text-sm">
+											<span className="mr-4">
+												{new Date(log.createdAt).toLocaleString("fr-ch")}
+											</span>
+											<span>
+												{logMessage}
+											</span>
 										</DialogTitle>
 									</DialogHeader>
-									<Tabs defaultValue="response" className="">
+									<Tabs defaultValue="response" className="Tabs">
 										<TabsList>
 											<TabsTrigger value="request">Request</TabsTrigger>
 											<TabsTrigger value="response">Response</TabsTrigger>
