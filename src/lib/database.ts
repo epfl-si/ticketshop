@@ -140,9 +140,43 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 				skipDuplicates: true,
 			});
 
+			// Get all funds of user (existed and created just before) to assign it as a setting
+			const allFundsOfUser = funds.concat(createdFunds);
+
+			// Get funds already assigned from settings
+			// const fundsAlreadyAssigned = await prisma.setting.findMany({
+			// 	where: {
+			// 		user: {
+			// 			uniqueId: dbUser.id
+			// 		}
+			// 	},
+			// 	include: {
+			// 		fund: true,
+			// 		user: true
+			// 	}
+			// });
+
+			const fundsAlreadyAssigned = await prisma.fund.findMany({
+				where: {
+					settings: {
+						some: {
+							user: {
+								uniqueId: dbUser.uniqueId,
+							},
+						},
+					},
+				},
+				select: {
+					resourceId: true,
+				},
+			});
+
+			// Keep only funds settings which need to be update or created
+			const allFundsToAssign = allFundsOfUser.map(fund => fund).filter(fund => !fundsAlreadyAssigned.map(fund => fund.resourceId).includes(fund.resourceId));
+
 			// Ensure that new funds are enabled by default
 			await prisma.$transaction(async (prisma) => {
-				for (const fund of createdFunds) {
+				for (const fund of allFundsToAssign) {
 					await prisma.setting.upsert({
 						where: {
 							userId_fundId: {
