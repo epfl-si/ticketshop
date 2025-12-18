@@ -175,9 +175,31 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 			const allFundsToAssign = allFundsOfUser.map(fund => fund).filter(fund => !fundsAlreadyAssigned.map(fund => fund.resourceId).includes(fund.resourceId));
 
 			// Ensure that new funds are enabled by default
+			// await prisma.$transaction(async (prisma) => {
+			// 	for (const fund of allFundsToAssign) {
+			// 		await prisma.setting.upsert({
+			// 			where: {
+			// 				userId_fundId: {
+			// 					userId: dbUser.id,
+			// 					fundId: fund.id,
+			// 				},
+			// 			},
+			// 			update: {
+			// 				shown: true,
+			// 			},
+			// 			create: {
+			// 				shown: true,
+			// 				userId: dbUser.id,
+			// 				fundId: fund.id,
+			// 			},
+			// 		});
+			// 	};
+			// }, {
+			// 	maxWait: 5000
+			// });
 			await prisma.$transaction(async (prisma) => {
-				for (const fund of allFundsToAssign) {
-					await prisma.setting.upsert({
+				await Promise.all(allFundsToAssign.map((fund) => {
+					prisma.setting.upsert({
 						where: {
 							userId_fundId: {
 								userId: dbUser.id,
@@ -193,7 +215,9 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 							fundId: fund.id,
 						},
 					});
-				};
+				}));
+			}, {
+				maxWait: 5000,
 			});
 
 			// Get current settings including funds relations
