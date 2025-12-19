@@ -175,28 +175,24 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 			const allFundsToAssign = allFundsOfUser.map(fund => fund).filter(fund => !fundsAlreadyAssigned.map(fund => fund.resourceId).includes(fund.resourceId));
 
 			// Ensure that new funds are enabled by default
-			await prisma.$transaction(async (tx) => {
-				for (const fund of allFundsToAssign) {
-					await tx.setting.upsert({
-						where: {
-							userId_fundId: {
-								userId: dbUser.id,
-								fundId: fund.id,
-							},
-						},
-						update: {
-							shown: true,
-						},
-						create: {
-							shown: true,
+			for (const fund of allFundsToAssign) {
+				await prisma.setting.upsert({
+					where: {
+						userId_fundId: {
 							userId: dbUser.id,
 							fundId: fund.id,
 						},
-					});
-				};
-			}, {
-				maxWait: 5000,
-			});
+					},
+					update: {
+						shown: true,
+					},
+					create: {
+						shown: true,
+						userId: dbUser.id,
+						fundId: fund.id,
+					},
+				});
+			};
 			// await prisma.$transaction(async (prisma) => {
 			// 	await Promise.all(allFundsToAssign.map((fund) => {
 			// 		prisma.setting.upsert({
