@@ -57,7 +57,7 @@ export async function POST(req: Request) {
 		// XML SOAP response with EPFL user's fund(s) to the CFF HTTP request.
 		if (request.artifactID) {
 			const artifactID = String(request.artifactID);
-			await syncUserData(artifactID);
+			// await syncUserData(artifactID);
 			const result = await processArtifactRequest(artifactID);
 			let status = 501;
 			let soap = "";
