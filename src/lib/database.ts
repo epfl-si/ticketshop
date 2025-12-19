@@ -117,60 +117,121 @@ export async function syncUserData(uniqueId: string): Promise<{ message: string 
 		const fundAuthorizations = await getUserFundAuthorizations(uniqueId);
 
 		if (fundAuthorizations.length > 0) {
+			const fundAuthorizationsIds = fundAuthorizations.map(fund => fund.resourceId);
+
+			// Get all funds of the user that are already set in database
+			const funds = await prisma.fund.findMany({
+				where: { resourceId: { in: fundAuthorizationsIds } },
+			});
+
+			const fundsIds = funds.map(fund => fund.resourceId);
+
+			// Filter funds ids to create
+			const fundsToCreateIds = fundAuthorizationsIds.filter(fund => !fundsIds.includes(fund));
+			const fundsToCreate = fundAuthorizations.filter(fund => fundsToCreateIds.includes(fund.resourceId));
+
+			const createdFunds = await prisma.fund.createManyAndReturn({
+				data: fundsToCreate.map((fund) => (
+					{
+						resourceId: fund.resourceId,
+						cf: fund.fund || "",
+					}
+				)),
+				skipDuplicates: true,
+			});
+
+			// Get all funds of user (existed and created just before) to assign it as a setting
+			const allFundsOfUser = funds.concat(createdFunds);
+
+			// Get funds already assigned from settings
+			// const fundsAlreadyAssigned = await prisma.setting.findMany({
+			// 	where: {
+			// 		user: {
+			// 			uniqueId: dbUser.id
+			// 		}
+			// 	},
+			// 	include: {
+			// 		fund: true,
+			// 		user: true
+			// 	}
+			// });
+
+			const fundsAlreadyAssigned = await prisma.fund.findMany({
+				where: {
+					settings: {
+						some: {
+							user: {
+								uniqueId: dbUser.uniqueId,
+							},
+						},
+					},
+				},
+				select: {
+					resourceId: true,
+				},
+			});
+
+			// Keep only funds settings which need to be update or created
+			const allFundsToAssign = allFundsOfUser.map(fund => fund).filter(fund => !fundsAlreadyAssigned.map(fund => fund.resourceId).includes(fund.resourceId));
+
+			// Ensure that new funds are enabled by default
+			for (const fund of allFundsToAssign) {
+				await prisma.setting.upsert({
+					where: {
+						userId_fundId: {
+							userId: dbUser.id,
+							fundId: fund.id,
+						},
+					},
+					update: {
+						shown: true,
+					},
+					create: {
+						shown: true,
+						userId: dbUser.id,
+						fundId: fund.id,
+					},
+				});
+			};
+			// await prisma.$transaction(async (prisma) => {
+			// 	await Promise.all(allFundsToAssign.map((fund) => {
+			// 		prisma.setting.upsert({
+			// 			where: {
+			// 				userId_fundId: {
+			// 					userId: dbUser.id,
+			// 					fundId: fund.id,
+			// 				},
+			// 			},
+			// 			update: {
+			// 				shown: true,
+			// 			},
+			// 			create: {
+			// 				shown: true,
+			// 				userId: dbUser.id,
+			// 				fundId: fund.id,
+			// 			},
+			// 		});
+			// 	}));
+			// }, {
+			// 	maxWait: 5000,
+			// });
+
+			// Get current settings including funds relations
 			const currentSettings = await prisma.setting.findMany({
 				where: { userId: dbUser.id, fundId: { not: null } },
 				include: { fund: true },
 			});
 
-			for (const auth of fundAuthorizations) {
-				const resourceId = auth.resourceId;
-
-				let fund = await prisma.fund.findUnique({
-					where: { resourceId },
-				});
-
-				if (!fund) {
-					fund = await prisma.fund.create({
-						data: {
-							resourceId,
-							cf: auth.fund || "",
-						},
-					});
-				}
-
-				const settingExists = currentSettings.find((s) => s.fund?.resourceId === resourceId);
-
-				if (!settingExists) {
-					await prisma.setting.upsert({
-						where: {
-							userId_fundId: {
-								userId: dbUser.id,
-								fundId: fund.id,
-							},
-						},
-						update: {
-							shown: true,
-						},
-						create: {
-							shown: true,
-							userId: dbUser.id,
-							fundId: fund.id,
-						},
-					});
-				}
-			}
-
-			const validResourceIds = fundAuthorizations.map(auth => auth.resourceId);
 			const settingsToRemove = currentSettings.filter((s) =>
-				s.fund && !validResourceIds.includes(s.fund.resourceId),
+				s.fund && !fundAuthorizationsIds.includes(s.fund.resourceId),
 			);
 
-			for (const setting of settingsToRemove) {
-				await prisma.setting.delete({
-					where: { id: setting.id },
-				});
-			}
+			// Remove access to funds when needed
+			await prisma.setting.deleteMany({
+				where: { id: { in: settingsToRemove.map(setting => setting.id) } },
+			});
 		} else {
+			// The user has no funds
 			await prisma.setting.deleteMany({
 				where: { userId: dbUser.id, fundId: { not: null } },
 			});

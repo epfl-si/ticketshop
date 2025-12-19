@@ -4,6 +4,7 @@ import { makeApiCall } from "@/lib/api";
 import { getUserFunds, getUserTravelsEnriched } from "@/lib/database";
 import { ArtifactProcessingResult, PersonData, ArtifactResponse } from "@/types/artifact";
 import { ApiFund, ApiTravel } from "@/types/api";
+import { getUserFundAuthorizations } from "./funds";
 
 export async function getPersonByEmail(email: string): Promise<PersonData[] | null> {
 	try {
@@ -27,15 +28,15 @@ export async function getPersonBySciper(sciper: string): Promise<PersonData | nu
 	}
 }
 
-export async function getUserArtifactData(uniqueId: string): Promise<{ funds: ApiFund[], travels: ApiTravel[] }> {
+export async function getUserHiddenFundsAndTravelsFromDB(uniqueId: string): Promise<{ funds: ApiFund[], travels: ApiTravel[] }> {
 	try {
 		const [funds, travels] = await Promise.all([
 			getUserFunds(uniqueId),
 			getUserTravelsEnriched(uniqueId),
 		]);
 
-		const visibleFunds = funds.filter(fund => fund.setting?.shown);
-		const visibleTravels = travels.filter(travel => travel.setting?.shown);
+		const visibleFunds = funds.filter(fund => !fund.setting?.shown);
+		const visibleTravels = travels.filter(travel => !travel.setting?.shown);
 
 		return {
 			funds: visibleFunds,
@@ -121,9 +122,23 @@ export async function processArtifactRequest(artifactID: string): Promise<Artifa
 			};
 		}
 
-		const { funds, travels } = await getUserArtifactData(artifactID);
+		// TODO :
+		// Ici c'est chemin critique : nous devons repondre aux CFF avec efficiance (minimum de code et de requêtes (API et DB))
+		// Le but est de retourner le XML avec la liste des fonds pour laquelle la personne est autorisée. Accessoirement elle a pu en cacher
+		// 1. Récupérer les infos utilisateur (email, num... depuis API)
+		// 2. Récupérer la liste des fonds de l'utilisateur (depuis API)
+		// 3. Récupérer la liste des fonds cachés de l'utilisateur (depuis la DB)
+		// 4. Depuis la liste des fonds de l'utilisateur récupérés (depuis API), retirer les fonds cachés (selon DB)
+		// 5. Retourner la liste des fonds pour que l'appelant puisse retourner le XML aux CFF
 
-		if (funds.length === 0 && travels.length === 0) {
+		const fundsFromAPI = await getUserFundAuthorizations(artifactID);
+		const hiddenFundsTravels = await getUserHiddenFundsAndTravelsFromDB(artifactID);
+		const hiddenFunds = hiddenFundsTravels.funds;
+		const hiddenTravels = hiddenFundsTravels.travels;
+
+		const fundsMinusHidden = fundsFromAPI.filter((fund) => !hiddenFunds.map((fund) => fund.id).includes(fund.resourceId));
+
+		if (fundsMinusHidden.length === 0 && hiddenTravels.length === 0) {
 			return {
 				success: false,
 				error: {
@@ -134,8 +149,8 @@ export async function processArtifactRequest(artifactID: string): Promise<Artifa
 		}
 
 		const kostenzuordnungen = [
-			...funds.map(fund => fund.id),
-			...travels.map(travel => travel.requestID.toString()),
+			...fundsMinusHidden.map(fund => fund.resourceId),
+			...hiddenTravels.map(travel => travel.requestID.toString()),
 		];
 
 		const artifactResponse: ArtifactResponse = {
