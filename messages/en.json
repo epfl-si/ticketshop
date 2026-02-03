@@ -89,26 +89,21 @@
 		"logs": {
 			"title": "Event Logs",
 			"subtitle": "View system events and user activities",
-			"filterUserId": "User ID",
-			"filterUserIdPlaceholder": "Filter by user ID...",
-			"filterTargetId": "Target user ID",
-			"filterTargetIdPlaceholder": "Filter by user ID...",
-			"filterEventType": "Event Type",
-			"filterEventTypePlaceholder": "Select event type",
+			"filterSearch": "Search",
+			"filterSearchPlaceholder": "SCIPER, email or name...",
+			"filterEvent": "Event Type",
+			"filterEventPlaceholder": "Select event type",
 			"applyFilter": "Apply Filter",
-			"httpCode": "HTTP code",
 			"timestamp": "Timestamp",
-			"event": "Event",
-			"user": "User",
-			"target": "Target",
-			"unknow": "Unknow",
-			"targetUser": "Target user",
 			"details": "Details",
-			"system": "System",
 			"noLogs": "No logs found",
 			"noLogsDescription": "There are no logs matching your filters",
 			"showingLogs": "Showing {count} logs",
-			"eventTypes": {
+			"fund": "fund",
+			"travel": "travel",
+			"request": "Request",
+			"response": "Response",
+			"events": {
 				"all": "All Events",
 				"fundDisabled": "Fund Disabled",
 				"fundEnabled": "Fund Enabled",
@@ -117,11 +112,16 @@
 				"getArtifact": "getArtifact",
 				"getArtifactID": "getArtifactID"
 			},
-			"fund": "Fund",
-			"travel": "Travel",
-			"getArtifactIDLogMessage": "<badge>getArtifactID</badge> was called for <bold>{targetEmail}</bold>: {errorMessage, select, undefined {{sciper} returned} other {{errorMessage}}}.",
-			"getArtifactLogMessage": "<badge>getArtifact</badge> was called for <bold>{targetName} (#{targetSciper})</bold>  : {errorMessage, select, undefined {{itemCount} {itemCount, plural, =1 {fund} other {funds}} returned} other {{errorMessage}}}.",
-			"fundLogMessage": "<badge>{state, select, enabled {enabled fund} disabled {disable fund} other {unknown action}}</badge> The user <bold>{userName} (#{userSciper})</bold> {state, select, enabled {enabled fund} disabled {disable fund} other {unknown action}} with id <code></code> for the user <bold>{targetName} (#{targetSciper})</bold>."
+			"message": {
+				"enabled": "enabled {type}",
+				"disabled": "disabled {type}",
+				"for": "for",
+				"modifiedBy": "modified by",
+				"calledFor": "called for",
+				"fundsReturned": "{count, plural, =0 {0 funds} =1 {1 fund} other {# funds}} returned",
+				"sciperReturned": "returned",
+				"unknown": "unknown"
+			}
 		}
 	},
 	"errors": {
