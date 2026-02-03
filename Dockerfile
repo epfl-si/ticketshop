@@ -10,7 +10,7 @@ RUN apk add --no-cache \
 	py3-wheel \
 	&& rm -rf /var/cache/apk/*
 COPY package.json package-lock.json ./
-RUN npm i --force
+RUN npm ci --force
 
 FROM base AS builder
 WORKDIR /app
