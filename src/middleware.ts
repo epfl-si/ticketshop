@@ -9,7 +9,7 @@ export default async function middleware(req: NextRequest) {
 	const { pathname } = req.nextUrl;
 	const search = req.nextUrl.search;
 	const endpoint = pathname + search;
-	const ip = req.headers.get("x-forwarded-for") || null;
+	const ip = req.headers.get("x-forwarded-for") ?? "";
 
 	const requestId: string = generateUUID();
 	let session: Session | null = null;
@@ -19,7 +19,7 @@ export default async function middleware(req: NextRequest) {
 
 	const logWeb = (message?: string) => {
 		log.web({
-			user: session?.user,
+			userId: session?.user?.userId,
 			ip,
 			endpoint,
 			requestId,
