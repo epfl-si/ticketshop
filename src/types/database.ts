@@ -1,37 +1,37 @@
-export interface DbUser {
-	id: string;
-	uniqueId: string;
-	createdAt: Date;
-	updatedAt: Date;
-	travels: DbTravel[];
-	settings: DbSetting[];
+export interface DatabaseUser {
+    id: string;
+    uniqueId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    travels: DatabaseTravel[];
+    settings: DatabaseSetting[];
 }
 
-export interface DbFund {
-	id: string;
-	resourceId: string;
-	cf: string;
-	settings: DbSetting[];
+export interface DatabaseFund {
+    id: string;
+    resourceId: string;
+    cf: string;
+    settings: DatabaseSetting[];
 }
 
-export interface DbTravel {
-	id: string;
-	requestId: string;
-	name: string;
-	dates?: string;
-	destination?: string;
-	userId: string;
-	user: DbUser;
-	settings: DbSetting[];
+export interface DatabaseTravel {
+    id: string;
+    requestId: string;
+    name: string;
+    dates?: string;
+    destination?: string;
+    userId: string;
+    user: DatabaseUser;
+    settings: DatabaseSetting[];
 }
 
-export interface DbSetting {
-	id: string;
-	shown: boolean;
-	userId: string;
-	fundId?: string | null;
-	travelId?: string | null;
-	user: DbUser;
-	fund?: DbFund | null;
-	travel?: DbTravel | null;
+export interface DatabaseSetting {
+    id: string;
+    shown: boolean;
+    userId: string;
+    fundId?: string | null;
+    travelId?: string | null;
+    user: DatabaseUser;
+    fund?: DatabaseFund | null;
+    travel?: DatabaseTravel | null;
 }

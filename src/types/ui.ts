@@ -1,18 +1,18 @@
 import { ApiFund, ApiTravel } from "./api";
-import { DbSetting, DbUser } from "./database";
+import { DatabaseSetting, DatabaseUser } from "./database";
 
 export interface EnrichedFund extends ApiFund {
-	setting?: DbSetting;
+    setting?: DatabaseSetting;
 }
 
 export interface EnrichedTravel extends ApiTravel {
-	uniqueId: string;
-	setting?: DbSetting;
+    uniqueId: string;
+    setting?: DatabaseSetting;
 }
 
 export interface UserData {
-	user: DbUser | null;
-	funds: EnrichedFund[];
-	travels: EnrichedTravel[];
-	error?: string;
+    user: DatabaseUser | null;
+    funds: EnrichedFund[];
+    travels: EnrichedTravel[];
+    error?: string;
 }
