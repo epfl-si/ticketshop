@@ -1,26 +1,23 @@
 import type { WebLogParams, ApiLogParams, SoapLogParams, DatabaseLogParams, EventLogParams, BaseLogParams } from "@/types/log";
 
-async function logToConsole(params: Record<string, unknown>): Promise<void> {
-	const filtered = Object.fromEntries(
-		Object.entries(params).filter(([, value]) => value !== null && value !== undefined),
-	);
+function logToConsole(params: BaseLogParams & Record<string, unknown>): void {
+	const filtered: Record<string, unknown> = {
+		timestamp: new Date().toISOString(),
+	};
 
-	if (filtered.user && typeof filtered.user === "object") {
-		const user = filtered.user as Record<string, unknown>;
-		filtered.user = {
-			name: user.name,
-			groups: user.groups,
-			userId: user.userId,
-		};
+	for (const [key, value] of Object.entries(params)) {
+		if (value !== undefined) {
+			filtered[key] = value;
+		}
 	}
 
-	console.info(JSON.stringify({ timestamp: new Date().toISOString(), ...filtered }));
+	console.info(JSON.stringify(filtered));
 }
 
 async function log(params: BaseLogParams & Record<string, unknown>): Promise<void> {
-	await logToConsole(params);
+	logToConsole(params);
 
-	if (params.persist && params.type === "event" && !params.edge) {
+	if (params.persist && params.type === "event" && !params.edge && "event" in params) {
 		const { persistToDatabase } = await import("@/lib/log");
 		await persistToDatabase(params as unknown as EventLogParams);
 	}
@@ -36,7 +33,6 @@ const event = (params: EventLogParams) =>
 		type: "event",
 		...params,
 		persist: true,
-		username: params.user?.username,
 	});
 
 const logger = { web, api, soap, database, event };

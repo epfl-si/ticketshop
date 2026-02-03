@@ -1,5 +1,3 @@
-import { User } from "next-auth";
-
 export type EventType =
 	| "user.login"
 	| "user.logout"
@@ -18,7 +16,6 @@ export type LogType = "web" | "api" | "soap" | "database" | "event";
 
 export interface BaseLogParams {
 	type: LogType;
-	user?: User;
 	userId?: string;
 	message?: string;
 	requestId?: string;
@@ -28,7 +25,7 @@ export interface BaseLogParams {
 
 export interface WebLogParams extends Omit<BaseLogParams, "type"> {
 	endpoint?: string;
-	ip?: string | null;
+	ip?: string;
 	method?: string;
 }
 
@@ -46,7 +43,7 @@ export interface SoapLogParams extends Omit<BaseLogParams, "type"> {
 	method: string;
 	direction?: string;
 	soap?: string;
-	ip?: string | null;
+	ip?: string;
 }
 
 export interface DatabaseLogParams extends Omit<BaseLogParams, "type"> {
@@ -65,13 +62,42 @@ export interface DatabaseLogParams extends Omit<BaseLogParams, "type"> {
 export interface EventLogParams extends Omit<BaseLogParams, "type"> {
 	event: EventType;
 	details?: string;
-	metadata?: Record<string, unknown>;
+	metadata?: Record<string, string | number | boolean | object>;
+}
+
+export interface LogMetadata {
+	status?: number;
+	error?: {
+		errorMessage?: string;
+		errorCode?: string | number;
+	};
+	settingId?: string;
+	itemType?: string;
+	itemId?: string;
+	itemName?: string;
+	targetSciper?: string;
+	adminSciper?: string;
+	email?: string;
+	sciper?: string;
+	itemCount?: number;
+	soapRequest?: string;
+	soapResponse?: string;
+}
+
+export interface LogEntry {
+	id: string;
+	createdAt: Date;
+	event: string;
+	details: string;
+	metadata: LogMetadata;
+	user: {
+		uniqueId: string;
+	};
 }
 
 export interface GetLogsParams {
 	limit?: number;
 	offset?: number;
 	event?: EventType;
-	userId?: string;
-	targetId?: string;
+	search?: string;
 }
