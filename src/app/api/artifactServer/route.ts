@@ -15,38 +15,41 @@ export async function POST(req: Request) {
 		const cookieStore = await cookies();
 		cookieStore.set("requestId", requestId);
 
-		log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: xmlData, direction: "inband", ip: req.headers.get("x-forwarded-for"), requestId });
+		log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: xmlData, direction: "inband", ip: req.headers.get("x-forwarded-for") ?? "", requestId });
 
 		// XML SOAP response telling the CFF if the EPFL user has the railticket (accred) right.
 		if (request.email) {
 			const result = await processArtifactIDRequest(request.email);
 			let status = 501;
 			let soap = "";
+			const sciper = result.data?.artifactID;
 
-			if (result.success && result.data) {
-				await syncUserData(result.data.artifactID);
+			if (result.success && sciper) {
+				await syncUserData(sciper);
 				soap = generateArtifactIDResponse(result.data as ArtifactIDResponse);
 				status = 200;
-				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: soap, direction: "outband", status: status, ip: req.headers.get("x-forwarded-for"), requestId });
+				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: soap, direction: "outband", status: status, ip: req.headers.get("x-forwarded-for") ?? "", requestId });
 			} else if (result.error) {
-				// User doesn't find or internal server error when calling api
 				soap = generateSoapFault(result.error);
 				status = result.error.errorCode === 2 ? 200 : 500;
-				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
+				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for") ?? "", requestId });
 			}
-			const event = "artifactserver.getArtifactID";
+
 			await log.event({
-				event,
-				details: `Display ${request.email}'s ID`,
+				event: "artifactserver.getArtifactID",
+				userId: sciper,
+				details: `getArtifactID ${request.email}`,
 				metadata: {
-					target: request.email,
-					result: result.data?.artifactID,
+					email: request.email,
+					sciper: sciper ?? "",
 					status,
 					request,
-					error: {
-						errorMessage: result?.error?.errorMessage || "",
-						errorCode: result?.error?.errorCode || "",
-					},
+					...(result.error && {
+						error: {
+							errorMessage: result.error.errorMessage,
+							errorCode: result.error.errorCode,
+						},
+					}),
 					soapRequest: xmlData,
 					soapResponse: soap,
 				},
@@ -56,38 +59,38 @@ export async function POST(req: Request) {
 
 		// XML SOAP response with EPFL user's fund(s) to the CFF HTTP request.
 		if (request.artifactID) {
-			const artifactID = String(request.artifactID);
-			// await syncUserData(artifactID);
-			const result = await processArtifactRequest(artifactID);
+			const sciper = String(request.artifactID);
+			const result = await processArtifactRequest(sciper);
 			let status = 501;
 			let soap = "";
-			let itemCount = -1;
+			let itemCount = 0;
 
 			if (result.success && result.data) {
 				soap = generateArtifactResponse(result.data as ArtifactResponse);
 				status = 200;
 				itemCount = (result.data as ArtifactResponse).rechnungsstellen.kostenzuordnungen.length;
-				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
+				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for") ?? "", requestId });
 			} else if (result.error) {
-				// User doesn't have funds
 				soap = generateSoapFault(result.error);
 				status = 200;
-				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
+				log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: soap, direction: "outband", status, ip: req.headers.get("x-forwarded-for") ?? "", requestId });
 			}
 
-			const event = "artifactserver.getArtifact";
 			await log.event({
-				event,
-				details: `Display ${request.artifactID}'s funds`,
+				event: "artifactserver.getArtifact",
+				userId: sciper,
+				details: `getArtifact ${sciper}`,
 				metadata: {
-					target: request.artifactID,
+					sciper,
 					status,
 					request,
 					itemCount,
-					error: {
-						errorMessage: result?.error?.errorMessage || "",
-						errorCode: result?.error?.errorCode || "",
-					},
+					...(result.error && {
+						error: {
+							errorMessage: result.error.errorMessage,
+							errorCode: result.error.errorCode,
+						},
+					}),
 					soapRequest: xmlData,
 					soapResponse: soap,
 				},
@@ -96,26 +99,13 @@ export async function POST(req: Request) {
 			return createXmlResponse(soap, status);
 		}
 
+		// Missing parameter
 		const status = 200;
-		// XML SOAP response telling the CFF if a parameter is missing.
-		if (!request.email || !request.artifactID) {
-			const result = {
-				error: {
-					errorCode: 21 as number,
-					errorMessage: "Missing parameter" as string,
-				},
-			};
-			const errorXML = generateSoapFault(result.error);
-			log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(result.error), soap: errorXML, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
-			return createXmlResponse(errorXML, status);
-		}
-
-
 		const errorXML = generateSoapFault({
-			errorCode: 1,
-			errorMessage: "Invalid request format",
+			errorCode: 21,
+			errorMessage: "Missing parameter",
 		});
-		log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", soap: errorXML, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
+		log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: "Missing parameter", soap: errorXML, direction: "outband", status, ip: req.headers.get("x-forwarded-for") ?? "", requestId });
 		return createXmlResponse(errorXML, status);
 	} catch (error) {
 		const status = 500;
@@ -124,7 +114,7 @@ export async function POST(req: Request) {
 			errorCode: 1,
 			errorMessage: "Internal server error",
 		});
-		log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(error), soap: errorXML, direction: "outband", status, ip: req.headers.get("x-forwarded-for"), requestId });
+		log.soap({ endpoint: "/api/artifactServer", action: "artifactServer", method: "POST", message: String(error), soap: errorXML, direction: "outband", status, ip: req.headers.get("x-forwarded-for") ?? "", requestId });
 		return createXmlResponse(errorXML, status);
 	}
 }
