@@ -1,3 +1,4 @@
+import { searchUsers } from "@/services/users";
 import type { EventLogParams, GetLogsParams, LogEntry, LogMetadata } from "@/types/log";
 import type { Prisma } from "@prisma/client";
 
@@ -63,13 +64,28 @@ export async function getLogs(params: GetLogsParams = {}): Promise<{ logs: LogEn
 					{ user: { uniqueId: sciper } },
 					{ metadata: { path: ["sciper"], equals: sciper } },
 					{ metadata: { path: ["targetSciper"], equals: sciper } },
+					{ metadata: { path: ["adminSciper"], equals: sciper } },
 					{ metadata: { path: ["email"], string_contains: searchTerm } },
 				];
 			} else {
 				where.metadata = { path: ["email"], string_contains: searchTerm };
 			}
 		} else {
-			where.details = { contains: searchTerm, mode: "insensitive" };
+			const users = await searchUsers(searchTerm);
+			if (users && users.length > 0) {
+				// where.user = { contains: searchTerm, mode: "insensitive" };
+				const user = users[0];
+				where.OR = [
+					{ user: { uniqueId: user.id } },
+					{ metadata: { path: ["sciper"], equals: user.id } },
+					{ metadata: { path: ["targetSciper"], equals: user.id } },
+					{ metadata: { path: ["adminSciper"], equals: user.id } },
+					{ metadata: { path: ["email"], string_contains: user.email } },
+				];
+			}
+			else {
+				where.details = { contains: searchTerm, mode: "insensitive" };
+			}
 		}
 	}
 
