@@ -14,6 +14,7 @@ import { ApiUser } from "@/types";
 import { useTranslations } from "next-intl";
 import { CodeBlock } from "react-code-block";
 import { themes } from "prism-react-renderer";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LogsPage() {
 	const translations = {
@@ -21,12 +22,17 @@ export default function LogsPage() {
 		actions: useTranslations("actions"),
 	};
 
+	const router = useRouter();
+
+	// const params = useParams<{ tag: string; item: string }>()
+	const searchParams = useSearchParams();
+
 	const [logs, setLogs] = useState<LogEntry[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [users, setUsers] = useState<Record<string, ApiUser>>({});
 	const [filter, setFilter] = useState({
-		event: "all",
-		search: "",
+		event: searchParams.get("t")?.replaceAll("_", ".") || "all",
+		search: searchParams.get("q") || "",
 	});
 
 	useEffect(() => {
@@ -35,6 +41,13 @@ export default function LogsPage() {
 
 	async function fetchLogs() {
 		setLoading(true);
+		const search = [{ key: "q",value: filter.search }, { key: "t",value: filter.event }];
+		if ((filter.search && filter.search !== "") || (filter.event && filter.event != "all")) {
+			// router.push(search ? `?q=${filter.search}&t=${filter.event}` : "");
+			const searchArray = search.filter((param) => param.value && param.value !== "all").map((param) => `${param.key}=${param.value}`);
+			const urlParams = searchArray.join("&");
+			router.push(searchArray.length > 0 ? `?${urlParams}` : "");
+		}
 		try {
 			const { logs: fetchedLogs } = await fetchLogsAction({
 				limit: 100,
