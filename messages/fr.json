@@ -121,6 +121,11 @@
 				"fundsReturned": "{count, plural, =0 {0 fonds} =1 {1 fonds} other {# fonds}} retourné(s)",
 				"sciperReturned": "retourné",
 				"unknown": "inconnu"
+			},
+			"status":{
+				"success": "Réussites",
+				"notfound": "Non abouti",
+				"error": "Erreur serveur"
 			}
 		}
 	},
