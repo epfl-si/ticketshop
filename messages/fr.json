@@ -122,11 +122,12 @@
 				"sciperReturned": "retourné",
 				"unknown": "inconnu"
 			},
-			"status":{
+			"status": {
 				"success": "Réussites",
 				"notfound": "Non abouti",
 				"error": "Erreur serveur"
-			}
+			},
+			"export": "Exporter en CSV"
 		}
 	},
 	"errors": {
