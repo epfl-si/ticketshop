@@ -389,7 +389,7 @@ export default function LogsPageView({ targetID }: { targetID?: string }) {
                 createdAt: new Date(log.createdAt).toISOString(),
                 event: log?.event,
                 details: log?.details,
-                adminUserSciper: log?.metadata?.adminSciper,
+                adminUserSciper: log?.metadata?.adminSciper || log.user?.uniqueId,
                 adminUserName: (adminUser as any)?.name,
                 adminUserEmail: (adminUser as any)?.email,
                 targetUserSciper: log?.metadata?.targetSciper,
