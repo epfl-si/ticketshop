@@ -303,8 +303,6 @@ export default function LogsPageView({ targetID }: { targetID?: string }) {
 	}
 
 	const HTTPStatusCard = ({ variant }: { variant: "success" | "notfound" | "error" }) => {
-		console.log("logs")
-		console.log(logs)
 		const formatLogsToState = logs.map(
 			(log) => (
 				{
@@ -389,20 +387,20 @@ export default function LogsPageView({ targetID }: { targetID?: string }) {
             let editedLog: any = {
                 ...log,
                 createdAt: new Date(log.createdAt).toISOString(),
-                event: log.event,
-                details: log.details,
-                adminUserSciper: log.metadata.adminSciper,
-                adminUserName: (adminUser as any).name,
-                adminUserEmail: (adminUser as any).email,
-                targetUserSciper: log.metadata.targetSciper,
-                targetUserName: (targetUser as any).name,
-                targetUserEmail: (targetUser as any).email,
-                itemCount: log.metadata.itemCount,
-                itemId: log.metadata.itemId,
-                itemName: log.metadata.itemName,
-                itemType: log.metadata.itemType,
-                error: log.metadata.error,
-                status: log.metadata.status,
+                event: log?.event,
+                details: log?.details,
+                adminUserSciper: log?.metadata?.adminSciper,
+                adminUserName: (adminUser as any)?.name,
+                adminUserEmail: (adminUser as any)?.email,
+                targetUserSciper: log?.metadata?.targetSciper,
+                targetUserName: (targetUser as any)?.name,
+                targetUserEmail: (targetUser as any)?.email,
+                itemCount: log?.metadata?.itemCount,
+                itemId: log?.metadata?.itemId,
+                itemName: log?.metadata?.itemName,
+                itemType: log?.metadata?.itemType,
+                error: log?.metadata?.error,
+                status: log?.metadata?.status,
             };
 
             delete editedLog.metadata;
