@@ -383,7 +383,8 @@ export default function LogsPageView({ targetID }: { targetID?: string }) {
         let first = true;
         for (let log of logs) {
             const adminUser = users[log.metadata.adminSciper as string];
-            const targetUser = users[log.metadata.targetSciper as string];
+			const targetUser = users[log.metadata.targetSciper as string];
+			const error = log?.metadata?.error?.errorCode ? `error ${log?.metadata?.error?.errorCode} : ${log?.metadata?.error?.errorMessage}` : "";
             let editedLog: any = {
                 ...log,
                 createdAt: new Date(log.createdAt).toISOString(),
@@ -399,8 +400,8 @@ export default function LogsPageView({ targetID }: { targetID?: string }) {
                 itemId: log?.metadata?.itemId,
                 itemName: log?.metadata?.itemName,
                 itemType: log?.metadata?.itemType,
-                error: log?.metadata?.error,
                 status: log?.metadata?.status,
+				error,
             };
 
             delete editedLog.metadata;
