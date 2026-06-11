@@ -285,16 +285,43 @@ export default function LogsPageView({ targetID }: { targetID?: string }) {
                 </DialogContent>
             </Dialog>
         );
-    }
+	}
 
-    const HTTPStatusCard = ({ variant }: { variant: "success" | "notfound" | "error" }) => {
-        const success = logs.filter(
-            (log) => log.metadata.status && log.metadata.status >= 200 && log.metadata.status < 300,
+	const getStatusLog = (log: any) => {
+		if (log.metadata.error && log.metadata.status && log.metadata.status >= 500) {
+			return "error";
+		}
+		else if (log.metadata.error && log.metadata.status){
+			return "notfound";
+		}
+		else if (log.metadata.status && log.metadata.status >= 200 && log.metadata.status < 300) {
+			return "success";
+		}
+		else {
+			return "notfound";
+		}
+	}
+
+	const HTTPStatusCard = ({ variant }: { variant: "success" | "notfound" | "error" }) => {
+		console.log("logs")
+		console.log(logs)
+		const formatLogsToState = logs.map(
+			(log) => (
+				{
+					id: log.id,
+					status: getStatusLog(log)
+				}
+			)
         );
-        const notfound = logs.filter(
-            (log) => log.metadata.status && log.metadata.status >= 400 && log.metadata.status < 500,
+        const success = formatLogsToState.filter(
+            (log) => log.status === "success",
         );
-        const error = logs.filter((log) => log.metadata.status && log.metadata.status >= 500);
+        const notfound = formatLogsToState.filter(
+            (log) => log.status === "notfound",
+        );
+        const error = formatLogsToState.filter(
+            (log) => log.status === "error",
+        );
         return (
             <Card
                 className={`flex items-center w-full h-40 mx-2 px-2
@@ -413,7 +440,7 @@ export default function LogsPageView({ targetID }: { targetID?: string }) {
                     onClick={() => downloadCSV()}
                 >
                     <Download color="#ffffff" />
-					{ translations.page("") }
+					{ translations.page("export") }
                 </Button>
             </div>
 
