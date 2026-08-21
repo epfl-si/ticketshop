@@ -13,6 +13,16 @@ interface FundResponse {
 	funds: ApiFund[];
 }
 
+export async function hasRailticketRight(sciper: string): Promise<boolean> {
+	const data = await makeApiCall<AuthorizationResponse>("/v1/authorizations", "api", {
+		persid: sciper,
+		authid: "railticket",
+		type: "right",
+	});
+
+	return data.authorizations.length > 0;
+}
+
 export async function getUserFundAuthorizations(sciper: string): Promise<{ resourceId: string; fund?: string }[]> {
 	const data = await makeApiCall<AuthorizationResponse>("/v1/authorizations", "api", {
 		persid: sciper,

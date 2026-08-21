@@ -32,7 +32,6 @@ export default function DeniedPage() {
 					<h3 className="font-semibold text-sm mb-2">{translations.error("requiredRights")}</h3>
 					<ul className="text-sm text-muted-foreground space-y-1">
 						<li>railticket</li>
-						<li>ndf.travel.org</li>
 					</ul>
 				</div>
 
